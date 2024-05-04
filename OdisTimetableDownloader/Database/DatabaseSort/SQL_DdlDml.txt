@@ -1,0 +1,35 @@
+﻿USE TimetableDownloader;
+GO
+
+DROP TABLE TimetableLinks;
+GO
+
+CREATE TABLE TimetableLinks
+(       
+    OldPrefix NVARCHAR(50),
+	NewPrefix NVARCHAR(50),
+    StartDate DATE,
+    EndDate DATE,
+    TotalDateInterval NVARCHAR(50),
+    VT_Suffix NVARCHAR(50),
+    JS_GeneratedString NVARCHAR(50),
+    CompleteLink NVARCHAR(100) NOT NULL,
+    FileToBeSaved NVARCHAR(100)    
+);
+
+USE TimetableDownloader;
+GO
+
+INSERT INTO TimetableLinks 
+(
+    OldPrefix, NewPrefix, StartDate, EndDate, 
+    TotalDateInterval,VT_Suffix, JS_GeneratedString, 
+    CompleteLink, FileToBeSaved
+) 
+VALUES
+(
+    @OldPrefix, @NewPrefix, @StartDate, @EndDate, 
+    @TotalDateInterval, @VT_Suffix, @JS_GeneratedString, 
+    @CompleteLink, @FileToBeSaved
+);
+

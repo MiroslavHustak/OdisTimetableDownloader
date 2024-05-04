@@ -1,0 +1,23 @@
+﻿//***********************************************************
+
+CREATE OR ALTER TRIGGER [dbo].[trg_UpdateTimeDifference]
+    ON [dbo].[ProcessTime]
+    AFTER INSERT, UPDATE  --must be both
+AS
+BEGIN
+    IF UPDATE([Start]) OR UPDATE([End])  
+    BEGIN
+        DECLARE @startDateTime DATETIME;
+        DECLARE @endDateTime DATETIME;
+        DECLARE @lastUpdated DATETIME;
+
+        SELECT TOP 1 @startDateTime = [Start], @endDateTime = [End], @lastUpdated = LastUpdated
+        FROM inserted  -- Use the inserted pseudo table to get the newly inserted or updated values
+        ORDER BY LastUpdated DESC;
+
+        EXEC CalculateTimeDifference 
+            @startDateTime = @startDateTime,
+            @endDateTime = @endDateTime,
+            @lastUpdated = @lastUpdated;
+    END
+END;

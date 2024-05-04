@@ -1,0 +1,89 @@
+﻿//*************************************************
+CREATE FUNCTION dbo.ITVF_GetLinksCurrentValidity ()   
+RETURNS TABLE
+AS
+RETURN 
+(
+    SELECT NewPrefix, StartDate, CompleteLink, FileToBeSaved, MaxRow
+    FROM
+	(
+        SELECT NewPrefix, StartDate, EndDate, CompleteLink, FileToBeSaved,
+		ROW_NUMBER() OVER (PARTITION BY NewPrefix ORDER BY StartDate DESC) AS MaxRow
+        FROM TimetableLinks
+		WHERE 	    
+        ((StartDate <= FORMAT(GETDATE(), 'yyyy-MM-dd') AND EndDate >= FORMAT(GETDATE(), 'yyyy-MM-dd'))
+        OR
+        (StartDate = FORMAT(GETDATE(), 'yyyy-MM-dd') AND EndDate = FORMAT(GETDATE(), 'yyyy-MM-dd')))
+    ) AS myDerivedTable
+    WHERE MaxRow = 1     
+);
+
+
+//***********************************************
+CREATE FUNCTION dbo.ITVF_GetLinksFutureValidity () 
+RETURNS TABLE
+AS
+RETURN 
+(
+    SELECT NewPrefix, StartDate, CompleteLink, FileToBeSaved 
+    FROM
+	(
+        SELECT NewPrefix, StartDate, EndDate, CompleteLink, FileToBeSaved
+        FROM TimetableLinks
+		WHERE StartDate > FORMAT(GETDATE(), 'yyyy-MM-dd')
+    ) AS myDerivedTable     
+);
+
+
+//*****************************************************
+CREATE FUNCTION dbo.ITVF_GetLinksReplacementService ()   
+RETURNS TABLE
+AS
+RETURN 
+(
+    SELECT NewPrefix, StartDate, CompleteLink, FileToBeSaved, MaxRow
+    FROM
+	(
+        SELECT NewPrefix, StartDate, EndDate, CompleteLink, FileToBeSaved,
+		ROW_NUMBER() OVER (PARTITION BY NewPrefix ORDER BY StartDate DESC) AS MaxRow
+        FROM TimetableLinks
+		WHERE 	    
+        ((StartDate <= FORMAT(GETDATE(), 'yyyy-MM-dd') AND EndDate >= FORMAT(GETDATE(), 'yyyy-MM-dd'))
+        OR
+        (StartDate = FORMAT(GETDATE(), 'yyyy-MM-dd') AND EndDate = FORMAT(GETDATE(), 'yyyy-MM-dd')))
+		AND
+		(CHARINDEX('_v', FileToBeSaved) > 0
+        OR 
+        CHARINDEX('X', FileToBeSaved) > 0
+        OR 
+        CHARINDEX('NAD', FileToBeSaved) > 0)		
+    ) AS myDerivedTable
+    WHERE MaxRow = 1     
+);
+
+
+//*************************************************************  
+CREATE FUNCTION dbo.ITVF_GetLinksWithoutReplacementService ()   
+RETURNS TABLE
+AS
+RETURN 
+(
+    SELECT NewPrefix, StartDate, CompleteLink, FileToBeSaved, MaxRow
+    FROM
+	(
+        SELECT NewPrefix, StartDate, EndDate, CompleteLink, FileToBeSaved,
+		ROW_NUMBER() OVER (PARTITION BY NewPrefix ORDER BY StartDate DESC) AS MaxRow
+        FROM TimetableLinks
+		WHERE 	    
+        ((StartDate <= FORMAT(GETDATE(), 'yyyy-MM-dd') AND EndDate >= FORMAT(GETDATE(), 'yyyy-MM-dd'))
+        OR
+        (StartDate = FORMAT(GETDATE(), 'yyyy-MM-dd') AND EndDate = FORMAT(GETDATE(), 'yyyy-MM-dd')))
+		AND
+		(CHARINDEX('_v', FileToBeSaved) = 0
+        AND 
+        CHARINDEX('X', FileToBeSaved) = 0
+        AND 
+        CHARINDEX('NAD', FileToBeSaved) = 0)		
+    ) AS myDerivedTable
+    WHERE MaxRow = 1     
+);

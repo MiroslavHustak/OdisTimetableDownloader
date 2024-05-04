@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "OdisTimetableDownloader", "OdisTimetableDownloader\OdisTimetableDownloader.fsproj", "{A55CD3E9-10C0-4A15-AB8B-F24F6620C30C}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "DialogWindows", "DialogWindows\DialogWindows.fsproj", "{1B9641C9-BA35-484E-988A-0EF954FE09D0}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "EmbeddedTP", "EmbeddedTP\EmbeddedTP.fsproj", "{CD79DC8A-3DA4-4331-8B42-F964DEB1CDC8}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Test.xUnit", "Test.xUnit\Test.xUnit.fsproj", "{02986088-DD88-494C-B4C3-D68B1C3D4B4E}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Test.Expecto", "Test.Expecto\Test.Expecto.fsproj", "{F0D38225-DD8B-4B72-BED7-BFB0DFF2CE27}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Test.FsCheck", "Test.FsCheck\Test.FsCheck.fsproj", "{0DFB2E9E-CCC1-4A77-A24A-32C6E4D44D8A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A55CD3E9-10C0-4A15-AB8B-F24F6620C30C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A55CD3E9-10C0-4A15-AB8B-F24F6620C30C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A55CD3E9-10C0-4A15-AB8B-F24F6620C30C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A55CD3E9-10C0-4A15-AB8B-F24F6620C30C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B9641C9-BA35-484E-988A-0EF954FE09D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B9641C9-BA35-484E-988A-0EF954FE09D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B9641C9-BA35-484E-988A-0EF954FE09D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B9641C9-BA35-484E-988A-0EF954FE09D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD79DC8A-3DA4-4331-8B42-F964DEB1CDC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD79DC8A-3DA4-4331-8B42-F964DEB1CDC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD79DC8A-3DA4-4331-8B42-F964DEB1CDC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD79DC8A-3DA4-4331-8B42-F964DEB1CDC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02986088-DD88-494C-B4C3-D68B1C3D4B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02986088-DD88-494C-B4C3-D68B1C3D4B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02986088-DD88-494C-B4C3-D68B1C3D4B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02986088-DD88-494C-B4C3-D68B1C3D4B4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0D38225-DD8B-4B72-BED7-BFB0DFF2CE27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0D38225-DD8B-4B72-BED7-BFB0DFF2CE27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0D38225-DD8B-4B72-BED7-BFB0DFF2CE27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0D38225-DD8B-4B72-BED7-BFB0DFF2CE27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DFB2E9E-CCC1-4A77-A24A-32C6E4D44D8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DFB2E9E-CCC1-4A77-A24A-32C6E4D44D8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DFB2E9E-CCC1-4A77-A24A-32C6E4D44D8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DFB2E9E-CCC1-4A77-A24A-32C6E4D44D8A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {27D62DF5-6002-42F6-94A1-0EE395923B83}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,13 @@
+﻿//*************************************************
+
+//nelze bohuzel pouzit jako parametr pro ITVF
+CREATE VIEW CurrentValidityView AS
+	SELECT NewPrefix, StartDate, EndDate, CompleteLink, FileToBeSaved,
+	ROW_NUMBER() OVER (PARTITION BY NewPrefix ORDER BY StartDate DESC) AS MaxRow
+	FROM TimetableLinks
+	WHERE 	    
+		((StartDate <= FORMAT(GETDATE(), 'yyyy-MM-dd') AND EndDate >= FORMAT(GETDATE(), 'yyyy-MM-dd'))
+		OR
+		(StartDate = FORMAT(GETDATE(), 'yyyy-MM-dd') AND EndDate = FORMAT(GETDATE(), 'yyyy-MM-dd')));
+
+

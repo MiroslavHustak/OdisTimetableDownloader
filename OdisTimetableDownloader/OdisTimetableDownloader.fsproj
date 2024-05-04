@@ -1,0 +1,80 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>   
+	<OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <UseWindowsForms>True</UseWindowsForms>
+    <UseWPF>True</UseWPF>
+	<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="AssemblyInfo\AssemblyInfo.fs" />
+    <Compile Include="EducationalCode\EducationalCode.fs" />
+    <Compile Include="Types\SCDUs.fs" />
+    <Compile Include="Types\DirNames.fs" />
+    <Compile Include="Types\ErrorTypes.fs" />
+    <Compile Include="Types\DiscriminatedUnions.fs" />
+    <Compile Include="Settings\Messages.fs" />
+    <Compile Include="Settings\SettingsGeneral.fs" />
+    <Compile Include="Settings\SettingsMDPO.fs" />
+    <Compile Include="Settings\SettingsDPO.fs" />
+    <Compile Include="Settings\SettingsKODIS.fs" />
+    <Compile Include="Logging\Logging.fs" />
+    <Compile Include="Helpers\FreeMonads.fs" />
+    <Compile Include="Helpers\CEBuilders.fs" />
+    <Compile Include="Helpers\Parsing.fs" />
+    <Compile Include="Helpers\ErrorHandling.fs" />
+    <Compile Include="Helpers\Helpers.fs" />
+    <Compile Include="Helpers\MsgBoxClosing.fs" />
+    <Compile Include="Helpers\ListParallel.fs" />
+    <Compile Include="Helpers\ProgressBarFSharp.fs" />
+    <Compile Include="DataModelling\DataModels.fs" />
+    <Compile Include="DataModelling\Dtos.fs" />
+    <Compile Include="DataModelling\TransformationLayers.fs" />
+    <Compile Include="DataTable\InsertSelectSort.fs" />
+    <Content Include="Database\DatabaseSort\SQL_ITVFs.txt" />
+    <Content Include="Database\DatabaseSort\SQL_Views.txt" />
+    <Content Include="Database\DatabaseSort\SQL_DdlDml.txt" />
+    <Compile Include="Database\DatabaseSort\Connection.fs" />
+    <Compile Include="Database\DatabaseSort\InsertInto.fs" />
+    <Compile Include="Database\DatabaseSort\Select.fs" />
+    <Content Include="Database\DatabaseLog\SQL_Triggers.txt" />
+    <Content Include="Database\DatabaseLog\SQL_StoredProcedures.txt" />
+    <Content Include="Database\DatabaseLog\SQL_DdlDml.txt" />
+    <Compile Include="Database\DatabaseLog\Connection.fs" />
+    <Compile Include="Database\DatabaseLog\LogFileData.fs" />
+    <Compile Include="Database\DatabaseLog\InsertInto.fs" />
+    <Compile Include="SubmainFunctions\KODIS-Submain_DataTable.fs" />
+    <Compile Include="SubmainFunctions\DPO-Submain.fs" />
+    <Compile Include="SubmainFunctions\MDPO-Submain.fs" />
+    <Compile Include="SubmainFunctions\EducationalCode\CollectionSplitting.fs" />
+    <Compile Include="SubmainFunctions\EducationalCode\KODIS-Submain_Database.fs" />
+    <Compile Include="MainFunctions\KODIS_DataTable.fs" />
+    <Compile Include="MainFunctions\EducationalCode\KODIS_Database.fs" />
+    <Compile Include="MainFunctions\MDPO.fs" />
+    <Compile Include="MainFunctions\DPO.fs" />
+    <Compile Include="Start\Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FSharp.Control.AsyncSeq" Version="3.2.1" />
+    <PackageReference Include="FSharp.Data" Version="6.4.0" />
+    <PackageReference Include="FSharp.Quotations.Evaluator" Version="2.1.0" />
+    <PackageReference Include="FsHttp" Version="14.5.0" />
+    <PackageReference Include="FsToolkit.ErrorHandling" Version="4.15.2" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NReco.Logging.File" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DialogWindows\DialogWindows.fsproj" />
+    <ProjectReference Include="..\EmbeddedTP\EmbeddedTP.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="8.0.200" />
+  </ItemGroup>
+
+</Project>

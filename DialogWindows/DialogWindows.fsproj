@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <OutputType>Library</OutputType>
+	  <TargetFramework>net8.0-windows7.0</TargetFramework>
+	  <UseWindowsForms>true</UseWindowsForms>
+	  <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FsToolkit.ErrorHandling" Version="4.15.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Update="FSharp.Core" Version="8.0.200" />
+  </ItemGroup>
+
+</Project>

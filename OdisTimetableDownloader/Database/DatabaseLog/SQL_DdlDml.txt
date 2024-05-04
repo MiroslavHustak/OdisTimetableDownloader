@@ -1,0 +1,52 @@
+﻿//***********************************************
+
+MERGE INTO LogEntries2 AS target
+USING (VALUES (@Timestamp, @Logname, @Message))
+AS source ([Timestamp], Logname, [Message])
+ON target.[Timestamp] = source.[Timestamp]
+    AND target.Logname = source.Logname
+    AND target.[Message] = source.[Message]
+WHEN MATCHED THEN
+UPDATE SET target.[Timestamp] = source.[Timestamp],
+    target.Logname = source.Logname,
+    target.[Message] = source.[Message]
+WHEN NOT MATCHED BY target THEN
+    INSERT ([Timestamp], Logname, [Message])
+    VALUES (source.[Timestamp], source.Logname, source.[Message]);  
+
+//*******************************************
+DROP TABLE IF EXISTS LogEntries2; 
+GO
+
+CREATE TABLE LogEntries2
+(      
+    -- Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [Timestamp] DATETIME,
+    Logname NVARCHAR(100),
+    [Message] NVARCHAR(100),
+);
+
+ALTER TABLE LogEntries2
+ALTER COLUMN Logname NVARCHAR(100);
+
+ALTER TABLE LogEntries2
+ALTER COLUMN [Message] NVARCHAR(400);
+
+INSERT INTO LogEntries2 ([Timestamp], Logname, [Message])
+VALUES (@Timestamp, @Logname, @Message);
+
+//******************************************
+
+USE Logging;
+GO
+
+DROP TABLE IF EXISTS ProcessTime; 
+GO
+
+CREATE TABLE ProcessTime
+(
+    [Start] DATETIME,
+    [End] DATETIME,
+    TimeSpan NVARCHAR(10),
+    LastUpdated DATETIME DEFAULT GETDATE()
+);

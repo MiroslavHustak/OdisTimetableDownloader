@@ -1,0 +1,23 @@
+﻿//*************************************************************
+
+CREATE OR ALTER PROCEDURE CalculateTimeDifference
+    @startDateTime DATETIME, --parameter
+    @endDateTime DATETIME, --parameter
+    @lastUpdated DATETIME --parameter
+AS
+BEGIN
+    DECLARE @timeDifference INT;
+    DECLARE @minutes INT;
+    DECLARE @seconds INT;
+    DECLARE @formattedTime NVARCHAR(10);
+
+    SET @timeDifference = DATEDIFF(SECOND, @startDateTime, @endDateTime);
+    SET @minutes = @timeDifference / 60;
+    SET @seconds = @timeDifference % 60;
+
+    SET @formattedTime = FORMAT(@minutes, '00') + ':' + FORMAT(@seconds, '00');
+
+    UPDATE ProcessTime
+    SET TimeSpan = @formattedTime
+    WHERE LastUpdated = @lastUpdated;      
+END;
