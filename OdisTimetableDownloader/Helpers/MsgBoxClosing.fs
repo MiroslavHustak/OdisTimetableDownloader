@@ -87,10 +87,8 @@ module MsgBoxClosing =
                ->
                 let rec loop n =
                     async
-                        {   
-                            let! msg = inbox.Receive()
-                            
-                            match msg with
+                        {                              
+                            match! inbox.Receive() with
                             | Incr i            
                                 -> 
                                  match n = 0 with
@@ -124,10 +122,8 @@ module MsgBoxClosing =
                   ->
                    let rec loop isFirst =
                        async
-                           {
-                               let! msg = inbox.Receive()
-                               
-                               match msg with
+                           {                               
+                               match! inbox.Receive() with
                                | First x when isFirst //flag momentalne nepotrebny, ale ponechavam pro mozne vyuziti pri zmene
                                    ->                 //parametr x ve flag momentalne nepotrebny, ale ponechavam pro mozne vyuziti pri zmene
                                     let result () =

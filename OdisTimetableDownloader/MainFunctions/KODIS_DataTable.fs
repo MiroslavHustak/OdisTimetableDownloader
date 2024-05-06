@@ -105,7 +105,6 @@ module WebScraping_KODISFMDataTable =
 
                                                          //BulkVariantDownload       
                                                          | _ ->
-
                                                               //IO operation
                                                               KODIS_SubmainDataTable.deleteAllODISDirectories pathToDir                                                              
                                                               

@@ -93,8 +93,7 @@ module KODIS_Submain =
                      let rec loop n =
                          async
                              { 
-                                 let! msg = inbox.Receive()                                    
-                                 match msg with
+                                 match! inbox.Receive()  with
                                  | Incr i             ->
                                                        progressBarContinuous n l                                                        
                                                        return! loop (n + i)
@@ -776,8 +775,7 @@ module KODIS_Submain =
                                               let rec loop n =
                                                   async
                                                       { 
-                                                          let! msg = inbox.Receive()
-                                                          match msg with
+                                                          match! inbox.Receive() with
                                                           | Incr i             -> 
                                                                                 progressBarContinuous n l  
                                                                                 return! loop (n + i)
