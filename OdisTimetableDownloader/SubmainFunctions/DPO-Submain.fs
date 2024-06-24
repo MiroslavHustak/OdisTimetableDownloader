@@ -93,7 +93,8 @@ module DPO_Submain =
                                             let lineName = 
                                                 let s adaptedLineName = sprintf"%s_%s" (getLastThreeCharacters adaptedLineName) adaptedLineName  
                                                 let s1 s = removeLastFourCharacters s 
-                                                sprintf"%s%s" <| (s >> s1) adaptedLineName <| ".pdf"
+                                                let result = sprintf"%s%s" <| (s >> s1) adaptedLineName <| ".pdf"
+                                                result.Replace("?", String.Empty)
                                             
                                             let pathToFile = 
                                                 let lineName = 

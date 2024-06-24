@@ -620,8 +620,7 @@ module KODIS_SubmainDataTable =
                                 dirInfo.EnumerateDirectories() 
                                 |> Seq.filter (fun item -> getDefaultRecordValues |> List.contains item.Name) //prunik dvou kolekci (plus jeste Seq.distinct pro unique items)
                                 |> Seq.distinct 
-                                |> Seq.toList
-                                |> List.Parallel.iter (fun (item : DirectoryInfo) -> item.Delete(true))  //List.Parallel for educational purposes
+                                |> Seq.iter _.Delete(true)  
                                 //smazeme pouze adresare obsahujici stare JR, ostatni ponechame              
                         with
                         | ex -> 

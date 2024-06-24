@@ -79,7 +79,7 @@ let iter action list =
           let myList = splitListIntoEqualParts numberOfThreads list                             
                   
           fun i -> <@ async { return listToParallel (%%expr myList |> List.item %%(expr i)) } @>
-          |> List.init myList.Length
+          |> List.init (List.length myList)
           |> List.map _.Compile()      
           |> Async.Parallel  
           |> Async.RunSynchronously 
@@ -100,7 +100,7 @@ let iter2<'a, 'b> (mapping: 'a -> 'b -> unit) (xs1: 'a list) (xs2: 'b list) =
                  ||> List.zip                 
                                                
              fun i -> <@ async { return listToParallel (%%expr myList |> List.item %%(expr i)) } @>
-             |> List.init myList.Length
+             |> List.init (List.length myList)
              |> List.map _.Compile()       
              |> Async.Parallel  
              |> Async.RunSynchronously
@@ -122,7 +122,7 @@ let map (action: 'a -> 'b) (list: 'a list) =
           let myList : 'a list list = splitListIntoEqualParts numberOfThreads list 
     
           fun i -> <@ async { return listToParallel (%%expr myList |> List.item %%(expr i)) } @>
-          |> List.init myList.Length
+          |> List.init (List.length myList)
           |> List.map _.Compile()       
           |> Async.Parallel      
           |> Async.RunSynchronously
@@ -144,7 +144,7 @@ let map2<'a, 'b, 'c> (mapping: 'a -> 'b -> 'c) (xs1: 'a list) (xs2: 'b list) =
                  ||> List.zip                 
                                                
              fun i -> <@ async { return listToParallel (%%expr myList |> List.item %%(expr i)) } @>
-             |> List.init myList.Length
+             |> List.init (List.length myList)
              |> List.map _.Compile()       
              |> Async.Parallel  
              |> Async.RunSynchronously
