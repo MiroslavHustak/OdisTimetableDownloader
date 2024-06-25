@@ -195,8 +195,8 @@ let main argv =
                                          //webscraping_KODISFM path variant //database-based app
                                             
                                          printfn "%c" <| char(32)         
-                                         printfn "JŘ s chybějícími údaji o platnosti (např. NAD bez dalších údajů), pokud existovaly, nebyly staženy."
-                                         printfn "JŘ s chybnými údaji o platnosti, pokud existovaly, pravděpodobně nebyly staženy (záleží na druhu chyby)."
+                                         printfn "Pokud se v údajích KODISu nacházel odkaz na JŘ, který obsahoval chybné či neúplné údaje,"
+                                         printfn "daný JŘ pravděpodobně nebyl stažen (závisí na druhu chyby či povaze neúplného údaje)."
                                          printfn "%c" <| char(32)   
                                          printfn "Stiskni Esc pro ukončení aplikace, nebo cokoliv jiného pro návrat na hlavní stránku."
                                          Console.ReadKey() 

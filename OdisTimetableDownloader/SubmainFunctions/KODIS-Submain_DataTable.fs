@@ -351,6 +351,7 @@ module KODIS_SubmainDataTable =
                              [||]      
 
         (Array.append <| task <| addOn()) |> Array.distinct 
+          
     
     //input from array -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
     let private filterTimetables () param (pathToDir: string) diggingResult = 
@@ -389,7 +390,43 @@ module KODIS_SubmainDataTable =
                   msg9 ()
                   String.Empty 
 
+        let extractSubstring2 (input: string) : (string option * int) =
+
+            let prefix = "NAD_"
+            
+            match input.StartsWith(prefix) with
+            | false -> 
+                     (None, 0)
+            | true  ->
+                     let startIdx = prefix.Length
+                     let restOfString = input.Substring(startIdx)
+
+                     match restOfString.IndexOf('_') with
+                     | -1             -> 
+                                       (None, 0)
+                     | idx 
+                         when idx > 0 ->
+                                       let result = restOfString.Substring(0, idx)
+                                       (Some(result), result.Length)
+                     | _              ->
+                                       (None, 0)
+
+        //zamerne odlisne od NAD (extractSubstring2), pro pripad, ze KODIS neco zmeni 
+        let extractSubstring3 (input: string) : (string option * int) =
+
+            match input with            
+            | _ when input.[0] = 'X' ->
+                                      match input.IndexOf('_') with
+                                      | index 
+                                          when index > 1 -> 
+                                                          let result = input.Substring(1, index - 1)
+                                                          (Some(result), result.Length)
+                                      | _ -> (None, 0)
+            | _                      -> 
+                                      (None, 0)       
+
         let extractStartDate (input : string) =
+
              let result = 
                  match input.Equals(String.Empty) with
                  | true  -> String.Empty
@@ -397,6 +434,7 @@ module KODIS_SubmainDataTable =
              result.Replace("_", "-")
          
         let extractEndDate (input : string) =
+
             let result = 
                 match input.Equals(String.Empty) with
                 | true  -> String.Empty
@@ -404,6 +442,7 @@ module KODIS_SubmainDataTable =
             result.Replace("_", "-")
 
         let splitString (input : string) =   
+
             match input.StartsWith(pathKodisAmazonLink) with
             | true  -> [pathKodisAmazonLink; input.Substring(pathKodisAmazonLink.Length)]
             | false -> [pathKodisAmazonLink; input]
@@ -461,12 +500,8 @@ module KODIS_SubmainDataTable =
                         fun () -> oldPrefix.Contains("S") && oldPrefix.Length = 4
                         fun () -> oldPrefix.Contains("R") && oldPrefix.Length = 3
                         fun () -> oldPrefix.Contains("R") && oldPrefix.Length = 4
-                        fun () -> oldPrefix.Contains("NAD") && oldPrefix.Length = 5
-                        fun () -> oldPrefix.Contains("NAD") && oldPrefix.Length = 6
-                        fun () -> oldPrefix.Contains("NAD") && oldPrefix.Length = 7
-                        fun () -> oldPrefix.Contains("X") && oldPrefix.Length = 4
-                        fun () -> oldPrefix.Contains("X") && oldPrefix.Length = 5
-                        fun () -> oldPrefix.Contains("X") && oldPrefix.Length = 6
+                        fun () -> oldPrefix.Contains("NAD")
+                        fun () -> oldPrefix.Contains("X")
                     ]
 
                 match List.filter (fun condition -> condition()) conditions with
@@ -484,22 +519,20 @@ module KODIS_SubmainDataTable =
                                sprintf "_%s" oldPrefix
                          | 4  ->
                                sprintf "%s" oldPrefix
-                         | 5  ->
-                               sprintf "%s" oldPrefix
-                         | 6  ->
-                               oldPrefix.Replace("NAD_", "NAD_00")
-                         | 7  ->
-                               oldPrefix.Replace("NAD_", "NAD_0")
-                         | 8  -> 
-                               let s1 = oldPrefix
-                               let s2 = sprintf "X_%s%s" <| createStringSeqFold(2, "0") <| s1.[2..]
-                               oldPrefix.Replace(s1, s2)
-                         | 9  ->
-                               let s1 = oldPrefix
-                               let s2 = sprintf "X_%s%s" <| createStringSeqFold(1, "0") <| s1.[2..]
-                               oldPrefix.Replace(s1, s2)
-                         | 10 ->
-                               sprintf "%s" oldPrefix
+                         | 5  -> 
+                               let newPrefix =                                 
+                                   match oldPrefix |> extractSubstring2 with
+                                   | (Some value, length)
+                                       when length <= lineNumberLength -> sprintf "NAD%s%s_" <| createStringSeqFold(lineNumberLength - length, "0") <| value
+                                   | _                                 -> oldPrefix                                 
+                               oldPrefix.Replace(oldPrefix, newPrefix)                        
+                         | 6  -> 
+                               let newPrefix = //ponechat podobny kod jako vyse, nerobit refactoring, KODIS moze vse nekdy zmenit                                
+                                   match oldPrefix |> extractSubstring3 with
+                                   | (Some value, length)
+                                       when length <= lineNumberLength -> sprintf "X%s%s_" <| createStringSeqFold(lineNumberLength - length, "0") <| value
+                                   | _                                 -> oldPrefix                                 
+                               oldPrefix.Replace(oldPrefix, newPrefix)
                          | _  ->
                                sprintf "%s" oldPrefix
 
@@ -790,6 +823,21 @@ module KODIS_SubmainDataTable =
         try               
             //operation on data
             //input from saved json files -> change of input data -> output into array >> input from array -> change of input data -> output into datatable -> data filtering (links*paths)           
+            (*
+            (digThroughJsonStructure ()) 
+            |> Array.iter 
+                (fun item -> 
+                           match item.Contains("2024_07_01_2024") with true -> printfn "%s" item | false -> ())
+            Console.ReadLine()   
+            
+            https://kodis-files.s3.eu-central-1.amazonaws.com/AE_2024_07_01_2024_09_01_c112c0ee6f.pdf
+            https://kodis-files.s3.eu-central-1.amazonaws.com/X1_2024_07_01_2024_08_16_v_9e18c71418.pdf
+            https://kodis-files.s3.eu-central-1.amazonaws.com/X8_2024_07_01_2024_08_16_v_de3726939a.pdf
+            https://kodis-files.s3.eu-central-1.amazonaws.com/X14_2024_07_01_2024_08_16_v_dc5d3f0984.pdf
+            https://kodis-files.s3.eu-central-1.amazonaws.com/X46_2024_07_01_2024_09_01_v_d177975e8f.pdf
+            https://kodis-files.s3.eu-central-1.amazonaws.com/X64_2024_07_01_2024_09_01_v_03815b2309.pdf                  
+            *)
+            
             digThroughJsonStructure >> filterTimetables () variant dir <| ()   
 
         with
