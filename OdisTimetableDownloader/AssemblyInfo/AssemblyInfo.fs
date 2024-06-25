@@ -1,8 +1,8 @@
 ﻿namespace AssemblyInfo
 
-module AssemblyInfo =
+open System.Runtime.CompilerServices
 
-    open System.Runtime.CompilerServices
+module AssemblyInfo =
 
     [<assembly : InternalsVisibleTo("Test.xUnit")>]
     [<assembly : InternalsVisibleTo("Test.Expecto")>]

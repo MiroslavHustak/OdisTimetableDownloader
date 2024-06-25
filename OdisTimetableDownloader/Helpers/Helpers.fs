@@ -3,6 +3,9 @@
 module ConsoleFixers = 
    
     open System
+
+    //*****************
+
     open Logging.Logging
 
     let internal clearInputBuffer () = //zatim nevyuzito, blokuje to vsechno
@@ -63,6 +66,8 @@ module CopyingOrMovingFiles = //output in Result type
 
     open System.IO
     
+    //*******************
+
     open Logging.Logging
     
     open Helpers
@@ -107,6 +112,8 @@ module CopyingOrMovingFilesFreeMonad =   //not used yet
 
     open System
     open System.IO
+
+    //****************
     
     open CloseApp
     
@@ -249,6 +256,8 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
 module CheckNetConnection =  
 
     open System.Net.NetworkInformation
+
+    //***********************************
     
     open Helpers
     open Logging.Logging   

@@ -14,9 +14,13 @@ open FsToolkit.ErrorHandling
 open Microsoft.FSharp.Quotations
 open FSharp.Quotations.Evaluator.QuotationEvaluationExtensions
 
-open Types
+//************************************************************
 
 open EmbeddedTP.EmbeddedTP
+
+//************************************************************
+
+open Types
 
 open Logging.Logging
 
@@ -37,7 +41,9 @@ open TransformationLayers.TransformationLayerSend
 
 module KODIS_SubmainDataTable =    
         
-    //DO NOT DIVIDE this module into parts in line with the main design yet - KODIS keeps making unpredictable changes or amendments
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     
+    // DO NOT DIVIDE this module into parts in line with the main design yet - KODIS keeps making unpredictable changes or amendments
+    // LEAVE THE UNCOMMENTED CODE AS IT IS !!! DO NOT DELETE IT !!! IT IS THERE FOR A REASON.
 
 
     //*************************Helpers************************************************************
@@ -129,7 +135,7 @@ module KODIS_SubmainDataTable =
     
     //input from saved json files -> change of input data -> output into array
     let private digThroughJsonStructure () = //prohrabeme se strukturou json souboru 
-
+        
         let kodisTimetables : Reader<string list, string array> = 
 
             reader //Reader monad for educational purposes only, no real benefit here  
@@ -173,7 +179,7 @@ module KODIS_SubmainDataTable =
                               [||]      
                                                   
                 }
-    
+            
         let kodisTimetables2 : Reader<string list, string array> = 
 
             reader //Reader monad for educational purposes only, no real benefit here  
@@ -249,7 +255,7 @@ module KODIS_SubmainDataTable =
                               [||]      
                                                   
                 }       
-
+         
         let kodisAttachments : Reader<string list, string array> = //Reader monad for educational purposes only, no real benefit here
             
                 reader 
@@ -411,7 +417,7 @@ module KODIS_SubmainDataTable =
                      | _              ->
                                        (None, 0)
 
-        //zamerne odlisne od NAD (extractSubstring2), pro pripad, ze KODIS neco zmeni 
+        //zamerne nepouzivam jednotny kod pro NAD (extractSubstring2) a X - pro pripad, ze KODIS zase neco zmeni (uz se stalo)
         let extractSubstring3 (input: string) : (string option * int) =
 
             match input with            
@@ -421,7 +427,8 @@ module KODIS_SubmainDataTable =
                                           when index > 1 -> 
                                                           let result = input.Substring(1, index - 1)
                                                           (Some(result), result.Length)
-                                      | _ -> (None, 0)
+                                      | _                -> 
+                                                          (None, 0)
             | _                      -> 
                                       (None, 0)       
 

@@ -5,6 +5,12 @@ open System.Windows
 open FSharp.Control
 open System.Windows.Forms
 
+//**************************
+
+open BrowserDialogWindow
+
+//**************************
+
 open Helpers
 open Helpers.CloseApp
 open Helpers.ConsoleFixers
@@ -13,8 +19,6 @@ open Types
 open Types.DirNames
 
 open Logging.Logging
-
-open BrowserDialogWindow
 
 open Settings.Messages
 open Settings.SettingsGeneral

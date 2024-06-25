@@ -2,6 +2,8 @@
 
 open System
 
+//****************************
+
 open Types
 
 open Settings.Messages
@@ -65,8 +67,8 @@ module WebScraping_KODISFMDataTable =
                                                          Console.Write("\r" + new string(' ', (-) Console.WindowWidth 1) + "\r")
                                                          Console.CursorLeft <- 0  
 
-                                                         //KODIS_SubmainDataTable.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
-                                                         KODIS_SubmainDataTable.downloadAndSaveJson jsonLinkList2 pathToJsonList2 //prubezne overovat, zdali to staci
+                                                         KODIS_SubmainDataTable.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
+                                                         //KODIS_SubmainDataTable.downloadAndSaveJson jsonLinkList2 pathToJsonList2 //prubezne overovat, zdali to staci
                                                          
                                                          msg3 ()   
                                                          msg11 ()    
