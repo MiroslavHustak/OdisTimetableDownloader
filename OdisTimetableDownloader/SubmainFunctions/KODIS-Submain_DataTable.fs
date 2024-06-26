@@ -419,7 +419,7 @@ module KODIS_SubmainDataTable =
                      | _              ->
                                        (None, 0)
 
-        //zamerne nepouzivam jednotny kod pro NAD (extractSubstring2) a X - pro pripad, ze KODIS zase neco zmeni (uz se stalo)
+        //zamerne nepouzivam jednotny kod pro NAD (extractSubstring2) a X - pro pripad, ze KODIS zase neco zmeni
         let extractSubstring3 (input: string) : (string option * int) =
 
             match input with            
@@ -612,33 +612,32 @@ module KODIS_SubmainDataTable =
                              | _                             -> OtherType                                                      
                                                 
                          let pathToDir = sprintf "%s\\%s" pathToDir file //pro ostatni
-                                           
+                         
+                         // v pripade opakovani situace s A, B zrobit dalsi logiku 
                          match pathToDir.Contains("JR_ODIS_aktualni_vcetne_vyluk") || pathToDir.Contains("JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk") with 
                          | true ->   
                                  true //pro aktualni a dlouhodobe platne
                                  |> function
-                                     | true when file.Substring(0, 1) = "0"  -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 0 sortedLines)
-                                     | true when file.Substring(0, 1) = "1"  -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 0 sortedLines)
-                                     | true when file.Substring(0, 1) = "2"  -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 1 sortedLines)
-                                     | true when file.Substring(0, 1) = "3"  -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 2 sortedLines)
+                                     | true when file.Substring(0, 1) = "0"    -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 0 sortedLines)
+                                     | true when file.Substring(0, 1) = "1"    -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 0 sortedLines)
+                                     | true when file.Substring(0, 1) = "2"    -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 1 sortedLines)
+                                     | true when file.Substring(0, 1) = "3"    -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 2 sortedLines)
                                      | true 
                                          when 
-                                             (file.Substring(0, 1) = "4" && not (file.Contains("46_A")) && not (file.Contains("46_B")))
-                                                                             -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 3 sortedLines)
-                                     | true when file.Substring(0, 1) = "5"  -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 4 sortedLines)
-                                     | true when file.Substring(0, 1) = "6"  -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 5 sortedLines)
-                                     | true when file.Substring(0, 1) = "7"  -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 6 sortedLines)
-                                     | true when file.Substring(0, 1) = "8"  -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 7 sortedLines)
-                                     | true when file.Substring(0, 1) = "9"  -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 8 sortedLines)
-                                     | true when file.Substring(0, 1) = "S"  -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 9 sortedLines)
-                                     | true when file.Substring(0, 1) = "R"  -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 10 sortedLines)
-                                     | true when file.Substring(0, 2) = "_S" -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 9 sortedLines)
-                                     | true when file.Substring(0, 2) = "_R" -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 10 sortedLines) 
-                                     | true when file.Substring(0, 4) = "46_A" 
-                                                                             -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 11 sortedLines)
-                                     | true when file.Substring(0, 4) = "46_B"
-                                                                             -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 11 sortedLines)
-                                     | _                                     -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 11 sortedLines)                                                           
+                                             (file.Substring(0, 1) = "4" && not <| file.Contains("46_A") && not <| file.Contains("46_B"))
+                                                                               -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 3 sortedLines)
+                                     | true when file.Substring(0, 1) = "5"    -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 4 sortedLines)
+                                     | true when file.Substring(0, 1) = "6"    -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 5 sortedLines)
+                                     | true when file.Substring(0, 1) = "7"    -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 6 sortedLines)
+                                     | true when file.Substring(0, 1) = "8"    -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 7 sortedLines)
+                                     | true when file.Substring(0, 1) = "9"    -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 8 sortedLines)
+                                     | true when file.Substring(0, 1) = "S"    -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 9 sortedLines)
+                                     | true when file.Substring(0, 1) = "R"    -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 10 sortedLines)
+                                     | true when file.Substring(0, 2) = "_S"   -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 9 sortedLines)
+                                     | true when file.Substring(0, 2) = "_R"   -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 10 sortedLines) 
+                                     | true when file.Substring(0, 4) = "46_A" -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 11 sortedLines)
+                                     | true when file.Substring(0, 4) = "46_B" -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 11 sortedLines)
+                                     | _                                       -> pathToDir.Replace("_vyluk", sprintf "%s\\%s\\" <| "_vyluk" <| List.item 11 sortedLines)                                                           
                          | _    -> 
                                  pathToDir                               
                      link, path 
@@ -648,7 +647,7 @@ module KODIS_SubmainDataTable =
             match param with 
             | CurrentValidity           -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted CurrentValidity |> createPathsForDownloadedFiles
             | FutureValidity            -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted FutureValidity |> createPathsForDownloadedFiles
-           // | ReplacementService        -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted ReplacementService |> createPathsForDownloadedFiles  
+            // | ReplacementService     -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted ReplacementService |> createPathsForDownloadedFiles  
             | WithoutReplacementService -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted WithoutReplacementService |> createPathsForDownloadedFiles 
         
         selectDataFromDt  
@@ -700,7 +699,7 @@ module KODIS_SubmainDataTable =
                     match variant with 
                     | CurrentValidity           -> getDefaultRecordValues |> List.item 0
                     | FutureValidity            -> getDefaultRecordValues |> List.item 1
-                    //| ReplacementService        -> getDefaultRecordValues |> List.item 2                                
+                    // | ReplacementService     -> getDefaultRecordValues |> List.item 2                                
                     | WithoutReplacementService -> getDefaultRecordValues |> List.item 2
             } 
 
@@ -840,21 +839,7 @@ module KODIS_SubmainDataTable =
         try               
             //operation on data
             //input from saved json files -> change of input data -> output into array >> input from array -> change of input data -> output into datatable -> data filtering (links*paths)           
-            (*
-            (digThroughJsonStructure ()) 
-            |> Array.iter 
-                (fun item -> 
-                           match item.Contains("2024_07_01_2024") with true -> printfn "%s" item | false -> ())
-            Console.ReadLine()   
-            
-            https://kodis-files.s3.eu-central-1.amazonaws.com/AE_2024_07_01_2024_09_01_c112c0ee6f.pdf
-            https://kodis-files.s3.eu-central-1.amazonaws.com/X1_2024_07_01_2024_08_16_v_9e18c71418.pdf
-            https://kodis-files.s3.eu-central-1.amazonaws.com/X8_2024_07_01_2024_08_16_v_de3726939a.pdf
-            https://kodis-files.s3.eu-central-1.amazonaws.com/X14_2024_07_01_2024_08_16_v_dc5d3f0984.pdf
-            https://kodis-files.s3.eu-central-1.amazonaws.com/X46_2024_07_01_2024_09_01_v_d177975e8f.pdf
-            https://kodis-files.s3.eu-central-1.amazonaws.com/X64_2024_07_01_2024_09_01_v_03815b2309.pdf                  
-            *)
-            
+                       
             digThroughJsonStructure >> filterTimetables () variant dir <| ()   
 
         with
