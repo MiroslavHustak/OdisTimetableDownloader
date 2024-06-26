@@ -113,7 +113,7 @@ module InsertSelectSort =
                                          || fileToBeSaved.Contains("X")
                                          || fileToBeSaved.Contains("NAD"))
             *)
-            | WithoutReplacementService -> 
+            | WithoutReplacementService ->                                         
                                          ((dateValidityStart <= currentTime 
                                          && 
                                          dateValidityEnd >= currentTime)
@@ -124,8 +124,8 @@ module InsertSelectSort =
                                          &&
                                          (not <| fileToBeSaved.Contains("_v") 
                                          && not <| fileToBeSaved.Contains("X")
-                                         && not <| fileToBeSaved.Contains("NAD"))        
-
+                                         && not <| fileToBeSaved.Contains("NAD"))  
+                                        
         let currentTime = DateTime.Now.Date
 
         let dtDataDtoGetDataTable (row : DataRow) : DtDtoGet =                         

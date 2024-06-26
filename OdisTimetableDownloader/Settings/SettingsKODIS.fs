@@ -26,14 +26,14 @@ module SettingsKODIS =
     let [<Literal>] internal pathKodisWeb2 = @"https://kodis-backend-staging-85d01eccf627.herokuapp.com/api/linky-search?"
     let [<Literal>] internal pathKodisAmazonLink = @"https://kodis-files.s3.eu-central-1.amazonaws.com/" 
 
-    let [<Literal>] internal lineNumberLength = 3 //3 je delka retezce pouze pro linky 001 az 999 nebo 01A-99A (B, C, ...)
+    let [<Literal>] internal lineNumberLength = 3 //3 je delka retezce pouze pro linky 001 az 999
 
     let internal sortedLines =
         [ 
             "linky 001-199"; "linky 200-299"; "linky 300-399"; 
             "linky 400-499"; "linky 500-599"; "linky 600-699"; 
             "linky 700-799"; "linky 800-899"; "linky 900-999"; 
-            "vlakové linky S"; "vlakové linky R"; "linky X, NAD a AE"
+            "vlakové linky S"; "vlakové linky R"; "linky X, NAD, AE, A, B"
         ]
     
     let internal jsonLinkList = //pri zmene jsonu na strankach KODISu zmenit aji nazev souboru, napr. kodisRegion3001.json

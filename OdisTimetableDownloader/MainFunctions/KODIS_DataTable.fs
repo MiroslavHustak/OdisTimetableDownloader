@@ -68,7 +68,6 @@ module WebScraping_KODISFMDataTable =
                                                          Console.CursorLeft <- 0  
 
                                                          KODIS_SubmainDataTable.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
-                                                         //KODIS_SubmainDataTable.downloadAndSaveJson jsonLinkList2 pathToJsonList2 //prubezne overovat, zdali to staci
                                                          
                                                          msg3 ()   
                                                          msg11 ()    
