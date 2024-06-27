@@ -25,7 +25,6 @@ module SettingsKODIS =
     let [<Literal>] internal pathKodisWeb = @"https://kodisweb-backend.herokuapp.com/"
     let [<Literal>] internal pathKodisWeb2 = @"https://kodis-backend-staging-85d01eccf627.herokuapp.com/api/linky-search?"
     let [<Literal>] internal pathKodisAmazonLink = @"https://kodis-files.s3.eu-central-1.amazonaws.com/" 
-
     let [<Literal>] internal lineNumberLength = 3 //3 je delka retezce pouze pro linky 001 az 999
 
     let internal sortedLines =
@@ -144,6 +143,7 @@ module SettingsKODIS =
             sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=S1-S34&start=0&limit=12"
             sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=R8-R62&start=0&limit=12"            
             sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=NAD&start=0&limit=12"
+            sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=613-699&start=48&limit=12"
         ]
     
     let internal pathToJsonList2 =     
@@ -176,4 +176,5 @@ module SettingsKODIS =
             sprintf "%s%s" partialPathJson @"kodisTrainPomaliky2_0.json"
             sprintf "%s%s" partialPathJson @"kodisTrainRychliky2_0.json"
             sprintf "%s%s" partialPathJson @"kodisNAD2_0.json"
+            sprintf "%s%s" partialPathJson @"kodisRegion6002_1.json"
         ]      
