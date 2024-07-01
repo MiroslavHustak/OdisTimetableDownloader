@@ -230,10 +230,10 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
     open System
     
     [<CompiledName "CreateStringSeq">]      
-    let internal createStringSeq (numberOfStrings: int, stringToAdd: string): string = 
+    let internal createStringSeq (strSeqNum: int, stringToAdd: string): string = 
         
         let initialString = String.Empty   //initial value of the string
-        let listRange = [ 1 .. numberOfStrings ] 
+        let listRange = [ 1 .. strSeqNum ] 
 
         //[<TailCall>]
         let rec loop list acc =
@@ -248,9 +248,9 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
         
     //List.reduce nelze, tam musi byt stejny typ acc a range      
     [<CompiledName "CreateStringSeqFold">] 
-    let internal createStringSeqFold (numberOfStrings: int, stringToAdd: string): string =
+    let internal createStringSeqFold (strSeqNum: int, stringToAdd: string): string =
 
-        [1 .. numberOfStrings]
+        [1 .. strSeqNum]
         |> List.fold (fun acc i -> (+) acc stringToAdd) String.Empty
                   
 module CheckNetConnection =  

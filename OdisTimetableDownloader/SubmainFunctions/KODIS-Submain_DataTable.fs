@@ -358,8 +358,7 @@ module KODIS_SubmainDataTable =
                              msg5 ()
                              [||]      
 
-        (Array.append <| task <| addOn()) |> Array.distinct 
-          
+        Array.append <| task <| addOn() |> Array.distinct
     
     //input from array -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
     let private filterTimetables () param (pathToDir: string) diggingResult = 

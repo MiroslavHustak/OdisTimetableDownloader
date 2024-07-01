@@ -96,6 +96,12 @@ module InsertSelectSort =
                                          (dateValidityStart = currentTime 
                                          && 
                                          dateValidityEnd = currentTime))
+                                         &&
+                                         (
+                                             match currentTime >= DateTime(2024, 9, 2) with  
+                                             | true  -> true
+                                             | false -> not <| fileToBeSaved.Contains("046_2024_01_02_2024_12_14")
+                                         )
 
             | FutureValidity            ->
                                          dateValidityStart > currentTime

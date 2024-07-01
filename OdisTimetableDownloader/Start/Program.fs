@@ -60,7 +60,7 @@ let rec private pathToFolder () =
 let main argv = 
     
     //*****************************Console******************************  
-    let updateDate = "24-06-2024"
+    let updateDate = "01-07-2024"
 
     try
         consoleAppProblemFixer() 
@@ -177,7 +177,7 @@ let main argv =
                                          printfn "%4cplatný pouze určitý jednodenní výlukový JŘ, stáhne se tento JŘ, ne JŘ platný od dalšího dne." <| char(32)
                                          printfn "2 = JŘ (včetně výlukových JŘ), platné až v budoucí době, které se však už nyní vyskytují na webu KODISu."
                                          //printfn "3 = Pouze aktuální výlukové JŘ, JŘ NAD a JŘ X linek (krátkodobé i dlouhodobé)."
-                                         printfn "3 = JŘ teoreticky dlouhodobě platné bez jakýchkoliv (i dlouhodobých) výluk či NAD."
+                                         printfn "3 = JŘ teoreticky dlouhodobě platné bez jakýchkoliv (i dlouhodobých) výluk."
                                          printfn "%c" <| char(32) 
                                          printfn "Jakákoliv jiná klávesa plus ENTER nebo jen ENTER = KOMPLETNÍ stažení všech variant JŘ (doporučeno).\r"        
                                          printfn "%c" <| char(32) 
