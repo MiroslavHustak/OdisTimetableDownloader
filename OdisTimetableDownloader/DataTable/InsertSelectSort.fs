@@ -15,11 +15,13 @@ open Helpers.Builders
 open Helpers.CloseApp
 
 open Settings
+open Settings.SettingsKODIS
 
 open DataModelling.Dto
 open DataModelling.DataModel
 
 open TransformationLayers.TransformationLayerGet
+
 
 module InsertSelectSort = 
         
@@ -130,7 +132,13 @@ module InsertSelectSort =
                                          &&
                                          (not <| fileToBeSaved.Contains("_v") 
                                          && not <| fileToBeSaved.Contains("X")
-                                         && not <| fileToBeSaved.Contains("NAD"))  
+                                         && not <| fileToBeSaved.Contains("NAD")) 
+                                         &&
+                                         (
+                                         dateValidityEnd <> summerHolidayEnd1
+                                         && 
+                                         dateValidityEnd <> summerHolidayEnd2
+                                         )
                                         
         let currentTime = DateTime.Now.Date
 

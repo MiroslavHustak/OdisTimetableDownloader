@@ -24,7 +24,7 @@ module Builders =
              | false -> snd condition
              | true  -> nextFunc()  
          member _.Return x = x
-         //member _.Zero x = x
+         member _.Using x = x
 
     let internal pyramidOfHell = MyBuilder
 

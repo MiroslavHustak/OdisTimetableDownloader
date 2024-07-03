@@ -56,47 +56,70 @@ module InsertInto =
                 "  
                  
              try
-                 let connection: SqlConnection = getConnection2 () 
-                
-                 try                        
-                     use cmdInsert = new SqlCommand(queryInsert, connection)   
-                    
-                     let parameterTimeStamp = new SqlParameter()                 
-                     parameterTimeStamp.ParameterName <- "@Timestamp"  
-                     parameterTimeStamp.SqlDbType <- SqlDbType.DateTime  
-                    
-                     dataToBeInserted     
-                     |> List.iter
-                         (fun item -> 
-                                    let (timestamp, logName, message) = item 
-                                    
-                                    let timestamp = 
-                                        try 
-                                            DateTime.ParseExact(timestamp, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture) 
-                                        with
-                                        | :? System.ArgumentNullException as _ -> DateTime.MinValue //TODO pokud mne neco napadne, co lepsiho tady dat                                                                                                                                                                       
-                                        | :? System.FormatException as _       -> DateTime.MinValue //TODO pokud mne neco napadne, co lepsiho tady dat
-                                        | _                                    -> DateTime.MinValue //TODO pokud mne neco napadne, co lepsiho tady dat
-                                    
-                                    cmdInsert.Parameters.Clear() // Clear parameters for each iteration    
-                                    parameterTimeStamp.Value <- timestamp                             
-                                    cmdInsert.Parameters.Add(parameterTimeStamp) |> ignore    
+                 let isolationLevel = System.Data.IsolationLevel.Serializable 
 
-                                    cmdInsert.Parameters.AddWithValue("@Logname", logName) |> ignore
-                                    cmdInsert.Parameters.AddWithValue("@Message", message) |> ignore
-                                              
-                                    cmdInsert.ExecuteNonQuery() |> ignore //number of affected rows                                                                
-                        )                
-                     
-                     msg19 ()   
-                                      
-                 finally
-                     closeConnection connection 
+                 let connection: SqlConnection = getConnection2 ()
+                 let transaction: SqlTransaction = connection.BeginTransaction(isolationLevel) 
+
+                 Ok (connection, transaction)
              with
              | ex ->
-                   msgParam1 <| string ex.Message
-                   logInfoMsg <| sprintf "Err101 %s" (string ex.Message)
-                   closeItBaby (string ex.Message)
+                   Error ex
+
+             |> function
+                 | Ok value ->                      
+                             try
+                                 let connection, transaction = value
+
+                                 use cmdInsert = new SqlCommand(queryInsert, connection, transaction)
+
+                                 try                        
+                    
+                                     let parameterTimeStamp = new SqlParameter()                 
+                                     parameterTimeStamp.ParameterName <- "@Timestamp"  
+                                     parameterTimeStamp.SqlDbType <- SqlDbType.DateTime  
+                    
+                                     dataToBeInserted     
+                                     |> List.map
+                                         (fun item -> 
+                                                    let (timestamp, logName, message) = item 
+                                    
+                                                    let timestamp = 
+                                                        try 
+                                                            DateTime.ParseExact(timestamp, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture) 
+                                                        with
+                                                        | :? System.ArgumentNullException as _ -> DateTime.MinValue //TODO pokud mne neco napadne, co lepsiho tady dat                                                                                                                                                                       
+                                                        | :? System.FormatException as _       -> DateTime.MinValue //TODO pokud mne neco napadne, co lepsiho tady dat
+                                                        | _                                    -> DateTime.MinValue //TODO pokud mne neco napadne, co lepsiho tady dat
+                                    
+                                                    cmdInsert.Parameters.Clear() // Clear parameters for each iteration    
+                                                    parameterTimeStamp.Value <- timestamp                             
+                                                    cmdInsert.Parameters.Add(parameterTimeStamp) |> ignore    
+
+                                                    cmdInsert.Parameters.AddWithValue("@Logname", logName) |> ignore
+                                                    cmdInsert.Parameters.AddWithValue("@Message", message) |> ignore
+                                              
+                                                    cmdInsert.ExecuteNonQuery() > 0   //number of affected rows                                                           
+                                        )                                       
+                                     |> List.contains false   
+                                     |> function
+                                         | true  -> transaction.Rollback()  
+                                         | false -> transaction.Commit()  
+                     
+                                     msg19 ()   
+                                      
+                                 finally
+                                     transaction.Dispose()
+                                     closeConnection connection 
+                             with
+                             | ex ->
+                                   msgParam1 <| string ex.Message
+                                   logInfoMsg <| sprintf "Err101 %s" (string ex.Message)
+                                   closeItBaby (string ex.Message)
+                 | Error ex ->
+                             msgParam1 <| string ex.Message
+                             logInfoMsg <| sprintf "Err101X %s" (string ex.Message)
+                             closeItBaby (string ex.Message)
 
 
     let internal insertProcessTime getConnection2 closeConnection (dataToBeInserted : DateTime list) =    
@@ -110,36 +133,59 @@ module InsertInto =
                      INSERT INTO ProcessTime ([Start], [End])
                      VALUES (@Start, @End)                 
                     "  
-                    
+
                  try
+                     let isolationLevel = System.Data.IsolationLevel.Serializable 
+
                      let connection: SqlConnection = getConnection2 () 
-                    
-                     try                        
-                         use cmdInsert = new SqlCommand(queryInsert, connection)   
-                        
-                         let parameterStart = new SqlParameter()                 
-                         parameterStart.ParameterName <- "@Start"  
-                         parameterStart.SqlDbType <- SqlDbType.DateTime  
+                     let transaction: SqlTransaction = connection.BeginTransaction(isolationLevel) 
 
-                         let parameterEnd = new SqlParameter()                 
-                         parameterEnd.ParameterName <- "@End"  
-                         parameterEnd.SqlDbType <- SqlDbType.DateTime  
-                                         
-                         cmdInsert.Parameters.Clear() // Clear parameters for each iteration    
-                        
-                         parameterStart.Value <- List.item 0 dataToBeInserted                             
-                         cmdInsert.Parameters.Add(parameterStart) |> ignore   
-                         parameterEnd.Value <- List.item 1 dataToBeInserted                             
-                         cmdInsert.Parameters.Add(parameterEnd) |> ignore    
-                                                                              
-                         cmdInsert.ExecuteNonQuery() |> ignore //number of affected rows    
-
-                         msg25 ()   
-                                          
-                     finally
-                         closeConnection connection 
+                     Ok (connection, transaction)
                  with
                  | ex ->
-                       msgParam1 <| string ex.Message
-                       logInfoMsg <| sprintf "Err101A %s" (string ex.Message)
-                       closeItBaby (string ex.Message)
+                       Error ex
+
+                 |> function
+                     | Ok value ->                      
+                                 try
+                                     let connection, transaction = value
+
+                                     use cmdInsert = new SqlCommand(queryInsert, connection, transaction)   
+                                     
+                                     try                        
+                        
+                                         let parameterStart = new SqlParameter()                 
+                                         parameterStart.ParameterName <- "@Start"  
+                                         parameterStart.SqlDbType <- SqlDbType.DateTime  
+
+                                         let parameterEnd = new SqlParameter()                 
+                                         parameterEnd.ParameterName <- "@End"  
+                                         parameterEnd.SqlDbType <- SqlDbType.DateTime  
+                                         
+                                         cmdInsert.Parameters.Clear() // Clear parameters for each iteration    
+                        
+                                         parameterStart.Value <- List.item 0 dataToBeInserted                             
+                                         cmdInsert.Parameters.Add(parameterStart) |> ignore   
+                                         parameterEnd.Value <- List.item 1 dataToBeInserted                             
+                                         cmdInsert.Parameters.Add(parameterEnd) |> ignore    
+                                                                              
+                                         cmdInsert.ExecuteNonQuery() > 0 //number of affected rows   
+                                         |> function                                             
+                                             | true  -> transaction.Commit()  
+                                             | false -> transaction.Rollback()  
+
+                                         msg25 ()   
+                                          
+                                     finally
+                                         transaction.Dispose()
+                                         closeConnection connection 
+                                 with
+                                 | ex ->
+                                       msgParam1 <| string ex.Message
+                                       logInfoMsg <| sprintf "Err101A %s" (string ex.Message)
+                                       closeItBaby (string ex.Message)
+
+                     | Error ex ->
+                                 msgParam1 <| string ex.Message
+                                 logInfoMsg <| sprintf "Err101AX %s" (string ex.Message)
+                                 closeItBaby (string ex.Message)

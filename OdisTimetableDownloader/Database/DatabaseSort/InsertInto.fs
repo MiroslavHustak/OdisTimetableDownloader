@@ -40,60 +40,90 @@ module InsertInto =
                     @TotalDateInterval, @VT_Suffix, @JS_GeneratedString, 
                     @CompleteLink, @FileToBeSaved
                 );
-            "                
-        try
-            let connection: SqlConnection = getConnection () 
+            "   
             
-            try                 
-                use cmdDeleteAll = new SqlCommand(queryDeleteAll, connection)             
-                use cmdInsert = new SqlCommand(queryInsert, connection)   
-                
-                let parameterStart = new SqlParameter()                 
-                parameterStart.ParameterName <- "@StartDate"  
-                parameterStart.SqlDbType <- SqlDbType.Date  
+        try
+            let isolationLevel = System.Data.IsolationLevel.Serializable //Transaction locking behaviour
 
-                let parameterEnd = new SqlParameter() 
-                parameterEnd.ParameterName <- "@EndDate"  
-                parameterEnd.SqlDbType <- SqlDbType.Date  
+            let connection: SqlConnection = getConnection()
+            let transaction: SqlTransaction = connection.BeginTransaction(isolationLevel) //Transaction to be implemented for all commands linked to the connection
 
-                cmdDeleteAll.ExecuteNonQuery() |> ignore //number of affected rows
-                
-                dataToBeInserted     
-                |> List.iter
-                    (fun item -> 
-                               (*   
-                               let (startDate, endDate) =   
-
-                                   pyramidOfDoom
-                                       {
-                                           let! startDate = item.startDate, (DateTime.MinValue, DateTime.MinValue)                                                      
-                                           let! endDate = item.endDate, (DateTime.MinValue, DateTime.MinValue)                             
-                                          
-                                           return (startDate, endDate)
-                                       }
-                               *)
-                               cmdInsert.Parameters.Clear() // Clear parameters for each iteration     
-                               cmdInsert.Parameters.AddWithValue("@OldPrefix", item.oldPrefix) |> ignore
-                               cmdInsert.Parameters.AddWithValue("@NewPrefix", item.newPrefix) |> ignore
-
-                               parameterStart.Value <- item.startDate
-                               cmdInsert.Parameters.Add(parameterStart) |> ignore
-
-                               parameterEnd.Value <- item.endDate                                
-                               cmdInsert.Parameters.Add(parameterEnd) |> ignore
-
-                               cmdInsert.Parameters.AddWithValue("@TotalDateInterval", item.totalDateInterval) |> ignore
-                               cmdInsert.Parameters.AddWithValue("@VT_Suffix", item.suffix) |> ignore
-                               cmdInsert.Parameters.AddWithValue("@JS_GeneratedString", item.jsGeneratedString) |> ignore
-                               cmdInsert.Parameters.AddWithValue("@CompleteLink", item.completeLink) |> ignore
-                               cmdInsert.Parameters.AddWithValue("@FileToBeSaved", item.fileToBeSaved) |> ignore       
-                           
-                               cmdInsert.ExecuteNonQuery() |> ignore //number of affected rows                               
-                    )                
-            finally
-                closeConnection connection 
+            Ok (connection, transaction)
         with
         | ex ->
-              msgParam1 <| string ex.Message
-              logInfoMsg <| sprintf "Err033 %s" (string ex.Message)
-              closeItBaby (string ex.Message)
+              Error ex
+
+        |> function
+            | Ok value ->                      
+                        try
+                            let connection, transaction = value
+
+                            use cmdDeleteAll = new SqlCommand(queryDeleteAll, connection, transaction) //nemoze to byt ve vnorenem try with bloku
+                            use cmdInsert = new SqlCommand(queryInsert, connection, transaction)   //nemoze to byt ve vnorenem try with bloku
+            
+                            try                  
+                                
+                                let parameterStart = new SqlParameter()                 
+                                parameterStart.ParameterName <- "@StartDate"  
+                                parameterStart.SqlDbType <- SqlDbType.Date  
+
+                                let parameterEnd = new SqlParameter() 
+                                parameterEnd.ParameterName <- "@EndDate"  
+                                parameterEnd.SqlDbType <- SqlDbType.Date  
+                                                       
+                                pyramidOfHell
+                                    {   
+                                        let condition = try Some (cmdDeleteAll.ExecuteNonQuery()) with | _ -> None
+                                        let!_ = not (condition.IsNone || condition = Some 0), transaction.Rollback() 
+
+                                        let result =                 
+                                            dataToBeInserted     
+                                            |> List.map
+                                                (fun item -> 
+                                                           (*   
+                                                           let (startDate, endDate) =   
+
+                                                               pyramidOfDoom
+                                                                   {
+                                                                       let! startDate = item.startDate, (DateTime.MinValue, DateTime.MinValue)                                                      
+                                                                       let! endDate = item.endDate, (DateTime.MinValue, DateTime.MinValue)                             
+                                          
+                                                                       return (startDate, endDate)
+                                                                   }
+                                                           *)
+                                                           cmdInsert.Parameters.Clear() // Clear parameters for each iteration     
+                                                           cmdInsert.Parameters.AddWithValue("@OldPrefix", item.oldPrefix) |> ignore
+                                                           cmdInsert.Parameters.AddWithValue("@NewPrefix", item.newPrefix) |> ignore
+
+                                                           parameterStart.Value <- item.startDate
+                                                           cmdInsert.Parameters.Add(parameterStart) |> ignore
+
+                                                           parameterEnd.Value <- item.endDate                                
+                                                           cmdInsert.Parameters.Add(parameterEnd) |> ignore
+
+                                                           cmdInsert.Parameters.AddWithValue("@TotalDateInterval", item.totalDateInterval) |> ignore
+                                                           cmdInsert.Parameters.AddWithValue("@VT_Suffix", item.suffix) |> ignore
+                                                           cmdInsert.Parameters.AddWithValue("@JS_GeneratedString", item.jsGeneratedString) |> ignore
+                                                           cmdInsert.Parameters.AddWithValue("@CompleteLink", item.completeLink) |> ignore
+                                                           cmdInsert.Parameters.AddWithValue("@FileToBeSaved", item.fileToBeSaved) |> ignore   
+                                                           
+                                                           cmdInsert.ExecuteNonQuery() > 0
+                                                )                                             
+                                        
+                                        let!_ = not (result |> List.contains false), transaction.Rollback()                                         
+
+                                        return transaction.Commit()
+                                    }
+                              
+                            finally                              
+                                transaction.Dispose()
+                                closeConnection connection 
+                        with
+                        | ex ->
+                              msgParam1 <| string ex.Message
+                              logInfoMsg <| sprintf "Err033 %s" (string ex.Message)
+                              closeItBaby (string ex.Message)
+            | Error ex ->
+                        msgParam1 <| string ex.Message
+                        logInfoMsg <| sprintf "Err033X %s" (string ex.Message)
+                        closeItBaby (string ex.Message)
