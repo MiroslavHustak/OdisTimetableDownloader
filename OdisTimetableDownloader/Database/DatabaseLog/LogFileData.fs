@@ -15,7 +15,10 @@ open Logging.Logging
 
 open Settings.SettingsGeneral  
       
-module LogFileData =               
+module LogFileData =   
+    
+    // For educational purposes
+    // V komercni aplikaci zkopirovat log file a pouzivat kopii pro cteni
 
     //Thoth           
     let private decoder : Decoder<string*string*string> = Decode.tuple3 Decode.string Decode.string Decode.string         
@@ -23,33 +26,73 @@ module LogFileData =
     //Thoth
     let internal extractLogEntriesThoth () = 
 
-        try            
-            pyramidOfDoom
-                {
-                    let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
-                    let! filepath = filepath, Error (sprintf "%s%s" "Chyba při čtení cesty k souboru " logFileName)
-    
-                    let fInfodat: FileInfo = new FileInfo(logFileName)
-                    let! _ =  fInfodat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName) 
-                                           
-                    return 
-                        File.ReadAllLines(logFileName)
-                        |> Array.toList
-                        |> List.map (fun json -> Decode.fromString decoder json) 
-                        |> List.distinct 
-                        |> Result.sequence    
-                }
+        let rec attemptExtractLogEntries () = 
 
-            |> function
-                | Ok value  -> value
-                | Error err -> [err, String.Empty, String.Empty]
-        with
-        | ex -> 
-              printfn "%s" "Err2002B"
-              printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
-              [] //tady nevadi List.empty jakozto vystup 
+            try            
+                pyramidOfDoom
+                    {
+                        let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
+                        let! filepath = filepath, Error (sprintf "%s%s" "Chyba při čtení cesty k souboru " logFileName)
+    
+                        let fInfodat: FileInfo = new FileInfo(logFileName)
+                        let! _ =  fInfodat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName) 
+
+                        let fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.None)
+                        //To ensure that the log file is not being written to while you are reading it -> FileShare.None setting
+                    
+                        let reader = new StreamReader(fs)
+                    
+                        let lines = 
+                            reader.ReadToEnd()
+                            |> fun content -> content.Split([|Environment.NewLine|], StringSplitOptions.RemoveEmptyEntries)
+                            |> Array.toList
+                            |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) 
+                            |> List.distinct 
+                            |> Result.sequence    
+                    
+                        fs.Close()
+                        fs.Dispose()
+
+                        reader.Close()
+                        reader.Dispose()
+
+                        return lines
+                        (*
+                        return
+                            File.ReadAllLines(logFileName)
+                            |> Array.toList
+                            |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) 
+                            |> List.distinct 
+                            |> Result.sequence    
+                        *)
+                    }
+
+                |> function
+                    | Ok value  -> value
+                    | Error err -> [err, String.Empty, String.Empty]
+
+            with
+            | :? IOException as ex 
+                 ->
+                  // Handle IO exceptions (file is locked) and retry after a delay
+                  System.Threading.Thread.Sleep(1000) //nekdy se to ujme
+                  printfn "%s" "Tak si zopakujeme načítání záznamů v logfile ..."
+
+                  attemptExtractLogEntries ()
+
+            | :? UnauthorizedAccessException as ex 
+                 -> 
+                  printfn "Err2002C"
+                  printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
+                  [] 
+                            
+            | ex -> 
+                  printfn "%s" "Err2002B"
+                  printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
+                  [] //tady nevadi List.empty jakozto vystup 
                    
-                
+        attemptExtractLogEntries ()    
+        
      //NewtonSoft for educational purposes
     let internal extractLogEntries () = 
 

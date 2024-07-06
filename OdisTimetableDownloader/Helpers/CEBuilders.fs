@@ -37,6 +37,7 @@ module Builders =
              | Some value -> nextFunc value 
              | _          -> err  
          member _.Return x : 'a = x
+         member _.Using x = x
          //member _.Zero x = x
 
     let internal pyramidOfDoom = Builder2
