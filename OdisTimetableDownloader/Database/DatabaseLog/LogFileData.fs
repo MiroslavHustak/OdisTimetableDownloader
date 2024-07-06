@@ -27,7 +27,7 @@ module LogFileData =
         try            
             pyramidOfDoom
                 {
-                    let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty //Strings handled with extra care due to potential type-related concerns (you can call it "paranoia" :-)). 
+                    let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
                     let! filepath = filepath, Error (sprintf "%s%s" "Chyba při čtení cesty k souboru " logFileName)
     
                     let fInfodat: FileInfo = new FileInfo(logFileName)
@@ -57,7 +57,7 @@ module LogFileData =
         try            
             pyramidOfDoom
                 {
-                    let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty //Strings handled with extra care due to potential type-related concerns (you can call it "paranoia" :-)). 
+                    let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
                     let! filepath = filepath, Error (sprintf "%s%s" "Chyba při čtení cesty k souboru " logFileName)
     
                     let fInfodat: FileInfo = new FileInfo(logFileName)
@@ -81,8 +81,8 @@ module LogFileData =
                 }
 
             |> function
-                | Ok value  -> value
-                | Error err -> [err, String.Empty, String.Empty]
+                | Ok value -> value
+                | Error _  -> [] //k tomu nedojde
         with
         | ex -> 
               printfn "%s" "Tato chyba není zaznamenána v log file. Err2002A."
