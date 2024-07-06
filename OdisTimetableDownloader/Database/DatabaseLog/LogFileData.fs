@@ -13,8 +13,7 @@ open Helpers.CloseApp
 
 open Logging.Logging
 
-open Settings.SettingsGeneral
-  
+open Settings.SettingsGeneral  
       
 module LogFileData =               
 
@@ -46,12 +45,12 @@ module LogFileData =
                 | Error err -> [err, String.Empty, String.Empty]
         with
         | ex -> 
-              printfn "%s" "Tato chyba není zaznamenána v log file. Err2002B."
+              printfn "%s" "Err2002B"
               printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
               [] //tady nevadi List.empty jakozto vystup 
                    
                 
-     //NewtonSoft
+     //NewtonSoft for educational purposes
     let internal extractLogEntries () = 
 
         try            
@@ -85,6 +84,6 @@ module LogFileData =
                 | Error _  -> [] //k tomu nedojde
         with
         | ex -> 
-              printfn "%s" "Tato chyba není zaznamenána v log file. Err2002A."
+              printfn "%s" "Err2002A"
               printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
               [] //tady nevadi List.empty jakozto vystup 
