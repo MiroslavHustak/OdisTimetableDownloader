@@ -33,7 +33,7 @@ module Logging =
             string sb    
         with
         | ex -> 
-              printfn "%s" "Je třeba kontaktovat programátora, tato chyba není zaznamenána v log file. Err2001."
+              printfn "%s" "Tato chyba není zaznamenána v log file. Err2001."
               printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat...
               String.Empty               
 

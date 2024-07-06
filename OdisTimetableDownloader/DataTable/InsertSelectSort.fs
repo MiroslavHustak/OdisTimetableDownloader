@@ -134,11 +134,9 @@ module InsertSelectSort =
                                          && not <| fileToBeSaved.Contains("X")
                                          && not <| fileToBeSaved.Contains("NAD")) 
                                          &&
-                                         (
-                                         dateValidityEnd <> summerHolidayEnd1
+                                         (dateValidityEnd <> summerHolidayEnd1
                                          && 
-                                         dateValidityEnd <> summerHolidayEnd2
-                                         )
+                                         dateValidityEnd <> summerHolidayEnd2)
                                         
         let currentTime = DateTime.Now.Date
 

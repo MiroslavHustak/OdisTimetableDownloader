@@ -24,7 +24,7 @@ module InsertInto =
 
     let internal insertLogEntries getConnection2 closeConnection =
 
-        let dataToBeInserted = Database2.LogFileData.extractLogEntries () 
+        let dataToBeInserted = Database2.LogFileData.extractLogEntriesThoth () 
 
         match dataToBeInserted.Length with
         | 0 -> 
