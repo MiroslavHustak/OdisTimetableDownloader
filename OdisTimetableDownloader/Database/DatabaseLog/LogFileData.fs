@@ -49,7 +49,8 @@ module LogFileData =
                             |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) 
                             |> List.distinct 
                             |> Result.sequence    
-                    
+
+                        fs.Flush()                    
                         fs.Close()
                         fs.Dispose()
 

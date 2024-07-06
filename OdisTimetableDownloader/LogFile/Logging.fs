@@ -17,7 +17,7 @@ module Logging =
         try
             let sb = System.Text.StringBuilder()
             let sw = new System.IO.StringWriter(sb) //prip. use
-            let jsonWriter = new JsonTextWriter(sw) //prip.use
+            let jsonWriter = new JsonTextWriter(sw) //prip. use
 
             try     
                 jsonWriter.WriteStartArray()
@@ -34,6 +34,7 @@ module Logging =
                 jsonWriter.Flush()
 
                 string sb    
+
             finally
                 sw.Close()
                 sw.Dispose()
