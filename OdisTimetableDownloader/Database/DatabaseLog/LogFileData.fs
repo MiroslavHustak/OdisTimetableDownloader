@@ -76,7 +76,7 @@ module LogFileData =
             | :? IOException as ex 
                  ->
                   // Handle IO exceptions (file is locked) and retry after a delay
-                  System.Threading.Thread.Sleep(1000) //nekdy se to ujme
+                  System.Threading.Thread.Sleep(1000) //nekonecny cyklus, nekdy se to ujme :-)
                   printfn "%s" "Tak si zopakujeme načítání záznamů v logfile ..."
 
                   attemptExtractLogEntries ()
