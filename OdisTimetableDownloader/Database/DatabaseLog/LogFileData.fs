@@ -21,7 +21,11 @@ module LogFileData =
     // V komercni aplikaci zkopirovat log file a pouzivat kopii pro cteni
 
     //Thoth           
-    let private decoder : Decoder<string*string*string> = Decode.tuple3 Decode.string Decode.string Decode.string         
+    let private decoder : Decoder<string*string*string> = 
+        Decode.tuple3 
+        <| Decode.string
+        <| Decode.string 
+        <| Decode.string         
            
     //Thoth
     let internal extractLogEntriesThoth () = 
