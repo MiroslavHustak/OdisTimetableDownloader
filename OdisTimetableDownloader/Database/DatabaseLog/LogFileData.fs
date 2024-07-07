@@ -35,7 +35,7 @@ module LogFileData =
                         let! filepath = filepath, Error (sprintf "%s%s" "Chyba při čtení cesty k souboru " logFileName)
     
                         let fInfodat: FileInfo = new FileInfo(logFileName)
-                        let! _ =  fInfodat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName) 
+                        let! _ = fInfodat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName) 
 
                         let fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.None)
                         //To ensure that the log file is not being written to while you are reading it -> FileShare.None setting
@@ -94,7 +94,7 @@ module LogFileData =
                    
         attemptExtractLogEntries ()    
         
-     //NewtonSoft for educational purposes
+     //NewtonSoft  + File.ReadAllLines for educational purposes
     let internal extractLogEntries () = 
 
         try            

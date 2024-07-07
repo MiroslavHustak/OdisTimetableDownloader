@@ -64,9 +64,7 @@ module Logging =
        
     let private logger = 
         loggerFactory.CreateLogger("TimetableDownloader")
-
-    let private loggerDispose () = loggerFactory.Dispose()
                 
     let internal logInfoMsg msg = 
         logger.LogInformation(msg)
-        loggerDispose ()
+        loggerFactory.Dispose()
