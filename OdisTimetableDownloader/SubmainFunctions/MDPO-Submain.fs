@@ -5,12 +5,10 @@ module MDPO_Submain =
     open System
     open System.IO
     open System.Net
-    //open System.Reflection
 
     open FsHttp
     open FSharp.Data
     open FsToolkit.ErrorHandling
-    //open Microsoft.FSharp.Reflection
 
     //********************************
 
@@ -26,29 +24,6 @@ module MDPO_Submain =
     open Helpers.CloseApp
     open Helpers.ProgressBarFSharp
 
-    //************************Submain helpers**************************************************************************
-
-    (*
-    //Educational code - Result.sequence!!!
-
-    let private getDefaultRcVal (t: Type) (r: ConnErrorCode) =   //reflection for educational purposes
-
-        let list = 
-            FSharpType.GetRecordFields(t) 
-            |> Array.map 
-                (fun (prop: PropertyInfo) -> 
-                                           match Casting.castAs<string> <| prop.GetValue(r) |> Option.ofStringOption with
-                                           | Some value -> Ok value
-                                           | None       -> Error msg21 
-                ) 
-                |> List.ofArray 
-
-                list 
-                |> function
-            | [] -> Error msg21  
-            | _  -> list |> Result.sequence 
-
-    *)
 
     //************************Submain functions************************************************************************
 
@@ -157,7 +132,7 @@ module MDPO_Submain =
                                       value |> ignore
                          | Error err ->
                                       logInfoMsg <| sprintf "Err042 %s" err
-                                      mapErr3 err (Ok listConnErrorCodeDefault) //Ok je legacy drivejsiho reflection a Result.sequence
+                                      mapErr3 err (Ok listConnErrorCodeDefault) //Ok je legacy zruseneho reflection a Result.sequence
                                                  
                      async                                                
                          {   

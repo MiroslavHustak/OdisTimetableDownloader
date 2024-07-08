@@ -65,10 +65,10 @@ module WebScraping_KODISFM =
 
             | Free (DownloadAndSaveJsonFM next)     ->      
                                                      //Http request and IO operation (data from settings -> http request -> IO operation -> saving json files on HD)
-                                                     let downloadAndSaveJson =  
-                                                         startNetChecking ()
-                                                         KODIS_Submain.downloadAndSaveJson ()  
-                                                         in errorHandling downloadAndSaveJson
+                                                     //let downloadAndSaveJson =  
+                                                        // startNetChecking ()
+                                                        // KODIS_Submain.downloadAndSaveJson ()  
+                                                        // in errorHandling downloadAndSaveJson
 
                                                      let param = next ()
                                                      interpret param                                                

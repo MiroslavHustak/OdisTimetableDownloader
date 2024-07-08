@@ -3,6 +3,7 @@
 open System
 open System.IO
 open Thoth.Json.Net
+open Newtonsoft.Json
 open Newtonsoft.Json.Linq
 
 //**************************
@@ -14,6 +15,9 @@ open Helpers.CloseApp
 open Logging.Logging
 
 open Settings.SettingsGeneral  
+open FSharp.Data.Runtime.BaseTypes
+open System.Text.Json
+
       
 module LogFileData =   
     
@@ -27,7 +31,7 @@ module LogFileData =
         <| Decode.string 
         <| Decode.string         
            
-    //Thoth
+    //Thoth + StreamReader + JsonArray
     let internal extractLogEntriesThoth () = 
 
         let rec attemptExtractLogEntries () = 
@@ -41,20 +45,25 @@ module LogFileData =
                         let fInfodat: FileInfo = new FileInfo(logFileName)
                         let! _ = fInfodat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName) 
 
-                        let fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.None)
-                        //To ensure that the log file is not being written to while you are reading it -> FileShare.None setting
+                        //toto je fakticky custom-made deserializace s pouzitim Thoth pro decoding Json
+                        //FileShare.None -> zakaz zapisu do souboru v dobe cteni
+                        let fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.None) 
+                        let! fs = fs |> Option.ofNull, Error (sprintf "%s%s" "Chyba při čtení dat ze souboru " logFileName)                        
                     
-                        let reader = new StreamReader(fs)
+                        let reader = new StreamReader(fs) //For large files, StreamReader may offer better performance and memory efficiency
+                        let! reader = reader |> Option.ofNull, Error (sprintf "%s%s" "Chyba při čtení dat ze souboru " logFileName) 
+                        
+                        let jsonContent = reader.ReadToEnd()
+                        let! jsonContent = jsonContent |> Option.ofNullEmpty, Error (sprintf "%s%s" "Chyba při čtení dat ze souboru " logFileName)  
                     
                         let lines = 
-                            reader.ReadToEnd()
+                            jsonContent
                             |> fun content -> content.Split([|Environment.NewLine|], StringSplitOptions.RemoveEmptyEntries)
                             |> Array.toList
                             |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) 
                             |> List.distinct 
                             |> Result.sequence    
 
-                        fs.Flush()                    
                         fs.Close()
                         fs.Dispose()
 
@@ -62,14 +71,6 @@ module LogFileData =
                         reader.Dispose()
 
                         return lines
-                        (*
-                        return
-                            File.ReadAllLines(logFileName)
-                            |> Array.toList
-                            |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) 
-                            |> List.distinct 
-                            |> Result.sequence    
-                        *)
                     }
 
                 |> function
@@ -87,18 +88,76 @@ module LogFileData =
 
             | :? UnauthorizedAccessException as ex 
                  -> 
-                  printfn "Err2002C"
+                  printfn "Err2002E"
                   printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
                   [] 
                             
             | ex -> 
-                  printfn "%s" "Err2002B"
+                  printfn "%s" "Err2002D"
                   printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
                   [] //tady nevadi List.empty jakozto vystup 
                    
+        attemptExtractLogEntries ()   
+    
+   
+    //Thoth + System.IO (File.ReadAllLines) + JsonArray
+    let internal extractLogEntriesThoth2 () = 
+
+        let rec attemptExtractLogEntries () = 
+
+            try            
+                pyramidOfDoom
+                    {
+                        let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
+                        let! filepath = filepath, Error (sprintf "Chyba při čtení cesty k souboru %s" logFileName)
+    
+                        let fInfoDat = new FileInfo(logFileName)
+                        let! _ = fInfoDat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName)
+                        
+                        //For small to medium files, File.ReadAllLines is usually faster
+                        let fs = File.ReadAllLines(logFileName) //Automaticky zrobi close, dispose
+                        let! fs = fs |> Option.ofNull, Error (sprintf "%s%s" "Chyba při čtení dat ze souboru " logFileName)
+
+                        let lines = 
+                            fs
+                            |> List.ofSeq
+                            |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) 
+                            |> List.distinct
+                            |> Result.sequence                              
+                         
+                        return lines
+                    }
+
+                |> function
+                    | Ok value  -> value
+                    | Error err -> [err, String.Empty, String.Empty] 
+
+            with
+            | :? IOException as ex 
+                 ->
+                  // Handle IO exceptions (file is locked) and retry after a delay
+                  System.Threading.Thread.Sleep(1000) //nekonecny cyklus, nekdy se to ujme :-)
+                  printfn "%s" "Tak si zopakujeme načítání záznamů v logfile ..."
+
+                  attemptExtractLogEntries ()
+
+            | :? UnauthorizedAccessException as ex 
+                 -> 
+                  printfn "Err2002C"
+                  printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
+                  []
+                            
+            | ex -> 
+                  printfn "%s" "Err2002B"
+                  printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
+                  []                 
+                   
         attemptExtractLogEntries ()    
-        
-     //NewtonSoft  + File.ReadAllLines for educational purposes
+
+    //*********************************************************************************************
+
+
+    //Nepouzivano -> Newtonsoft.Json  + File.ReadAllLines for educational purposes
     let internal extractLogEntries () = 
 
         try            
@@ -112,7 +171,7 @@ module LogFileData =
                                            
                     return 
                         File.ReadAllLines(logFileName)
-                        |> Array.map 
+                        |> Seq.map 
                             (fun line ->                             
                                        let item = JArray.Parse(line)                   
                                        //tady nevadi pripadne String.Empty   
@@ -122,7 +181,7 @@ module LogFileData =
 
                                        timestamp, logName, message  
                             )                 
-                        |> List.ofArray         
+                        |> List.ofSeq        
                         |> List.distinct 
                         |> Ok
                 }

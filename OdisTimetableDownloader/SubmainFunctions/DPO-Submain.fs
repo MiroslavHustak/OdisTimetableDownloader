@@ -190,7 +190,7 @@ module DPO_Submain =
                                       value |> ignore
                          | Error err ->
                                       logInfoMsg <| sprintf "Err038 %s" err
-                                      mapErr3 err (Ok listConnErrorCodeDefault) //Ok je legacy drivejsiho reflection a Result.sequence
+                                      mapErr3 err (Ok listConnErrorCodeDefault) //Ok je legacy zruseneho reflection a Result.sequence
                                                  
                      async                                                
                          {   
