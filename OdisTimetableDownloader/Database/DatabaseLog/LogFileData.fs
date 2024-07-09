@@ -17,7 +17,6 @@ open Logging.Logging
 open Settings.SettingsGeneral  
 open FSharp.Data.Runtime.BaseTypes
 open System.Text.Json
-
       
 module LogFileData =   
     
@@ -35,23 +34,23 @@ module LogFileData =
     let internal extractLogEntriesThoth () = 
 
         let rec attemptExtractLogEntries () = 
-
+        
             try            
                 pyramidOfDoom
                     {
                         let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
                         let! filepath = filepath, Error (sprintf "%s%s" "Chyba při čtení cesty k souboru " logFileName)
-    
+            
                         let fInfodat: FileInfo = new FileInfo(logFileName)
                         let! _ = fInfodat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName) 
-
+        
                         //toto je fakticky custom-made deserializace s pouzitim Thoth pro decoding Json
                         //FileShare.None -> zakaz zapisu do souboru v dobe cteni
                         let fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.None) 
-                        let! fs = fs |> Option.ofNull, Error (sprintf "%s%s" "Chyba při čtení dat ze souboru " logFileName)                        
+                        use! fs = fs |> Option.ofNull, Error (sprintf "%s%s" "Chyba při čtení dat ze souboru " logFileName)                        
                     
                         let reader = new StreamReader(fs) //For large files, StreamReader may offer better performance and memory efficiency
-                        let! reader = reader |> Option.ofNull, Error (sprintf "%s%s" "Chyba při čtení dat ze souboru " logFileName) 
+                        use! reader = reader |> Option.ofNull, Error (sprintf "%s%s" "Chyba při čtení dat ze souboru " logFileName) 
                         
                         let jsonContent = reader.ReadToEnd()
                         let! jsonContent = jsonContent |> Option.ofNullEmpty, Error (sprintf "%s%s" "Chyba při čtení dat ze souboru " logFileName)  
@@ -63,42 +62,35 @@ module LogFileData =
                             |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) 
                             |> List.distinct 
                             |> Result.sequence    
-
-                        fs.Close()
-                        fs.Dispose()
-
-                        reader.Close()
-                        reader.Dispose()
-
+                
                         return lines
                     }
-
+        
                 |> function
                     | Ok value  -> value
                     | Error err -> [err, String.Empty, String.Empty]
-
+        
             with
             | :? IOException as ex 
                  ->
                   // Handle IO exceptions (file is locked) and retry after a delay
                   System.Threading.Thread.Sleep(1000) //nekonecny cyklus, nekdy se to ujme :-)
                   printfn "%s" "Tak si zopakujeme načítání záznamů v logfile ..."
-
+        
                   attemptExtractLogEntries ()
-
+        
             | :? UnauthorizedAccessException as ex 
                  -> 
                   printfn "Err2002E"
-                  printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
+                  printfn "%s" <| string ex.Message 
                   [] 
                             
             | ex -> 
                   printfn "%s" "Err2002D"
-                  printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
-                  [] //tady nevadi List.empty jakozto vystup 
+                  printfn "%s" <| string ex.Message 
+                  []
                    
-        attemptExtractLogEntries ()   
-    
+        attemptExtractLogEntries ()  
    
     //Thoth + System.IO (File.ReadAllLines) + JsonArray
     let internal extractLogEntriesThoth2 () = 
