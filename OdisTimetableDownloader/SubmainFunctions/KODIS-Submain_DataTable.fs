@@ -210,11 +210,11 @@ module KODIS_SubmainDataTable =
                                      kodisJsonSamples 
                                      |> function 
                                         | Some value -> 
-                                                    value 
-                                                    |> Option.ofNull 
-                                                    |> function
-                                                        | Some value -> value.Data |> Array.collect _.Vyluky  //quli tomuto je nutno Array //nejde Some, nejde Ok
-                                                        | None       -> [||]  
+                                                      value 
+                                                      |> Option.ofNull 
+                                                      |> function
+                                                          | Some value -> value.Data |> Array.collect _.Vyluky  //quli tomuto je nutno Array //nejde Some, nejde Ok
+                                                          | None       -> [||]  
                                         | None       -> 
                                                       [||]  
                                  
