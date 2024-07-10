@@ -8,7 +8,6 @@ open System.Net.NetworkInformation
 open System.Text.RegularExpressions
 
 open FsHttp
-open FSharp.Data
 open FSharp.Control
 open FsToolkit.ErrorHandling
 open Microsoft.FSharp.Quotations
@@ -199,13 +198,13 @@ module KODIS_SubmainDataTable =
                                      kodisJsonSamples 
                                      |> function 
                                          | Some value -> 
-                                                    value 
-                                                    |> Option.ofNull 
-                                                    |> function
-                                                        | Some value -> value.Data |> Array.map _.Timetable  //quli tomuto je nutno Array //nejde Some, nejde Ok
-                                                        | None       -> [||]  
+                                                       value 
+                                                       |> Option.ofNull 
+                                                       |> function
+                                                           | Some value -> value.Data |> Array.map _.Timetable  //quli tomuto je nutno Array //nejde Some, nejde Ok
+                                                           | None       -> [||]  
                                          | None       -> 
-                                                    [||]   
+                                                       [||]   
                                  
                                  let vyluky = 
                                      kodisJsonSamples 
@@ -217,7 +216,7 @@ module KODIS_SubmainDataTable =
                                                         | Some value -> value.Data |> Array.collect _.Vyluky  //quli tomuto je nutno Array //nejde Some, nejde Ok
                                                         | None       -> [||]  
                                         | None       -> 
-                                                    [||]  
+                                                      [||]  
                                  
                                  let attachments = 
                                      vyluky
