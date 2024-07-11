@@ -229,13 +229,13 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
         
     open System
     
-    [<CompiledName "CreateStringSeq">]      
-    let internal createStringSeq (strSeqNum: int, stringToAdd: string): string = 
+    [<CompiledName "CreateStringAcc">]      
+    let internal createStringAcc (strSeqNum: int, stringToAdd: string): string = 
         
         let initialString = String.Empty   //initial value of the string
         let listRange = [ 1 .. strSeqNum ] 
 
-        //[<TailCall>]
+        //[<TailCall>] Ok
         let rec loop list acc =
             match list with 
             | []        ->
@@ -245,7 +245,21 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
                          loop tail finalString  //Tail-recursive function calls that have their parameters passed by the pipe operator are not optimized as loops #6984
     
         loop listRange initialString
+
+    //Continuation-Passing Style (CPS)
+    [<CompiledName "CreateStringCps">]
+    let internal createStringCps (strSeqNum: int, stringToAdd: string): string =
+
+        let listRange = [ 1 .. strSeqNum ]
         
+        //[<TailCall>] Ok
+        let rec loop list cont =
+            match list with
+            | []        -> cont String.Empty
+            | _ :: tail -> loop tail (fun acc -> cont (stringToAdd + acc))
+    
+        loop listRange id
+                  
     //List.reduce nelze, tam musi byt stejny typ acc a range      
     [<CompiledName "CreateStringSeqFold">] 
     let internal createStringSeqFold (strSeqNum: int, stringToAdd: string): string =

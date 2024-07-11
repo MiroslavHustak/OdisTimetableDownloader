@@ -60,7 +60,7 @@ let rec private pathToFolder () =
 let main argv = 
     
     //*****************************Console******************************  
-    let updateDate = "07-07-2024"
+    let updateDate = "11-07-2024"
 
     try
         consoleAppProblemFixer() 
@@ -195,8 +195,8 @@ let main argv =
                                             
                                          Console.Clear()
                                             
-                                         //webscraping_KODISFMDataTable path variant //datatable-based app
-                                         webscraping_KODISFM path variant //database-based app
+                                         webscraping_KODISFMDataTable path variant //datatable-based app
+                                         //webscraping_KODISFM path variant //database-based app
                                             
                                          printfn "%c" <| char(32)         
                                          printfn "Pokud se v údajích KODISu nacházel odkaz na JŘ, který obsahoval chybné či neúplné údaje,"

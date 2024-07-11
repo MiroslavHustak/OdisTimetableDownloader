@@ -482,11 +482,11 @@ module KODIS_Submain =
                                oldPrefix.Replace("NAD_", "NAD_0")
                          | 8  -> 
                                let s1 = oldPrefix
-                               let s2 = sprintf "X_%s%s" <| createStringSeq(2, "0") <| s1.[2..]
+                               let s2 = sprintf "X_%s%s" <| createStringCps(2, "0") <| s1.[2..]
                                oldPrefix.Replace(s1, s2)
                          | 9  ->
                                let s1 = oldPrefix
-                               let s2 = sprintf "X_%s%s" <| createStringSeq(1, "0") <| s1.[2..]
+                               let s2 = sprintf "X_%s%s" <| createStringCps(1, "0") <| s1.[2..]
                                oldPrefix.Replace(s1, s2)
                          | 10 ->
                                sprintf "%s" oldPrefix
@@ -495,8 +495,8 @@ module KODIS_Submain =
 
                 | _     ->
                          match oldPrefix.Length with                    
-                         | 2  -> sprintf "%s%s" <| createStringSeq(2, "0") <| oldPrefix   //sprintf "00%s" oldPrefix
-                         | 3  -> sprintf "%s%s" <| createStringSeq(1, "0") <| oldPrefix   //sprintf "0%s" oldPrefix                  
+                         | 2  -> sprintf "%s%s" <| createStringCps(2, "0") <| oldPrefix   //sprintf "00%s" oldPrefix
+                         | 3  -> sprintf "%s%s" <| createStringCps(1, "0") <| oldPrefix   //sprintf "0%s" oldPrefix                  
                          | _  -> oldPrefix
 
             let input = 

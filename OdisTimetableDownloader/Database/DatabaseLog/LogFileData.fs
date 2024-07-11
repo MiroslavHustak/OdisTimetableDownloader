@@ -33,7 +33,8 @@ module LogFileData =
     //Thoth + StreamReader + JsonArray
     let internal extractLogEntriesThoth () = 
 
-        let rec attemptExtractLogEntries () =  
+        //[<TailCall>]  Ok
+        let rec attemptExtractLogEntries counter =  
                         
             try   
                 pyramidOfDoom
@@ -70,32 +71,40 @@ module LogFileData =
         
             with
             | :? IOException as ex 
-                 ->                  
+                 ->
                   // Handle IO exceptions (file is locked) and retry after a delay
-                  System.Threading.Thread.Sleep(1000) //nekonecny cyklus, nekdy se to ujme :-)
-                  printfn "%s" "Tak si zopakujeme načítání záznamů v logfile ..."                 
-                  attemptExtractLogEntries ()
-        
+                  System.Threading.Thread.Sleep(1000) 
+
+                  match counter < 10 with  //10 pokusu o zapis do log file
+                  | false -> 
+                           printfn "Err2002E"
+                           printfn "Pokusy o zápis do log file %s selhaly" logFileName
+                           []
+                  | true  ->  
+                           printfn "Další pokus číslo: %i" counter
+                           attemptExtractLogEntries (counter + 1)
+            
             | :? UnauthorizedAccessException as ex 
                  -> 
-                  printfn "Err2002E"
-                  printfn "%s" <| string ex.Message 
+                  printfn "Err2002C"
+                  printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
                   [] 
                             
             | ex -> 
-                  printfn "%s" "Err2002D"
-                  printfn "%s" <| string ex.Message 
-                  []
+                  printfn "%s" "Err2002B"
+                  printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
+                  []                  
                    
-        attemptExtractLogEntries ()  
+        attemptExtractLogEntries 0  
    
     //Thoth + System.IO (File.ReadAllLines) + JsonArray
     let internal extractLogEntriesThoth2 () = 
        
-        let rec attemptExtractLogEntries () = 
+        //[<TailCall>]  Ok
+        let rec attemptExtractLogEntries counter = 
 
             try  
-                raise (IOException("test"))
+                //raise (IOException("test"))
 
                 pyramidOfDoom
                     {
@@ -125,24 +134,31 @@ module LogFileData =
             | :? IOException as ex 
                  ->
                   // Handle IO exceptions (file is locked) and retry after a delay
-                  System.Threading.Thread.Sleep(1000) //nekonecny cyklus, nekdy se to ujme :-)
-                  attemptExtractLogEntries ()
-
+                  System.Threading.Thread.Sleep(1000) 
+                  
+                  match counter < 10 with //10 pokusu o zapis do log file
+                  | false -> 
+                           printfn "Err2002E"
+                           printfn "Pokusy o zápis do log file %s selhaly" logFileName
+                           []
+                  | true  ->  
+                           printfn "Další pokus číslo: %i" counter
+                           attemptExtractLogEntries (counter + 1)
+            
             | :? UnauthorizedAccessException as ex 
                  -> 
                   printfn "Err2002C"
                   printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
-                  []
+                  [] 
                             
             | ex -> 
                   printfn "%s" "Err2002B"
                   printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
-                  []                 
+                  []                  
                    
-        attemptExtractLogEntries ()    
-
+        attemptExtractLogEntries 0  
+    
     //*********************************************************************************************
-
 
     //Nepouzivano -> Newtonsoft.Json  + File.ReadAllLines for educational purposes
     let internal extractLogEntries () = 
