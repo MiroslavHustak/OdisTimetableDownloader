@@ -175,8 +175,7 @@ module KODIS_SubmainDataTable =
                         | ex -> 
                               logInfoMsg <| sprintf "Err005A %s" (string ex.Message) 
                               closeItBaby msg16 
-                              [||]      
-                                                  
+                              [||]                
                 }
             
         let kodisTimetables2 : Reader<string list, string array> = 
@@ -251,8 +250,7 @@ module KODIS_SubmainDataTable =
                         | ex -> 
                               logInfoMsg <| sprintf "Err005 %s" (string ex.Message) 
                               closeItBaby msg16 
-                              [||]      
-                                                  
+                              [||]               
                 }       
          
         let kodisAttachments : Reader<string list, string array> = //Reader monad for educational purposes only, no real benefit here
