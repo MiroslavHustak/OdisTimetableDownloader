@@ -8,6 +8,6 @@ Stále ve vývojové fázi... :-)
 
 Under development (a re-write of my old console app).
 
-Proper error handling with more extensive utilization of result types and separation of the user interface from the business logic will be addressed during the process of converting this console application into a mobile application.
+Better error handling with more extensive utilization of result types and separation of the user interface from the business logic will be addressed during the process of converting this console application into a mobile application.
 
 Installation file (ClickOnce): https://1drv.ms/u/s!Aoxczq1nq-J5hx9vHNNAYDLLzr2b?e=u6hnEe
