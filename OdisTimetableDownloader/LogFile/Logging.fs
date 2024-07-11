@@ -30,8 +30,8 @@ module Logging =
                 jsonWriter.WriteValue(msg.Message)
                 jsonWriter.WriteEndArray()
 
-                sw.Flush()
-                jsonWriter.Flush()
+                //sw.Flush()
+                //jsonWriter.Flush()
 
                 string sb    
 
