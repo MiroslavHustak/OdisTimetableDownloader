@@ -147,25 +147,34 @@ module KODIS_SubmainDataTable =
                         |> Array.collect 
                             (fun pathToJson 
                                 ->   
-                                 JsonProvider1.Parse(File.ReadAllText pathToJson)
-                                 |> Option.ofNull
+                                 let json = 
+                                     pyramidOfDoom
+                                         {
+                                             let filepath = Path.GetFullPath(pathToJson) |> Option.ofNullEmpty  
+                                             let! filepath = filepath, String.Empty //tady nelze Result.sequence, proto String.Empty misto Error
+    
+                                             let fInfoDat = new FileInfo(pathToJson)
+                                             let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
+                                     
+                                             let fs = File.ReadAllText(pathToJson) 
+                                             let! fs = fs |> Option.ofNull, String.Empty                                             
+                                                                                                  
+                                             return fs
+                                         }   
+                                         
+                                 JsonProvider1.Parse(json) 
+                                 |> Option.ofNull  
                                  |> function 
-                                     | Some value -> 
-                                                   value
-                                                   |> Option.ofNull 
-                                                   |> function
-                                                       | Some value -> value |> Array.map _.Timetable  //quli tomuto je nutno Array //nejde Some, nejde Ok
-                                                       | None       -> [||]  
-                                     | None       -> 
-                                                   [||] 
-                            )                     
+                                     | Some value -> value |> Array.map _.Timetable                                                
+                                     | None       -> [||] //tady nelze Result.sequence //TODO vymysli neco
+                            )  
                         
                     return
                         try
                            let value = result ()   
                            value
                            |> function
-                               | [||] -> Error "msg16"                                        
+                               | [||] -> Error msg16                                        
                                | _    -> Ok value
                         with
                         | ex -> Error <| string ex.Message  
@@ -191,8 +200,23 @@ module KODIS_SubmainDataTable =
                         |> Array.ofList 
                         |> Array.collect 
                             (fun pathToJson 
-                                ->     
-                                 let kodisJsonSamples = JsonProvider2.Parse(File.ReadAllText pathToJson) |> Option.ofNull
+                                ->                                       
+                                 let json = //tady nelze Result.sequence //TODO vymysli neco
+                                     pyramidOfDoom
+                                         {
+                                             let filepath = Path.GetFullPath(pathToJson) |> Option.ofNullEmpty  
+                                             let! filepath = filepath, String.Empty //tady nelze Result.sequence, proto String.Empty misto Error
+    
+                                             let fInfoDat = new FileInfo(pathToJson)
+                                             let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
+                                     
+                                             let fs = File.ReadAllText(pathToJson) 
+                                             let! fs = fs |> Option.ofNull, String.Empty                                             
+                                                                                                  
+                                             return fs
+                                         }    
+
+                                 let kodisJsonSamples = JsonProvider2.Parse(json) |> Option.ofNull
                                  
                                  let timetables = 
                                      kodisJsonSamples 
@@ -240,7 +264,7 @@ module KODIS_SubmainDataTable =
                             let value = result ()   
                             value
                             |> function
-                                | [||] -> Error "msg16"                                        
+                                | [||] -> Error msg16                                        
                                 | _    -> Ok value
                         with
                         | ex -> Error <| string ex.Message  
@@ -295,8 +319,23 @@ module KODIS_SubmainDataTable =
                                                            msg5 () 
                                                            logInfoMsg <| sprintf "007B %s" "resulting in None"
                                                            [||] 
+
+                                     let json = //tady nelze Result.sequence //TODO vymysli neco
+                                         pyramidOfDoom
+                                             {
+                                                 let filepath = Path.GetFullPath(pathToJson) |> Option.ofNullEmpty  
+                                                 let! filepath = filepath, String.Empty //tady nelze Result.sequence, proto String.Empty misto Error
+    
+                                                 let fInfoDat = new FileInfo(pathToJson)
+                                                 let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
+                                         
+                                                 let fs = File.ReadAllText(pathToJson) 
+                                                 let! fs = fs |> Option.ofNull, String.Empty                                             
+                                                                                                      
+                                                 return fs
+                                             }    
                                                           
-                                     let kodisJsonSamples = JsonProvider1.Parse(File.ReadAllText pathToJson) |> Option.ofNull  
+                                     let kodisJsonSamples = JsonProvider1.Parse(json) |> Option.ofNull  
                                                           
                                      kodisJsonSamples 
                                      |> function 
@@ -313,7 +352,7 @@ module KODIS_SubmainDataTable =
                                 let value = result ()   
                                 value
                                 |> function
-                                    | [||] -> Error "msg16"                                        
+                                    | [||] -> Error msg16                                        
                                     | _    -> Ok value
                             with
                             | ex -> Error <| string ex.Message  
