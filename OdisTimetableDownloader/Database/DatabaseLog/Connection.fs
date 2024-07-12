@@ -17,21 +17,31 @@ module Connection =
         try
             let connection = new SqlConnection(connString2)
             connection.Open()
-            connection
+            Ok connection   
         with
-        | ex ->
-              logInfoMsg <| sprintf "Err131A %s" (string ex.Message) 
-              closeItBaby msg16 
-              new SqlConnection(connString2)     
+        | ex -> Error <| string ex.Message
+                        
+        |> function
+            | Ok value  -> 
+                         value  
+            | Error err ->
+                         logInfoMsg <| sprintf "Err131A %s" err
+                         closeItBaby msg16 
+                         new SqlConnection(connString2)   
 
     let internal closeConnection (connection: SqlConnection) =  
         
         try
             try
-                connection.Close()                
+                Ok <| connection.Close()                
             finally
                 connection.Dispose()
         with
-        | ex -> 
-              logInfoMsg <| sprintf "Err132A %s" (string ex.Message) 
-              closeItBaby msg16  
+        | ex -> Error <| string ex.Message
+                        
+        |> function
+            | Ok value  -> 
+                         value  
+            | Error err ->
+                         logInfoMsg <| sprintf "Err132A %s" err
+                         closeItBaby msg16  

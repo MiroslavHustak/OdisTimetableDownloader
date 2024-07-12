@@ -542,7 +542,6 @@ module KODIS_Submain =
             |> List.map 
                 (fun item -> splitKodisLink item) 
         
-        //(insertWithCE getConnection closeConnection dataToBeInserted).Force()  
         insert getConnection closeConnection dataToBeInserted  
         
         //**********************Cesty pro soubory pro aktualni a dlouhodobe platne a pro ostatni********************************************************

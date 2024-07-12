@@ -13,3 +13,8 @@ module ErrorTypes =
             NotFound : string
             CofeeMakerUnavailable : string
         }
+
+    type internal TryWithErrors = 
+        | IOExnErr of string
+        | UnauthorizedAccessExnErr of string
+        | AllOtherErrors of string

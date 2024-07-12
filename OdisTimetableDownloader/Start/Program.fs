@@ -32,28 +32,33 @@ open MainFunctions.WebScraping_KODISFMDataTable
 [<TailCall>] 
 let rec private pathToFolder () =
     
-    let e = String.Empty
-    
     try        
         let (str, value) = openFolderBrowserDialog()    
 
         match value with
-        | false            -> 
-                            str       
+        | false     -> 
+                     Ok str       
         | true 
             when 
-                (<>) str e -> 
-                            Console.Clear()                                          
-                            e
-        | _                -> 
-                            Console.Clear()
-                            printfn "\nNebyl vybrán adresář. Tak znovu... Anebo klikni na křížek pro ukončení aplikace. \n"                                                                     
-                            pathToFolder ()   
+                (<>) str String.Empty
+                    -> 
+                     Console.Clear()                                          
+                     Ok String.Empty
+        | _         -> 
+                     Console.Clear()
+                     printfn "\nNebyl vybrán adresář. Tak znovu... Anebo klikni na křížek pro ukončení aplikace. \n"                                                                     
+                     Ok <| pathToFolder ()   
+   
     with
-    | ex ->
-          logInfoMsg <| sprintf "Err043 %s" (string ex.Message)
-          closeItBaby (string ex.Message)  
-          e
+    | ex -> Error <| string ex.Message
+                    
+    |> function
+        | Ok value  -> 
+                     value  
+        | Error err ->
+                     logInfoMsg <| sprintf "Err043 %s" err
+                     closeItBaby err
+                     String.Empty
 
 //[<EntryPoint>] 
 [<EntryPoint; STAThread>] // STAThread> musi byt quli openFolderBrowserDialog()
@@ -65,10 +70,16 @@ let main argv =
     try
         consoleAppProblemFixer() 
         consoleWindowSettings()  
+        Ok ()             
     with
-    | ex -> 
-          logInfoMsg <| sprintf "Err045 %s" (string ex.Message)
-          closeItBaby "Problém s textovým rozhraním."                
+    | ex -> Error <| string ex.Message
+                    
+    |> function
+        | Ok value  -> 
+                     value  
+        | Error err ->
+                     logInfoMsg <| sprintf "Err045 %s" err
+                     closeItBaby "Problém s textovým rozhraním." 
      
     //*****************************WebScraping******************************  
     
@@ -218,13 +229,18 @@ let main argv =
         let timetableVariant (fn: ConsoleKeyInfo) = 
             try
                 match fn.Key with
-                | ConsoleKey.Escape -> System.Environment.Exit(0)
-                | _                 -> variant ()
+                | ConsoleKey.Escape -> Ok <| System.Environment.Exit(0)
+                | _                 -> Ok <| variant ()
             with
-            | ex ->
-                  msgParam1 (string ex.Message)  
-                  logInfoMsg <| sprintf "Err046 %s" (string ex.Message)  
-                  closeItBaby (string ex.Message)  
+            | ex -> Error <| string ex.Message
+                            
+            |> function
+                | Ok value  -> 
+                             value  
+                | Error err ->
+                             msgParam1 err
+                             logInfoMsg <| sprintf "Err046 %s" err 
+                             closeItBaby err
 
         Console.Clear()
 

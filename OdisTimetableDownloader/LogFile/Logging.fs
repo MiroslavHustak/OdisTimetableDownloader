@@ -7,7 +7,7 @@ open NReco.Logging.File
 open Microsoft.Extensions.Logging
 
 //**********************************
-
+open Helpers
 open Settings.SettingsGeneral
 
 module Logging =     
@@ -30,20 +30,22 @@ module Logging =
                 jsonWriter.WriteValue(msg.Message)
                 jsonWriter.WriteEndArray()
 
-                //sw.Flush()
-                //jsonWriter.Flush()
-
-                string sb    
+                Option.ofNullEmpty >> Result.fromOption <| sb             
 
             finally
                 sw.Close()
                 sw.Dispose()
                 jsonWriter.Close()
         with
-        | ex -> 
-              printfn "%s" "Err2001"
-              printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat...
-              String.Empty               
+        | ex -> Error <| string ex.Message
+                                   
+        |> function
+            | Ok value  -> 
+                         value  
+            | Error err ->
+                         printfn "%s" "Err2001"
+                         printfn "%s" err //proste s tim nic nezrobime, kdyz to nebude fungovat...
+                         String.Empty  
 
     //***************************Log files******************************       
     

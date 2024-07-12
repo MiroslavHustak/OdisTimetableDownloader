@@ -9,13 +9,9 @@ module SettingsKODIS =
     //tu a tam zkontrolovat json, zdali KODIS nezmenil jeho strukturu 
     //pro type provider musi byt konstanta (nemozu pouzit sprintf partialPathJson) a musi byt forward slash"
 
-    //Tohle nefunguje s json type provider
+    //Tohle nefunguje s json type provider - zde pouze jako educational code bez try-with bloku
     let internal pathJsonNotWorkingForTypeProviders = 
-        try
-            let path = AppDomain.CurrentDomain.BaseDirectory + "KODISJson" + @"/kodisMHDTotal.json" //Copy Always     
-            path
-        with
-        | ex -> sprintf "Some mysterious exception: %s" ex.Message  
+        AppDomain.CurrentDomain.BaseDirectory + "KODISJson" + @"/kodisMHDTotal.json" //Copy Always  
 
     //let [<Literal>] internal pathJson = @"KODISJson/kodisMHDTotal.json"      // nahrazeno dll EmbeddedTP
     //let [<Literal>] internal pathJson2 = @"KODISJson/kodisMHDTotal2_0.json"  // nahrazeno dll EmbeddedTP

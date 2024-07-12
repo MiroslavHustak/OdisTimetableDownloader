@@ -13,12 +13,15 @@ let internal openFolderBrowserDialog() =
         let result = folderBrowserDialog.ShowDialog()
         
         match result = System.Windows.Forms.DialogResult.OK with
-        | true  -> folderBrowserDialog.SelectedPath, false
-        | false -> String.Empty, true         
+        | true  -> Ok (folderBrowserDialog.SelectedPath, false)
+        | false -> Ok (String.Empty, true)         
     with
-    | ex -> 
-         //(string ex), true
-         "Chyba při pokusu o vybrání adresáře.", true
+    | _ -> Error ("Chyba při pokusu o vybrání adresáře.", true)
+
+    |> function 
+        | Ok value  -> value
+        | Error err -> err
+         
                
 
     

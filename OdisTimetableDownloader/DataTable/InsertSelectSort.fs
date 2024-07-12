@@ -151,11 +151,16 @@ module InsertSelectSort =
 
         let dataTransformation row =                                 
             try
-                dtDataDtoGetDataTable >> dtDataTransformLayerGet <| row
+                Ok (dtDataDtoGetDataTable >> dtDataTransformLayerGet <| row)                  
             with
-            | ex -> 
-                  closeItBaby (string ex.Message)
-                  dtDataDtoGetDataTable >> dtDataTransformLayerGet <| row                 
+            | ex -> Error <| string ex.Message
+                                       
+            |> function
+                | Ok value  -> 
+                             value  
+                | Error err ->
+                             closeItBaby err
+                             dtDataDtoGetDataTable >> dtDataTransformLayerGet <| row 
         
         let seqFromDataTable = dt.AsEnumerable() |> Seq.distinct 
 

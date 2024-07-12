@@ -4,7 +4,6 @@ open System
 
 //*********************
 
-open Logging.Logging
 open Helpers.CloseApp
 open Settings.Messages
 
@@ -18,19 +17,24 @@ module ProgressBarFSharp =
 
         let bytes = //437 je tzv. Extended ASCII            
             try
-                System.Text.Encoding.GetEncoding(437).GetBytes("█") 
-            with 
-            | ex ->
-                  logInfoMsg <| sprintf "Err027 %s" (string ex.Message)
-                  [||] 
+                Ok <| System.Text.Encoding.GetEncoding(437).GetBytes("█") 
+           
+            with
+            | ex -> Error <| string ex.Message
+                                       
+            |> function
+                | Ok value  -> value  
+                | Error err -> [||]  //nestoji to za to
                    
         let output =          
             try
-                System.Text.Encoding.GetEncoding(852).GetChars(bytes)
-            with 
-            | ex ->
-                  logInfoMsg <| sprintf "Err028 %s" (string ex.Message)
-                  [||] 
+                Ok <| System.Text.Encoding.GetEncoding(852).GetChars(bytes)
+            with
+            | ex -> Error <| string ex.Message
+                                       
+            |> function
+                | Ok value  -> value  
+                | Error err -> [||]  //nestoji to za to
         
         let progressBar = 
 
@@ -42,19 +46,23 @@ module ProgressBarFSharp =
             
             let bar = 
                 try                   
-                    String.replicate barFill characterToFill
+                    Ok <| String.replicate barFill characterToFill
                 with
-                | ex -> 
-                      logInfoMsg <| sprintf "Err029 %s" (string ex.Message)
-                      String.Empty
+                | ex -> Error <| string ex.Message
+                                           
+                |> function
+                    | Ok value  -> value  
+                    | Error err -> String.Empty //nestoji to za to
                                
             let remaining = 
                 try
-                    String.replicate (barWidth - (barFill + 1)) "*"
+                    Ok <| String.replicate (barWidth - (barFill + 1)) "*"
                 with
-                | ex -> 
-                      logInfoMsg <| sprintf "Err030 %s" (string ex.Message)
-                      String.Empty
+                | ex -> Error <| string ex.Message
+                                           
+                |> function
+                    | Ok value  -> value  
+                    | Error err -> String.Empty //nestoji to za to 
               
             sprintf "<%s%s> %d%%" bar remaining percentComplete 
 

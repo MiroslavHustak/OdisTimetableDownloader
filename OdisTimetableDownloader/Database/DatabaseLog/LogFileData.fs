@@ -9,10 +9,12 @@ open Newtonsoft.Json.Linq
 open FSharp.Control
 
 //**************************
-open Types
+
 open Helpers
 open Helpers.Builders
 open Helpers.CloseApp
+
+open Types.ErrorTypes
 
 open Logging.Logging
 
@@ -63,39 +65,49 @@ module LogFileData =
                             |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) 
                             |> List.distinct 
                             |> Result.sequence    
-                    }
-        
+                    }  
+                    
                 |> function
-                    | Ok value  -> value
-                    | Error err -> [err, String.Empty, String.Empty]
-        
+                    | Ok value  -> Ok value
+                    | Error err -> Error (AllOtherErrors err)
             with
-            | :? IOException as ex 
-                 ->
-                  // Handle IO exceptions (file is locked) and retry after a delay
-                  System.Threading.Thread.Sleep(1000) 
+            | :? IOException as ex                 -> Error (IOExnErr <| string ex.Message) 
+            | :? UnauthorizedAccessException as ex -> Error (UnauthorizedAccessExnErr <| string ex.Message)    
+            | ex                                   -> Error (AllOtherErrors <| string ex.Message)                
+                  
+            |> function
+                | Ok value   ->
+                              value
+                | Error case ->
+                              case
+                              |> function
+                                  | IOExnErr err 
+                                      ->                                 
+                                       // Handle IO exceptions (file is locked) and retry after a delay
+                                       System.Threading.Thread.Sleep(1000) 
 
-                  match counter < 10 with  //10 pokusu o zapis do log file
-                  | false -> 
-                           printfn "Err2002E"
-                           printfn "Pokusy o zápis do log file %s selhaly" logFileName
-                           []
-                  | true  ->  
-                           printfn "Další pokus číslo: %i" counter
-                           attemptExtractLogEntries (counter + 1)
-            
-            | :? UnauthorizedAccessException as ex 
-                 -> 
-                  printfn "Err2002C"
-                  printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
-                  [] 
-                            
-            | ex -> 
-                  printfn "%s" "Err2002B"
-                  printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
-                  []                  
+                                       match counter < 10 with  //10 pokusu o zapis do log file
+                                       | false -> 
+                                                printfn "Err2002E"
+                                                printfn "Pokusy o zápis do log file %s selhaly" logFileName
+                                                []
+                                       | true  ->  
+                                                printfn "Další pokus číslo: %i" counter
+                                                attemptExtractLogEntries (counter + 1)
+
+                                  | UnauthorizedAccessExnErr err 
+                                      -> 
+                                       printfn "Err2002C"
+                                       printfn "%s" err //proste s tim nic nezrobime, kdyz to nebude fungovat... 
+                                       [] 
+
+                                  | AllOtherErrors err 
+                                      -> 
+                                       printfn "%s" "Err2002B"
+                                       printfn "%s" err //proste s tim nic nezrobime, kdyz to nebude fungovat... 
+                                       []  
                    
-        attemptExtractLogEntries 0  
+        attemptExtractLogEntries 0 
    
     //Thoth + System.IO (File.ReadAllLines) + JsonArray
     let internal extractLogEntriesThoth2 () = 
@@ -127,73 +139,77 @@ module LogFileData =
                     }
 
                 |> function
-                    | Ok value  -> value
-                    | Error err -> [err, String.Empty, String.Empty] 
+                    | Ok value  -> Ok value
+                    | Error err -> Error (AllOtherErrors err) 
 
             with
-            | :? IOException as ex 
-                 ->
-                  // Handle IO exceptions (file is locked) and retry after a delay
-                  System.Threading.Thread.Sleep(1000) 
+            | :? IOException as ex                 -> Error (IOExnErr <| string ex.Message) 
+            | :? UnauthorizedAccessException as ex -> Error (UnauthorizedAccessExnErr <| string ex.Message)    
+            | ex                                   -> Error (AllOtherErrors <| string ex.Message)                
                   
-                  match counter < 10 with //10 pokusu o zapis do log file
-                  | false -> 
-                           printfn "Err2002E"
-                           printfn "Pokusy o zápis do log file %s selhaly" logFileName
-                           []
-                  | true  ->  
-                           printfn "Další pokus číslo: %i" counter
-                           attemptExtractLogEntries (counter + 1)
-            
-            | :? UnauthorizedAccessException as ex 
-                 -> 
-                  printfn "Err2002C"
-                  printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
-                  [] 
-                            
-            | ex -> 
-                  printfn "%s" "Err2002B"
-                  printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
-                  []                  
+            |> function
+                | Ok value   ->
+                              value
+                | Error case ->
+                              case
+                              |> function
+                                  | IOExnErr err 
+                                      ->                                 
+                                       // Handle IO exceptions (file is locked) and retry after a delay
+                                       System.Threading.Thread.Sleep(1000) 
+
+                                       match counter < 10 with  //10 pokusu o zapis do log file
+                                       | false -> 
+                                                printfn "Err2002E"
+                                                printfn "Pokusy o zápis do log file %s selhaly" logFileName
+                                                []
+                                       | true  ->  
+                                                printfn "Další pokus číslo: %i" counter
+                                                attemptExtractLogEntries (counter + 1)
+
+                                  | UnauthorizedAccessExnErr err 
+                                      -> 
+                                       printfn "Err2002C"
+                                       printfn "%s" err //proste s tim nic nezrobime, kdyz to nebude fungovat... 
+                                       [] 
+
+                                  | AllOtherErrors err 
+                                      -> 
+                                       printfn "%s" "Err2002B"
+                                       printfn "%s" err //proste s tim nic nezrobime, kdyz to nebude fungovat... 
+                                       []  
                    
-        attemptExtractLogEntries 0  
+        attemptExtractLogEntries 0 
     
     //*********************************************************************************************
 
     //Nepouzivano -> Newtonsoft.Json  + File.ReadAllLines for educational purposes
     let internal extractLogEntries () = 
-
-        try            
-            pyramidOfDoom
-                {
-                    let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
-                    let! filepath = filepath, Error (sprintf "%s%s" "Chyba při čtení cesty k souboru " logFileName)
+        
+        //nepouzivano, pouze for educational purposes, bez try-with bloku
+        pyramidOfDoom
+            {
+                let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
+                let! filepath = filepath, Error (sprintf "%s%s" "Chyba při čtení cesty k souboru " logFileName)
     
-                    let fInfodat: FileInfo = new FileInfo(logFileName)
-                    let! _ =  fInfodat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName) 
+                let fInfodat: FileInfo = new FileInfo(logFileName)
+                let! _ =  fInfodat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName) 
                                            
-                    return 
-                        File.ReadAllLines(logFileName)
-                        |> Seq.map 
-                            (fun line ->                             
-                                       let item = JArray.Parse(line)                   
-                                       //tady nevadi pripadne String.Empty   
-                                       let timestamp = string item.[0] //nelze Array.item 0
-                                       let logName = string item.[1]
-                                       let message = string item.[2]  
+                return 
+                    File.ReadAllLines(logFileName)
+                    |> Seq.map 
+                        (fun line ->                             
+                                    let item = JArray.Parse(line)                   
+                                    //tady nevadi pripadne String.Empty   
+                                    let timestamp = string item.[0] //nelze Array.item 0
+                                    let logName = string item.[1]
+                                    let message = string item.[2]  
 
-                                       timestamp, logName, message  
-                            )                 
-                        |> List.ofSeq        
-                        |> List.distinct 
-                        |> Ok
-                }
+                                    timestamp, logName, message  
+                        )                 
+                    |> List.ofSeq        
+                    |> List.distinct 
+                    |> Ok
+            }
 
-            |> function
-                | Ok value -> value
-                | Error _  -> [] //k tomu nedojde
-        with
-        | ex -> 
-              printfn "%s" "Err2002A"
-              printfn "%s" <| string ex.Message //proste s tim nic nezrobime, kdyz to nebude fungovat... 
-              [] //tady nevadi List.empty jakozto vystup 
+           

@@ -96,17 +96,23 @@ module InsertInto =
                          | true  -> transaction.Rollback()  
                          | false -> transaction.Commit()  
                      
-                     msg19 ()   
+                     msg19 () 
+                     
+                     Ok ()
                                       
                  finally
                      transaction.Dispose()
                      closeConnection connection 
              with
-             | ex ->
-                   msgParam1 <| string ex.Message
-                   logInfoMsg <| sprintf "Err101 %s" (string ex.Message)
-                   closeItBaby (string ex.Message)
-
+             | ex -> Error <| string ex.Message
+                             
+             |> function
+                 | Ok value  -> 
+                              value  
+                 | Error err ->
+                              msgParam1 err
+                              logInfoMsg <| sprintf "Err101 %s" err
+                              closeItBaby err  
 
     let internal insertProcessTime getConnection2 closeConnection (dataToBeInserted : DateTime list) =    
     
@@ -149,15 +155,21 @@ module InsertInto =
                              | true  -> transaction.Commit()  
                              | false -> transaction.Rollback()  
 
-                         msg25 ()   
+                         msg25 () 
+                         
+                         Ok ()
                                           
                      finally
                          transaction.Dispose()
-                         closeConnection connection 
+                         closeConnection connection  
                  with
-                 | ex ->
-                       msgParam1 <| string ex.Message
-                       logInfoMsg <| sprintf "Err101A %s" (string ex.Message)
-                       closeItBaby (string ex.Message)
-
+                 | ex -> Error <| string ex.Message
+                                 
+                 |> function
+                     | Ok value  -> 
+                                  value  
+                     | Error err ->
+                                  msgParam1 err
+                                  logInfoMsg <| sprintf "Err101A %s" err
+                                  closeItBaby err    
    

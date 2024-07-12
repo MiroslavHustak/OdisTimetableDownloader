@@ -4,27 +4,16 @@ module ConsoleFixers =
    
     open System
 
-    //*****************
-
-    open Logging.Logging
-
-    let internal clearInputBuffer () = //zatim nevyuzito, blokuje to vsechno
-
-        try            
-            Console.OpenStandardInput()
-            |> Option.ofNull
-            |> function
-                | Some inputHandle -> Console.SetIn(new System.IO.StreamReader(inputHandle)) 
-                | None             -> logInfoMsg <| sprintf "Err122 %s" "System.IO.StreamReader()"            
-        with
-        | ex -> logInfoMsg <| sprintf "Err121 %s" (string ex.Message)  
-
     let internal consoleAppProblemFixer () = 
 
         try            
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance)         
+            Ok <| System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance)         
         with
-        | ex -> logInfoMsg <| sprintf "Err123 %s" (string ex.Message)         
+        | ex -> Error (string ex.Message) 
+        
+        |> function
+            | Ok value -> value
+            | Error err -> printfn "Err123 %s" err         
       
     let internal consoleWindowSettings () =
         
@@ -66,10 +55,6 @@ module CopyingOrMovingFiles = //output in Result type
 
     open System.IO
     
-    //*******************
-
-    open Logging.Logging
-    
     open Helpers
     open Helpers.Builders
          
@@ -92,11 +77,15 @@ module CopyingOrMovingFiles = //output in Result type
             let action sourceFilepath destinFilepath = 
                 File.Copy(sourceFilepath, destinFilepath, overwrite) 
                 in 
-                processFile source destination action
+                processFile source destination action           
         with
-        | err -> 
-               logInfoMsg <| sprintf "Err022 %s" (string err.Message)
-               Error <| sprintf "Chyba při kopírování souboru %s do %s" source destination
+        | ex -> Error (string ex.Message) 
+        
+        |> function
+            | Ok value -> value
+            | Error _  -> printfn "Err022 Chyba při kopírování souboru %s do %s" source destination     
+
+   
             
     let internal moveFiles source destination overwrite =
         try
@@ -104,20 +93,18 @@ module CopyingOrMovingFiles = //output in Result type
                 in 
                 processFile source destination action
         with
-        | err ->
-               logInfoMsg <| sprintf "Err023 %s" (string err.Message)
-               Error <| sprintf "Chyba při přemísťování souboru %s do %s" source destination
+        | ex -> Error (string ex.Message) 
+        
+        |> function
+            | Ok value -> value
+            | Error _  -> printfn "Err023 Chyba při přemísťování souboru %s do %s" source destination 
     
 module CopyingOrMovingFilesFreeMonad =   //not used yet  
 
     open System
     open System.IO
-
-    //****************
     
-    open CloseApp
-    
-    open Logging.Logging
+    open CloseApp    
     
     open Helpers
     open Helpers.Builders
@@ -153,7 +140,6 @@ module CopyingOrMovingFilesFreeMonad =   //not used yet
             | Ok path1  -> 
                          path1
             | Error err -> 
-                         logInfoMsg <| sprintf "Err021 %s" err
                          closeItBaby (sprintf "%s%s" err path2) 
                          String.Empty
 
@@ -270,11 +256,8 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
 module CheckNetConnection =  
 
     open System.Net.NetworkInformation
-
-    //***********************************
-    
+   
     open Helpers
-    open Logging.Logging   
       
     let internal checkNetConn (timeout : int) =                 
        
@@ -295,6 +278,4 @@ module CheckNetConnection =
                     )
                ) 
         with
-        | ex ->
-              logInfoMsg <| sprintf "Err110 %s" (string ex.Message)
-              None   
+        | ex -> None   

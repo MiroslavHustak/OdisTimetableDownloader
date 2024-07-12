@@ -10,10 +10,6 @@ open FsToolkit.ErrorHandling
 open Microsoft.FSharp.Quotations
 open FSharp.Quotations.Evaluator.QuotationEvaluationExtensions
 
-//***************************************************************
-
-open Logging.Logging
-
 //EDUCATIONAL CODE, but used in the app for various reasons
 
 //Just for fun :-)
@@ -63,7 +59,6 @@ let private numberOfThreads l =
              | false when l > 0 -> l
              | _                -> 1  
     | false ->
-             logInfoMsg <| sprintf "Err2003 %s" "Cannot count the number of processors available to the current process"
              1
 
 let iter action list =  

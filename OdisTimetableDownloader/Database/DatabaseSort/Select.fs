@@ -75,17 +75,17 @@ module Select =
                                           Error msg18
                     )
                 |> Result.sequence
-                |> function   
-                    | Ok value  -> 
-                                 value
-                    | Error err -> 
-                                 logInfoMsg <| sprintf "Err019 %s" err
-                                 closeItBaby err
-                                 []
+               
             finally
                 closeConnection connection 
+
         with
-        | ex -> 
-              logInfoMsg <| sprintf "Err020 %s" (string ex.Message)
-              closeItBaby msg18             
-              []
+        | ex -> Error <| string ex.Message
+                            
+        |> function
+            | Ok value  -> 
+                         value  
+            | Error err ->
+                         logInfoMsg <| sprintf "Err020 %s" err
+                         closeItBaby msg18             
+                         []  

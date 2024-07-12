@@ -20,7 +20,6 @@
     <Compile Include="Settings\SettingsMDPO.fs" />
     <Compile Include="Settings\SettingsDPO.fs" />
     <Compile Include="Settings\SettingsKODIS.fs" />
-    <Compile Include="LogFile\Logging.fs" />
     <Compile Include="Helpers\FreeMonads.fs" />
     <Compile Include="Helpers\CEBuilders.fs" />
     <Compile Include="Helpers\Parsing.fs" />
@@ -29,6 +28,7 @@
     <Compile Include="Helpers\MsgBoxClosing.fs" />
     <Compile Include="Helpers\ListParallel.fs" />
     <Compile Include="Helpers\ProgressBarFSharp.fs" />
+    <Compile Include="LogFile\Logging.fs" />
     <Compile Include="DataModelling\DataModels.fs" />
     <Compile Include="DataModelling\Dtos.fs" />
     <Compile Include="DataModelling\TransformationLayers.fs" />

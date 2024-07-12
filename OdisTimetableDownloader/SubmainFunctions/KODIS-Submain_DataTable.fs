@@ -165,17 +165,18 @@ module KODIS_SubmainDataTable =
                            let value = result ()   
                            value
                            |> function
-                               | [||] -> 
-                                       logInfoMsg <| sprintf "Err004A %s" "msg16" 
-                                       closeItBaby msg16
-                                       [||]
-                               | _    -> 
-                                       value
+                               | [||] -> Error "msg16"                                        
+                               | _    -> Ok value
                         with
-                        | ex -> 
-                              logInfoMsg <| sprintf "Err005A %s" (string ex.Message) 
-                              closeItBaby msg16 
-                              [||]                
+                        | ex -> Error <| string ex.Message  
+
+                        |> function
+                            | Ok value  -> 
+                                         value
+                            | Error err -> 
+                                         logInfoMsg <| sprintf "Err004A %s" err 
+                                         closeItBaby msg16 
+                                         [||]      
                 }
             
         let kodisTimetables2 : Reader<string list, string array> = 
@@ -236,21 +237,21 @@ module KODIS_SubmainDataTable =
                         
                     return
                         try
-                           let value = result ()  
-                         
-                           value
-                           |> function
-                               | [||] -> 
-                                       logInfoMsg <| sprintf "Err004 %s" "msg16" 
-                                       closeItBaby msg16
-                                       [||]
-                               | _    -> 
-                                       value
+                            let value = result ()   
+                            value
+                            |> function
+                                | [||] -> Error "msg16"                                        
+                                | _    -> Ok value
                         with
-                        | ex -> 
-                              logInfoMsg <| sprintf "Err005 %s" (string ex.Message) 
-                              closeItBaby msg16 
-                              [||]               
+                        | ex -> Error <| string ex.Message  
+
+                        |> function
+                            | Ok value  -> 
+                                         value
+                            | Error err ->
+                                         logInfoMsg <| sprintf "Err004 %s" err 
+                                         closeItBaby msg16 
+                                         [||]       
                 }       
          
         let kodisAttachments : Reader<string list, string array> = //Reader monad for educational purposes only, no real benefit here
@@ -307,24 +308,24 @@ module KODIS_SubmainDataTable =
                                                        [||]                                 
                                 ) 
                     
-                        return
+                        return 
                             try
-                                let value = result ()
+                                let value = result ()   
                                 value
                                 |> function
-                                    | [||] -> 
-                                            logInfoMsg <| sprintf "Err006A %s" "msg16" 
-                                            msg5 ()
-                                            closeItBaby msg16
-                                            [||]
-                                    | _    -> 
-                                            value
+                                    | [||] -> Error "msg16"                                        
+                                    | _    -> Ok value
                             with
-                            | ex -> 
-                                  logInfoMsg <| sprintf "Err007D %s" (string ex.Message) 
-                                  msg5 ()
-                                  closeItBaby msg16 
-                                  [||]                          
+                            | ex -> Error <| string ex.Message  
+
+                            |> function
+                                | Ok value  ->
+                                             value
+                                | Error err ->
+                                             logInfoMsg <| sprintf "Err006A %s" err 
+                                             msg5 ()   
+                                             closeItBaby msg16 
+                                             [||]      
                     }
         
         let addOn () =  
@@ -370,13 +371,18 @@ module KODIS_SubmainDataTable =
                 let matchResult = regex.Match(input)
         
                 match matchResult.Success with
-                | true  -> input 
-                | false -> String.Empty 
+                | true  -> Ok input 
+                | false -> Ok String.Empty 
             with            
-            | ex ->
-                  logInfoMsg <| sprintf "Err008 %s" (string ex.Message) 
-                  msg9 ()
-                  String.Empty            
+            | ex -> Error <| string ex.Message                  
+                  
+            |> function
+                | Ok value  -> 
+                             value  
+                | Error err ->
+                             logInfoMsg <| sprintf "Err008 %s" err
+                             msg9 ()
+                             String.Empty    
         
         let extractSubstring1 (input : string) =
 
@@ -386,13 +392,18 @@ module KODIS_SubmainDataTable =
                 let matchResult = regex.Match(input)
         
                 match matchResult.Success with
-                | true  -> matchResult.Value
-                | false -> String.Empty
+                | true  -> Ok matchResult.Value
+                | false -> Ok String.Empty
             with            
-            | ex ->
-                  logInfoMsg <| sprintf "Err009 %s" (string ex.Message) 
-                  msg9 ()
-                  String.Empty 
+            | ex -> Error <| string ex.Message                 
+
+            |> function
+                | Ok value  -> 
+                             value  
+                | Error err ->
+                             logInfoMsg <| sprintf "Err009 %s" err
+                             msg9 ()
+                             String.Empty     
 
         let extractSubstring2 (input: string) : (string option * int) =
 
@@ -462,11 +473,17 @@ module KODIS_SubmainDataTable =
                     |> List.item 0
                     |> splitString
                     |> List.item 1
+                    |> Ok
                 with
-                | ex -> 
-                      logInfoMsg <| sprintf "Err010 %s" (string ex.Message) 
-                      msg9 ()
-                      String.Empty  
+                | ex -> Error <| string ex.Message
+                     
+                |> function
+                    | Ok value  -> 
+                                 value  
+                    | Error err ->
+                                 logInfoMsg <| sprintf "Err010 %s" err
+                                 msg9 ()
+                                 String.Empty      
 
             let totalDateInterval = extractSubstring1 input
 
@@ -474,12 +491,18 @@ module KODIS_SubmainDataTable =
                 try
                     Regex.Split(input, totalDateInterval)
                     |> Array.toList
-                    |> List.item 1    
+                    |> List.item 1 
+                    |> Ok
                 with
-                | ex -> 
-                      logInfoMsg <| sprintf "Err011 %s" (string ex.Message) 
-                      msg9 ()
-                      String.Empty   
+                | ex -> Error <| string ex.Message
+                         
+                |> function
+                    | Ok value  -> 
+                                 value  
+                    | Error err ->
+                                 logInfoMsg <| sprintf "Err011 %s" err
+                                 msg9 ()
+                                 String.Empty   
         
             let vIndex = partAfter.IndexOf "_v"
             let tIndex = partAfter.IndexOf "_t"
@@ -666,11 +689,17 @@ module KODIS_SubmainDataTable =
                                 |> Seq.filter (fun item -> getDefaultRecordValues |> List.contains item.Name) //prunik dvou kolekci (plus jeste Seq.distinct pro unique items)
                                 |> Seq.distinct 
                                 |> Seq.iter _.Delete(true)  
+                                |> Ok
                                 //smazeme pouze adresare obsahujici stare JR, ostatni ponechame              
                         with
-                        | ex -> 
-                              logInfoMsg <| sprintf "Err012 %s" (string ex.Message)
-                              closeItBaby msg16 
+                        | ex -> Error <| string ex.Message
+                        
+                        |> function
+                            | Ok value  -> 
+                                         value  
+                            | Error err ->
+                                         logInfoMsg <| sprintf "Err012 %s" err
+                                         closeItBaby msg16 
                 }
 
         deleteIt listODISDefault4 
@@ -718,11 +747,16 @@ module KODIS_SubmainDataTable =
                                 dirInfo.EnumerateDirectories()
                                 |> Seq.filter (fun item -> item.Name = createDirName variant getDefaultRecordValues) 
                                 |> Seq.iter _.Delete(true) //trochu je to hack, ale nemusim se zabyvat tryHead, bo moze byt empty kolekce  
-                                             
+                                |> Ok                                             
                         with
-                        | ex -> 
-                              logInfoMsg <| sprintf "Err012B %s" (string ex.Message)
-                              closeItBaby msg16 
+                        | ex -> Error <| string ex.Message
+                        
+                        |> function
+                            | Ok value  -> 
+                                         value  
+                            | Error err ->
+                                         logInfoMsg <| sprintf "Err012B %s" err
+                                         closeItBaby msg16  
                 }
 
         deleteIt listODISDefault4         
@@ -748,11 +782,16 @@ module KODIS_SubmainDataTable =
                                  )           
                      | _    -> 
                              Directory.CreateDirectory(sprintf "%s" dir) |> ignore           
-                )              
+                ) |> Ok
         with
-        | ex ->           
-              logInfoMsg <| sprintf "Err013 %s" (string ex.Message)
-              closeItBaby msg16        
+        | ex -> Error <| string ex.Message
+        
+        |> function
+            | Ok value  -> 
+                         value  
+            | Error err ->
+                         logInfoMsg <| sprintf "Err013 %s" err
+                         closeItBaby msg16   
     
     //input from data filtering (links*paths) -> http request -> IO operation -> saving pdf data files on HD    
     let private downloadAndSaveTimetables pathToDir =     //FsHttp
@@ -836,13 +875,19 @@ module KODIS_SubmainDataTable =
             //operation on data
             //input from saved json files -> change of input data -> output into array >> input from array -> change of input data -> output into datatable -> data filtering (links*paths)           
                        
-            digThroughJsonStructure >> filterTimetables () variant dir <| ()   
+            digThroughJsonStructure >> filterTimetables () variant dir <| () 
+            |> Ok  
 
         with
-        | ex -> 
-              logInfoMsg <| sprintf "Err018 %s" (string ex.Message)
-              closeItBaby msg16 
-              []
+        | ex -> Error <| string ex.Message
+        
+        |> function
+            | Ok value  -> 
+                         value  
+            | Error err ->
+                         logInfoMsg <| sprintf "Err018 %s" err
+                         closeItBaby msg16  
+                         []
                            
     let internal downloadAndSave dir list = 
 
@@ -854,9 +899,14 @@ module KODIS_SubmainDataTable =
                  try
                      //input from data filtering (links*paths) -> http request -> saving pdf files on HD
                      match list with
-                     | [] -> msgParam13 dir       
-                     | _  -> downloadAndSaveTimetables dir list     
+                     | [] -> Ok <| msgParam13 dir       
+                     | _  -> Ok <| downloadAndSaveTimetables dir list     
                  with
-                 | ex -> 
-                       logInfoMsg <| sprintf "Err019 %s" (string ex.Message)
-                       closeItBaby msg16   
+                 | ex -> Error <| string ex.Message
+                 
+                 |> function
+                     | Ok value  -> 
+                                  value  
+                     | Error err ->
+                                  logInfoMsg <| sprintf "Err019 %s" err
+                                  closeItBaby msg16  

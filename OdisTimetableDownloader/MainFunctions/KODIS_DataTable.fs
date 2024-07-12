@@ -28,11 +28,16 @@ module WebScraping_KODISFMDataTable =
 
             let errorHandling fn = 
                 try
-                    fn
+                    Ok fn
                 with
-                | ex ->
-                      logInfoMsg <| sprintf "Err049 %s" (string ex.Message)
-                      closeItBaby msg16           
+                | ex -> Error <| string ex.Message
+                                
+                |> function
+                    | Ok value  -> 
+                                 value  
+                    | Error err ->
+                                 logInfoMsg <| sprintf "Err049 %s" err
+                                 closeItBaby msg16             
 
             //function //CommandLineProgram<unit> -> unit
             match clp with
@@ -45,11 +50,16 @@ module WebScraping_KODISFMDataTable =
                                                          let processStartTime = 
                                                              try 
                                                                  startNetChecking ()
-                                                                 sprintf "Začátek procesu: %s" <| DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss")                                                                  
+                                                                 Ok (sprintf "Začátek procesu: %s" <| DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"))  
                                                              with
-                                                             | ex ->       
-                                                                   logInfoMsg <| sprintf "Err503 %s" (string ex.Message)
-                                                                   sprintf "Začátek procesu nemohl býti ustanoven."   
+                                                             | ex -> Error <| string ex.Message
+                                                                             
+                                                             |> function
+                                                                 | Ok value  -> 
+                                                                              value  
+                                                                 | Error err ->
+                                                                              logInfoMsg <| sprintf "Err503 %s" err
+                                                                              sprintf "Začátek procesu nemohl býti ustanoven."      
                                                              in msgParam7 processStartTime 
                                                          in errorHandling processStartTime
 
@@ -139,11 +149,16 @@ module WebScraping_KODISFMDataTable =
                                                      let processEndTime =    
                                                          let processEndTime = 
                                                              try                                                                
-                                                                 sprintf "Konec procesu: %s" <| DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss")  
+                                                                 Ok (sprintf "Konec procesu: %s" <| DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"))                                                                    
                                                              with
-                                                             | ex ->       
-                                                                   logInfoMsg <| sprintf "Err504 %s" (string ex.Message)
-                                                                   sprintf "Konec procesu nemohl býti ustanoven."   
+                                                             | ex -> Error <| string ex.Message
+                                                                             
+                                                             |> function
+                                                                 | Ok value  -> 
+                                                                              value  
+                                                                 | Error err ->
+                                                                              logInfoMsg <| sprintf "Err504 %s" err
+                                                                              sprintf "Konec procesu nemohl býti ustanoven." 
                                                              in msgParam7 processEndTime
                                                          in errorHandling processEndTime
         cmdBuilder

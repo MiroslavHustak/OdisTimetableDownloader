@@ -59,11 +59,16 @@ module WebScraping_MDPO =
            
             let errorHandling fn = 
                 try
-                    fn
+                    Ok fn
                 with
-                | ex ->
-                      logInfoMsg <| sprintf "Err051 %s" (string ex.Message)
-                      closeItBaby msg16       
+                | ex -> Error <| string ex.Message
+                                
+                |> function
+                    | Ok value  -> 
+                                 value  
+                    | Error err ->
+                                 logInfoMsg <| sprintf "Err051 %s" err
+                                 closeItBaby msg16      
 
             match action with                                                   
             | StartProcess           -> 
