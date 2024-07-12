@@ -76,11 +76,13 @@ module InsertInto =
                                     
                                     let timestamp = 
                                         try 
-                                            DateTime.ParseExact(timestamp, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture) 
+                                            Ok <| DateTime.ParseExact(timestamp, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture) 
                                         with
-                                        | :? System.ArgumentNullException as _ -> DateTime.MinValue //TODO pokud mne neco napadne, co lepsiho tady dat                                                                                                                                                                       
-                                        | :? System.FormatException as _       -> DateTime.MinValue //TODO pokud mne neco napadne, co lepsiho tady dat
-                                        | _                                    -> DateTime.MinValue //TODO pokud mne neco napadne, co lepsiho tady dat
+                                        | _ -> Error String.Empty 
+
+                                        |> function
+                                            | Ok value -> value
+                                            | Error _  -> DateTime.MinValue 
                                     
                                     cmdInsert.Parameters.Clear() // Clear parameters for each iteration    
                                     parameterTimeStamp.Value <- timestamp                             

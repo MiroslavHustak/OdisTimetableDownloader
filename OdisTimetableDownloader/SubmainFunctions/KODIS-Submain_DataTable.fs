@@ -150,15 +150,13 @@ module KODIS_SubmainDataTable =
                                  let json = 
                                      pyramidOfDoom
                                          {
-                                             let filepath = Path.GetFullPath(pathToJson) |> Option.ofNullEmpty  
-                                             let! filepath = filepath, String.Empty //tady nelze Result.sequence, proto String.Empty misto Error
-    
+                                             let filepath = Path.GetFullPath(pathToJson) //pathToJson pod kontrolou, filepath nebude null
+                                                
                                              let fInfoDat = new FileInfo(pathToJson)
                                              let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
                                      
-                                             let fs = File.ReadAllText(pathToJson) 
-                                             let! fs = fs |> Option.ofNull, String.Empty                                             
-                                                                                                  
+                                             let fs = File.ReadAllText(pathToJson) //pathToJson pod kontrolou, fs nebude null
+                                            
                                              return fs
                                          }   
                                          
@@ -166,7 +164,7 @@ module KODIS_SubmainDataTable =
                                  |> Option.ofNull  
                                  |> function 
                                      | Some value -> value |> Array.map _.Timetable                                                
-                                     | None       -> [||] //tady nelze Result.sequence //TODO vymysli neco
+                                     | None       -> [||] //tady nelze Result.sequence 
                             )  
                         
                     return
@@ -201,17 +199,15 @@ module KODIS_SubmainDataTable =
                         |> Array.collect 
                             (fun pathToJson 
                                 ->                                       
-                                 let json = //tady nelze Result.sequence //TODO vymysli neco
+                                 let json = //tady nelze Result.sequence 
                                      pyramidOfDoom
                                          {
-                                             let filepath = Path.GetFullPath(pathToJson) |> Option.ofNullEmpty  
-                                             let! filepath = filepath, String.Empty //tady nelze Result.sequence, proto String.Empty misto Error
-    
+                                             let filepath = Path.GetFullPath(pathToJson) //pathToJson pod kontrolou, filepath nebude null
+                                             
                                              let fInfoDat = new FileInfo(pathToJson)
                                              let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
                                      
-                                             let fs = File.ReadAllText(pathToJson) 
-                                             let! fs = fs |> Option.ofNull, String.Empty                                             
+                                             let fs = File.ReadAllText(pathToJson) //pathToJson pod kontrolou, fs nebude null                                       
                                                                                                   
                                              return fs
                                          }    
@@ -222,11 +218,8 @@ module KODIS_SubmainDataTable =
                                      kodisJsonSamples 
                                      |> function 
                                          | Some value -> 
-                                                       value 
-                                                       |> Option.ofNull 
-                                                       |> function
-                                                           | Some value -> value.Data |> Array.map _.Timetable  //quli tomuto je nutno Array //nejde Some, nejde Ok
-                                                           | None       -> [||]  
+                                                       value.Data
+                                                       |> Array.map _.Timetable  //quli tomuto je nutno Array //nejde Some, nejde Ok
                                          | None       -> 
                                                        [||]   
                                  
@@ -234,11 +227,8 @@ module KODIS_SubmainDataTable =
                                      kodisJsonSamples 
                                      |> function 
                                         | Some value -> 
-                                                      value 
-                                                      |> Option.ofNull 
-                                                      |> function
-                                                          | Some value -> value.Data |> Array.collect _.Vyluky  //quli tomuto je nutno Array //nejde Some, nejde Ok
-                                                          | None       -> [||]  
+                                                      value.Data 
+                                                      |> Array.collect _.Vyluky  //quli tomuto je nutno Array //nejde Some, nejde Ok
                                         | None       -> 
                                                       [||]  
                                  
@@ -320,18 +310,16 @@ module KODIS_SubmainDataTable =
                                                            logInfoMsg <| sprintf "007B %s" "resulting in None"
                                                            [||] 
 
-                                     let json = //tady nelze Result.sequence //TODO vymysli neco
+                                     let json = //tady nelze Result.sequence 
                                          pyramidOfDoom
                                              {
-                                                 let filepath = Path.GetFullPath(pathToJson) |> Option.ofNullEmpty  
-                                                 let! filepath = filepath, String.Empty //tady nelze Result.sequence, proto String.Empty misto Error
-    
+                                                 let filepath = Path.GetFullPath(pathToJson) //pathToJson pod kontrolou, filepath nebude null
+                                                 
                                                  let fInfoDat = new FileInfo(pathToJson)
                                                  let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
-                                         
-                                                 let fs = File.ReadAllText(pathToJson) 
-                                                 let! fs = fs |> Option.ofNull, String.Empty                                             
-                                                                                                      
+                                     
+                                                 let fs = File.ReadAllText(pathToJson) //pathToJson pod kontrolou, fs nebude null
+
                                                  return fs
                                              }    
                                                           
@@ -590,15 +578,15 @@ module KODIS_SubmainDataTable =
                                let newPrefix =                                 
                                    match oldPrefix |> extractSubstring2 with
                                    | (Some value, length)
-                                       when length <= lineNumberLength -> sprintf "NAD%s%s_" <| createStringSeqFold(lineNumberLength - length, "0") <| value
-                                   | _                                 -> oldPrefix                                 
+                                         when length <= lineNumberLength -> sprintf "NAD%s%s_" <| createStringSeqFold(lineNumberLength - length, "0") <| value
+                                   | _                                   -> oldPrefix                                 
                                oldPrefix.Replace(oldPrefix, newPrefix)                        
                          | 6  -> 
                                let newPrefix = //ponechat podobny kod jako vyse, nerobit refactoring, KODIS moze vse nekdy zmenit                                
                                    match oldPrefix |> extractSubstring3 with
                                    | (Some value, length)
-                                       when length <= lineNumberLength -> sprintf "X%s%s_" <| createStringSeqFold(lineNumberLength - length, "0") <| value
-                                   | _                                 -> oldPrefix                                 
+                                         when length <= lineNumberLength -> sprintf "X%s%s_" <| createStringSeqFold(lineNumberLength - length, "0") <| value
+                                   | _                                   -> oldPrefix                                 
                                oldPrefix.Replace(oldPrefix, newPrefix)
                          | _  ->
                                sprintf "%s" oldPrefix

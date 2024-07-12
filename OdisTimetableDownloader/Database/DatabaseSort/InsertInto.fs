@@ -64,8 +64,7 @@ module InsertInto =
     
                 match cmdDeleteAll.ExecuteNonQuery() > 0 with
                 | false -> 
-                         transaction.Rollback() 
-                         Ok ()
+                         Ok <| transaction.Rollback() 
                 | true  ->                                             
                          use cmdInsert = new SqlCommand(queryInsert, connection, transaction) 
     
@@ -103,10 +102,8 @@ module InsertInto =
                              ) 
                          |> List.contains false
                          |> function
-                             | true  -> transaction.Rollback() 
-                             | false -> transaction.Commit()  
-                         
-                         Ok ()   
+                             | true  -> Ok <| transaction.Rollback() 
+                             | false -> Ok <| transaction.Commit()  
 
             finally                              
                 transaction.Dispose()

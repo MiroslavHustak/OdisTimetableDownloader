@@ -105,7 +105,10 @@ module LogFileData =
                                       -> 
                                        printfn "%s" "Err2002B"
                                        printfn "%s" err //proste s tim nic nezrobime, kdyz to nebude fungovat... 
-                                       []  
+                                       []
+                                       
+                                  | _ ->
+                                       []
                    
         attemptExtractLogEntries 0 
    
@@ -177,7 +180,10 @@ module LogFileData =
                                       -> 
                                        printfn "%s" "Err2002B"
                                        printfn "%s" err //proste s tim nic nezrobime, kdyz to nebude fungovat... 
-                                       []  
+                                       []
+                                       
+                                  | _ ->
+                                       []
                    
         attemptExtractLogEntries 0 
     
@@ -199,13 +205,13 @@ module LogFileData =
                     File.ReadAllLines(logFileName)
                     |> Seq.map 
                         (fun line ->                             
-                                    let item = JArray.Parse(line)                   
-                                    //tady nevadi pripadne String.Empty   
-                                    let timestamp = string item.[0] //nelze Array.item 0
-                                    let logName = string item.[1]
-                                    let message = string item.[2]  
+                                   let item = JArray.Parse(line)                   
+                                   //tady nevadi pripadne String.Empty   
+                                   let timestamp = string item.[0] //nelze Array.item 0
+                                   let logName = string item.[1]
+                                   let message = string item.[2]  
 
-                                    timestamp, logName, message  
+                                   timestamp, logName, message  
                         )                 
                     |> List.ofSeq        
                     |> List.distinct 

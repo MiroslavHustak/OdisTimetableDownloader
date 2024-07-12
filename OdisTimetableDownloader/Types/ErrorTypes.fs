@@ -16,5 +16,7 @@ module ErrorTypes =
 
     type internal TryWithErrors = 
         | IOExnErr of string
-        | UnauthorizedAccessExnErr of string
+        | UnauthorizedAccessExnErr of string        
+        | ArgumentNullExnErr of string //zatim nepouzito
+        | FormatExErr of string  //zatim nepouzito
         | AllOtherErrors of string

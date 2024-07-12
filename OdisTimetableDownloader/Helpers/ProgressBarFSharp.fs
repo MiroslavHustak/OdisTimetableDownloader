@@ -17,8 +17,7 @@ module ProgressBarFSharp =
 
         let bytes = //437 je tzv. Extended ASCII            
             try
-                Ok <| System.Text.Encoding.GetEncoding(437).GetBytes("█") 
-           
+                Ok <| System.Text.Encoding.GetEncoding(437).GetBytes("█")            
             with
             | ex -> Error <| string ex.Message
                                        
