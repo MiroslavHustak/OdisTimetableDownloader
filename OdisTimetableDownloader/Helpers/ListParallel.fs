@@ -10,11 +10,9 @@ open FsToolkit.ErrorHandling
 open Microsoft.FSharp.Quotations
 open FSharp.Quotations.Evaluator.QuotationEvaluationExtensions
 
-//EDUCATIONAL CODE, but used in the app for various reasons
-
 //Just for fun :-)
-//Functions seem to be as fast as Array.Parallel.iter/map for non-CPU-bound operations
-//But I have not tested too intensively....
+//Functions seem to be as fast as Array.Parallel.iter/map for non-CPU-bound operations,
+//but I have not tested too intensively....
 
 let private expr (param : 'a) = Expr.Value(param)  
   
