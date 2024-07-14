@@ -119,7 +119,7 @@ module CheckNetConnection =
         with
         | ex -> None   
 
-module CopyOrMoveFiles = //output in Result type 
+module CopyOrMoveFiles = //output -> Result type 
 
     open System.IO
     
@@ -248,7 +248,7 @@ module CopyOrMoveFilesFM =
                                                           Option.fromBool value fInfodat.Exists
                                                       ), Error <| sprintf "Zdrojový soubor %s neexistuje" value
                                                   return Ok value
-                                          }
+                                              }
 
                                       interpret config io (next (sourceFilepath config.source))
 

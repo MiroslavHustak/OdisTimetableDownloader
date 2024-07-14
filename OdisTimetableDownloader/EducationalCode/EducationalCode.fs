@@ -11,6 +11,11 @@ module OptionModule =
         match option with
         | Some value -> f value
         | None       -> None
+   
+    let ofObj (value: 'T when 'T : null) : 'T option = 
+        match value with
+        | null -> None
+        | _    -> Some value    
 
 module ResultModule =
 

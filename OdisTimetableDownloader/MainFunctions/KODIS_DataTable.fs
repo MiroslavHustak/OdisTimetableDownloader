@@ -168,7 +168,9 @@ module WebScraping_KODISFMDataTable =
                 let! _ = Free (DownloadSelectedVariantFM Pure)
 
                 return! Free (EndProcessFM Pure)
-            } |> interpret 
+            } 
+            
+        |> interpret 
 
         //*****************************************************************************************************************************************
 
