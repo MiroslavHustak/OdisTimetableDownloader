@@ -1,7 +1,7 @@
 ﻿namespace Helpers
-   
-module ConsoleFixers = 
-   
+
+module ConsoleFixers =
+
     open System
 
     let internal consoleAppProblemFixer () = 
@@ -50,166 +50,6 @@ module LogicalAliases =
             | []    -> acc
             | x::xs -> nXor_tail_recursive ((x && not acc) || ((not x) && acc)) xs
         nXor_tail_recursive false operands
-
-module CopyingOrMovingFiles = //output in Result type 
-
-    open System.IO
-    
-    open Helpers
-    open Helpers.Builders
-         
-    let private processFile source destination action =
-                         
-        pyramidOfDoom 
-            {
-                let! sourceFilepath = Path.GetFullPath(source) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" source
-                let! destinFilepath = Path.GetFullPath(destination) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" destination
-                let fInfodat: FileInfo = new FileInfo(sourceFilepath)  
-                let! _ = fInfodat.Exists |> Option.ofBool, Error <| sprintf "Zdrojový soubor %s neexistuje" sourceFilepath 
-                let dInfodat: DirectoryInfo = new DirectoryInfo(destinFilepath) //Overit vhodnost pred pouzitim
-                let! _ = dInfodat.Exists |> Option.ofBool, Error <| sprintf "Destinační adresář %s neexistuje" destinFilepath  //Overit vhodnost pred pouzitim
-                                    
-                return Ok <| action sourceFilepath destinFilepath
-            }           
-
-    let internal copyFiles source destination overwrite =
-        try
-            let action sourceFilepath destinFilepath = 
-                File.Copy(sourceFilepath, destinFilepath, overwrite) 
-                in 
-                processFile source destination action           
-        with
-        | ex -> Error (string ex.Message) 
-        
-        |> function
-            | Ok value -> value
-            | Error _  -> printfn "Err022 Chyba při kopírování souboru %s do %s" source destination     
-
-   
-            
-    let internal moveFiles source destination overwrite =
-        try
-            let action sourceFilepath destinFilepath = File.Move(sourceFilepath, destinFilepath, overwrite) 
-                in 
-                processFile source destination action
-        with
-        | ex -> Error (string ex.Message) 
-        
-        |> function
-            | Ok value -> value
-            | Error _  -> printfn "Err023 Chyba při přemísťování souboru %s do %s" source destination 
-    
-module CopyingOrMovingFilesFreeMonad =   //not used yet  
-
-    open System
-    open System.IO
-    
-    open CloseApp    
-    
-    open Helpers
-    open Helpers.Builders
-    open Helpers.FreeMonadsCM
-
-    //Free monads are just a general way of turning functors into monads.
-    //A free monad is a sequence of actions where subsequent actions can depend on the result of previous ones.
-        
-    [<Struct>]
-    type private Config =
-        {
-            source: string
-            destination: string
-            fileName: string
-        }
-
-    [<Struct>]
-    type private IO = 
-        | Copy
-        | Move 
-    
-    [<TailCall>]
-    let rec private interpret config io clp = //[<TailCall>] for testing purposes
-    //let rec private interpret config io = //[<TailCall>] for testing purposes
-
-        let source = config.source
-        let destination = config.destination
-
-        let msg = sprintf "Chyba %s při čtení cesty " 
-        
-        let result path1 path2 = 
-            match path1 with
-            | Ok path1  -> 
-                         path1
-            | Error err -> 
-                         closeItBaby (sprintf "%s%s" err path2) 
-                         String.Empty
-
-        let f = 
-            match io with
-            | Copy -> fun p1 p2 -> File.Copy(p1, p2, true) //(fun _ _ -> ())           
-            | Move -> fun p1 p2 -> File.Move(p1, p2, true) //(fun _ _ -> ())      
-        
-        match clp with 
-        //function //CommandLineProgram<unit> -> unit //warning FS3569
-        | Pure x                     ->
-                                      x
-
-        | Free (SourceFilepath next) ->
-                                      let sourceFilepath source =                                        
-                                          pyramidOfDoom
-                                              {
-                                                  let! value = Path.GetFullPath(source) |> Option.ofNullEmpty, Error <| msg "č.2"   
-                                                  let! value = 
-                                                      (
-                                                          let fInfodat: FileInfo = new FileInfo(value)   
-                                                          Option.fromBool value fInfodat.Exists
-                                                      ), Error <| msg "č.1"
-                                                  return Ok value
-                                              }    
-                                              
-                                      let param = next (result (sourceFilepath source) source) 
-                                      interpret config io param 
-
-        | Free (DestinFilepath next) ->
-                                      let destinFilepath destination =                                        
-                                          pyramidOfDoom
-                                              {
-                                                  let! value = Path.GetFullPath(destination) |> Option.ofNullEmpty, Error <| msg "č.4"    
-                                                  let! value = 
-                                                      (
-                                                          let dInfodat: DirectoryInfo = new DirectoryInfo(value)   
-                                                          Option.fromBool value dInfodat.Exists
-                                                      ), Error <| msg "č.3"
-                                                  return Ok value
-                                              }   
-
-                                      let param = next (result (destinFilepath destination) destination)    
-                                      interpret config io param
-                                      //next (result (destinFilepath destination) destination) |> interpret config io  //error FS0251 expected 
-
-        | Free (CopyOrMove (s, _))   -> 
-                                      let (sourceFilepath, destinFilepath) = s
-                                      f sourceFilepath destinFilepath 
-                                      //interpret config next 
-    
-    let private config = 
-        {
-            source = @"e:\UVstarterLog\log.txt" //kontrola s FileInfo
-            destination = @"e:\UVstarterLog\test\" //kontrola s DirectoryInfo
-            fileName = "test.txt"
-        }   
-
-    let private copyOrMoveFiles config io =
-        
-        cmdBuilder 
-            {
-                let! sourceFilepath = Free (SourceFilepath Pure)                
-                let! destinFilepath = Free (DestinFilepath Pure) 
-
-                return! Free (CopyOrMove ((sourceFilepath, sprintf "%s%s" (destinFilepath) config.fileName), Pure ()))
-            } |> interpret config io
-
-    let copyFiles () = copyOrMoveFiles config Copy
-    let moveFiles () = copyOrMoveFiles config Move
        
 module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled nazev velkym kvuli DLL pro C#        
         
@@ -231,8 +71,7 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
                          loop tail finalString  //Tail-recursive function calls that have their parameters passed by the pipe operator are not optimized as loops #6984
     
         loop listRange initialString
-
-    //Continuation-Passing Style (CPS)
+    
     [<CompiledName "CreateStringCps">]
     let internal createStringCps (strSeqNum: int, stringToAdd: string): string =
 
@@ -242,7 +81,7 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
         let rec loop list cont =
             match list with
             | []        -> cont String.Empty
-            | _ :: tail -> loop tail (fun acc -> cont (stringToAdd + acc))
+            | _ :: tail -> loop tail (fun acc -> cont (stringToAdd + acc)) //Continuation-Passing Style (CPS)
     
         loop listRange id
                   
@@ -279,3 +118,178 @@ module CheckNetConnection =
                ) 
         with
         | ex -> None   
+
+module CopyOrMoveFiles = //output in Result type 
+
+    open System.IO
+    
+    open Helpers
+    open Helpers.Builders
+         
+    let private processFile source destination action =
+                         
+        pyramidOfDoom 
+            {
+                let! sourceFilepath = Path.GetFullPath(source) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" source
+                let! destinFilepath = Path.GetFullPath(destination) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" destination
+
+                let fInfodat: FileInfo = new FileInfo(sourceFilepath)  
+                let! _ = fInfodat.Exists |> Option.ofBool, Error <| sprintf "Zdrojový soubor %s neexistuje" sourceFilepath 
+
+                let dInfodat: DirectoryInfo = new DirectoryInfo(destinFilepath) //Overit vhodnost pred pouzitim
+                let! _ = dInfodat.Exists |> Option.ofBool, Error <| sprintf "Destinační adresář %s neexistuje" destinFilepath  //Overit vhodnost pred pouzitim
+                                    
+                return Ok <| action sourceFilepath destinFilepath
+            }           
+
+    let internal copyFiles source destination overwrite =
+        try
+            let action sourceFilepath destinFilepath = 
+                File.Copy(sourceFilepath, destinFilepath, overwrite) 
+                in 
+                processFile source destination action           
+        with
+        | ex -> Error (string ex.Message) 
+        
+        |> function
+            | Ok value -> value
+            | Error _  -> printfn "Err022 Chyba při kopírování souboru %s do %s" source destination
+            
+    let internal moveFiles source destination overwrite =
+        try
+            let action sourceFilepath destinFilepath = File.Move(sourceFilepath, destinFilepath, overwrite) 
+                in 
+                processFile source destination action
+        with
+        | ex -> Error (string ex.Message) 
+        
+        |> function
+            | Ok value -> value
+            | Error _  -> printfn "Err023 Chyba při přemísťování souboru %s do %s" source destination 
+    
+module CopyOrMoveFilesFM = 
+
+    open System.IO
+    
+    open Helpers
+    open Helpers.Builders
+           
+    type private CommandLineInstruction<'a> =
+        | SourceFilepath of (Result<string, string> -> 'a)
+        | DestinFilepath of (Result<string, string> -> 'a)
+        | CopyOrMove of (Result<string, string> * Result<string, string>)
+
+    type private CommandLineProgram<'a> =
+        | Pure of 'a 
+        | Free of CommandLineInstruction<CommandLineProgram<'a>>
+
+    let private mapI f = 
+        function
+        | SourceFilepath next -> SourceFilepath (next >> f)
+        | DestinFilepath next -> DestinFilepath (next >> f)
+        | CopyOrMove s        -> CopyOrMove s 
+
+    let rec private bind f = 
+        function
+        | Free x -> x |> mapI (bind f) |> Free
+        | Pure x -> f x
+
+    type private CommandLineProgramBuilder = CommandLineProgramBuilder with
+        member this.Bind(p, f) = //x |> mapI (bind f) |> Free
+            match p with
+            | Pure x     -> f x
+            | Free instr -> Free (mapI (fun p' -> this.Bind(p', f)) instr)
+        member _.Return x = Pure x
+        member _.ReturnFrom p = p
+
+    let private cmdBuilder = CommandLineProgramBuilder
+
+    [<Struct>]
+    type internal Config =
+        {
+            source: string
+            destination: string
+            fileName: string
+        }
+
+    [<Struct>]
+    type internal IO = 
+        | Copy
+        | Move     
+
+    let rec private interpret config io clp =
+               
+        let f (source : Result<string, string>) (destination : Result<string, string>) : Result<unit, string> =
+            match source, destination with
+            | Ok s, Ok d ->
+                          try
+                              match io with
+                              | Copy -> Ok (File.Copy(s, Path.Combine(d, config.fileName), true))
+                              | Move -> Ok (File.Move(s, Path.Combine(d, config.fileName), true))
+                          with
+                          | ex -> Error ex.Message
+            | Error e, _ ->
+                          Error e
+            | _, Error e ->
+                          Error e
+
+        match clp with 
+        | Pure x                     ->
+                                      x
+
+        | Free (SourceFilepath next) ->
+                                      let sourceFilepath source =                                        
+                                          pyramidOfDoom
+                                              {
+                                                  let! value = Path.GetFullPath(source) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" source   
+                                                  let! value = 
+                                                      (
+                                                          let fInfodat: FileInfo = new FileInfo(value)   
+                                                          Option.fromBool value fInfodat.Exists
+                                                      ), Error <| sprintf "Zdrojový soubor %s neexistuje" value
+                                                  return Ok value
+                                          }
+
+                                      interpret config io (next (sourceFilepath config.source))
+
+        | Free (DestinFilepath next) ->
+                                      let destinFilepath destination =                                        
+                                          pyramidOfDoom
+                                              {
+                                                  let! value = Path.GetFullPath(destination) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" destination
+                                                  (*
+                                                      let! value = 
+                                                          (
+                                                              let dInfodat: DirectoryInfo = new DirectoryInfo(value)   
+                                                              Option.fromBool value dInfodat.Exists
+                                                          ), Error <| sprintf "Chyba při čtení cesty k %s" value
+                                                  *) 
+                                                  return Ok value
+                                              }
+
+                                      interpret config io (next (destinFilepath config.destination))
+
+        | Free (CopyOrMove (s, d))  ->
+                                     try
+                                         f s d 
+                                     with
+                                     | ex ->
+                                           match s, d with
+                                           | Ok s, Ok d ->
+                                                         Error <| sprintf "Chyba při kopírování nebo přemísťování souboru %s do %s. %s." s d (string ex.Message)
+                                           | Error e, _ ->
+                                                         Error e
+                                           | _, Error e ->
+                                                         Error e      
+
+    let internal copyOrMoveFiles config io =
+
+        cmdBuilder
+            {
+                let! sourceFilepath = Free (SourceFilepath Pure)                
+                let! destinFilepath = Free (DestinFilepath Pure)
+
+                return! Free (CopyOrMove (sourceFilepath, destinFilepath))
+            }
+
+        |> interpret config io
