@@ -163,6 +163,8 @@ module InsertSelectSort =
                              dtDataDtoGetDataTable >> dtDataTransformLayerGet <| row 
         
         let seqFromDataTable = dt.AsEnumerable() |> Seq.distinct 
+        
+        dt.Dispose()
 
         match validity with
         | FutureValidity -> 
