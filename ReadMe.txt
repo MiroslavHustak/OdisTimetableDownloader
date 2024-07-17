@@ -1,22 +1,22 @@
 Konzolová aplikace pro hromadné stahování jízdních řádů 
 ************************************************************************************************
-Vyžaduje .NET 8, teoreticky OS Windows 7 a vyšší, prakticky zkoušeno jen pod OS Windows 11.
+Vyžaduje .NET 8, teoreticky OS Windows 7 a vyšší, prakticky zkoušeno jen pod OS Windows 10.
 
-Poslední aktualizace instalačního souboru: 24-06-2024
+Poslední aktualizace instalačního souboru: 03-07-2024
 
 
 Poznámky pro instalaci:
 
-Pokud se k vám do počítače ještě nenastěhoval .NET 8 (např. společně s nějakým update OS Windows), 
+Pokud se k vám náhodou do počítače ještě nenastěhoval .NET 8 (např. společně s nějakým update OS Windows), 
 je třeba jej instalovat (64 bit), např. odtud: https://dotnet.microsoft.com/en-us/download/dotnet/8.0
 
-Aplikace není podepsána žádným "codesign certificate" - proklikat se přes Windows Defender nebo dát výjimku antiviru je daleko menší buzerace, než nějaký certifikát získat. Pokud potřebujete předem vidět zdrojový kód, viz odkaz níže.
+Aplikace není podepsána žádným "codesign certificate" - proklikat se přes Windows Defender nebo dát výjimku antiviru je 
+pro mne daleko menší buzerace, než nějaký certifikát získat. Pokud potřebujete předem vidět zdrojový kód, viz odkaz níže.
 
 
 Poznámky pro uživatele:
 
-JŘ ODIS dopravců MDPO a DPO jsou stahovány přímo z jejich webových 
-stránek a jsou uloženy v podobě, v jaké jsou staženy, bez roztřídění. 
+JŘ ODIS dopravců MDPO a DPO jsou stahovány přímo z jejich webových stránek a jsou uloženy v podobě, v jaké jsou staženy, bez roztřídění. 
 
 Proto doporučuji přednostně stahovat jízdní řády ze stránek KODISu. Trvá to sice déle, 
 neb se musí nejdříve stáhnout JSON soubory s odkazy na JŘ a teprvé poté se stahují 
@@ -34,6 +34,8 @@ odkud čerpám informace pro stažení - pak chvíli trvá, než si toho všimnu
 Z těchto důvodů raději častěji stahujte instalační soubor a kontrolujte datum poslední aktualizace instalačního souboru.
 
 Pokud naleznete problém, ocením, když mi pošlete informaci na emailovou adresu miroslav.hustak@atlas.cz .
+
+"Mobilní" verze toho programu bude k dispozici, až najdu někoho, kdo pomůže s UX/UE. 
 
 Zdrojový kód:
 https://github.com/MiroslavHustak/OdisTimetableDownloader
