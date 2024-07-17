@@ -164,6 +164,7 @@ module InsertSelectSort =
         
         let seqFromDataTable = dt.AsEnumerable() |> Seq.distinct 
         
+        dt.Clear()
         dt.Dispose()
 
         match validity with
