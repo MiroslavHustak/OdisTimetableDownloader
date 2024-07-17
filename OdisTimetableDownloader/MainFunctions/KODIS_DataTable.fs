@@ -27,10 +27,9 @@ module WebScraping_KODISFMDataTable =
         let rec interpret clp  = 
 
             let errorHandling fn = 
-                try
-                    Ok fn
-                with
-                | ex -> Error <| string ex.Message
+
+                try Ok fn
+                with ex -> Error <| string ex.Message
                                 
                 |> function
                     | Ok value  -> 
@@ -46,6 +45,7 @@ module WebScraping_KODISFMDataTable =
 
             | Free (StartProcessFM next)            -> 
                                                      let processStartTime =    
+
                                                          Console.Clear()
                                                          let processStartTime = 
                                                              try 
@@ -69,6 +69,7 @@ module WebScraping_KODISFMDataTable =
             | Free (DownloadAndSaveJsonFM next)     ->      
                                                      //Http request and IO operation (data from settings -> http request -> IO operation -> saving json files on HD)
                                                      let downloadAndSaveJson =  
+
                                                          startNetChecking ()
                                                          
                                                          msg2 ()    
@@ -89,6 +90,7 @@ module WebScraping_KODISFMDataTable =
                                                 
             | Free (DownloadSelectedVariantFM next) -> 
                                                      let downloadSelectedVariant = 
+
                                                          match variantList |> List.length with
                                                          //SingleVariantDownload
                                                          | 1 -> 
@@ -147,11 +149,10 @@ module WebScraping_KODISFMDataTable =
 
             | Free (EndProcessFM _)                 ->
                                                      let processEndTime =    
+
                                                          let processEndTime = 
-                                                             try                                                                
-                                                                 Ok (sprintf "Konec procesu: %s" <| DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"))                                                                    
-                                                             with
-                                                             | ex -> Error <| string ex.Message
+                                                             try Ok (sprintf "Konec procesu: %s" <| DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"))                                                                    
+                                                             with ex -> Error <| string ex.Message
                                                                              
                                                              |> function
                                                                  | Ok value  -> 

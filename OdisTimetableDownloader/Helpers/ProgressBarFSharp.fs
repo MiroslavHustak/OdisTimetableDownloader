@@ -27,7 +27,7 @@ module ProgressBarFSharp =
                 let percentComplete = (currentProgress * 101) / (totalProgress + 1) //101 proto, ze pri deleni 100 to po zaokrouhleni dalo jen 99%                    
                 let barFill = (currentProgress * barWidth) / totalProgress 
                
-                let characterToFill = string (Array.item 0 output) //moze byt baj aji "#"
+                let characterToFill = string (Array.item 0 output) //moze byt baj aji "#" //Option.ofNullEmpty tady nestoji za tu namahu
             
                 let bar = string <| String.replicate barFill characterToFill //Option.ofNullEmpty tady nestoji za tu namahu
                                                  

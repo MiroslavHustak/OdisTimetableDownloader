@@ -2,7 +2,7 @@
 
 open System
 
-//SCDUs for type-driven development (TDD) //TDD not strictly necessary in such a small app
+//SCDUs for type-driven development (TDD)  
 
 type [<Struct>] CompleteLinkOpt = CompleteLinkOpt of string option
 type [<Struct>] FileToBeSavedOpt = FileToBeSavedOpt of string option

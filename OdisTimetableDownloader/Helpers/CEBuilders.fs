@@ -39,10 +39,8 @@ module Builders =
         member _.Return x : 'a = x   
         member _.ReturnFrom x : 'a = x 
         member _.TryFinally(body, compensation) =
-            try 
-                body()
-            finally
-                compensation()
+            try body()
+            finally compensation()
         member _.Zero () = ()
         member _.Using(resource, binder) =
             use r = resource

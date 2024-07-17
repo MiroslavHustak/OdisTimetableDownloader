@@ -897,16 +897,12 @@ module KODIS_SubmainDataTable =
             } 
      
     let internal operationOnDataFromJson variant dir =   
-        
-        try               
-            //operation on data
-            //input from saved json files -> change of input data -> output into array >> input from array -> change of input data -> output into datatable -> data filtering (links*paths)           
-                       
-            digThroughJsonStructure >> filterTimetables () variant dir <| () 
-            |> Ok  
 
-        with
-        | ex -> Error <| string ex.Message
+        //operation on data
+        //input from saved json files -> change of input data -> output into array >> input from array -> change of input data -> output into datatable -> data filtering (links*paths)  
+        
+        try digThroughJsonStructure >> filterTimetables () variant dir <| () |> Ok
+        with ex -> Error <| string ex.Message
         
         |> function
             | Ok value  -> 

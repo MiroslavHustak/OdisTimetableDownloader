@@ -58,10 +58,9 @@ module WebScraping_MDPO =
             let dirList pathToDir = [ sprintf"%s\%s"pathToDir ODISDefault.odisDir6 ]
            
             let errorHandling fn = 
-                try
-                    Ok fn
-                with
-                | ex -> Error <| string ex.Message
+                
+                try Ok fn
+                with ex -> Error <| string ex.Message
                                 
                 |> function
                     | Ok value  -> 

@@ -31,12 +31,10 @@ module Connection =
     
     let internal closeConnection (connection: SqlConnection) =  
             
-        try
-            try
-                Ok <| connection.Close()                
-            finally
-                connection.Dispose()
-        with
+        try 
+            try Ok <| connection.Close()                
+            finally connection.Dispose()
+        with 
         | ex -> Error <| string ex.Message
                             
         |> function

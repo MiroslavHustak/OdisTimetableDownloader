@@ -73,7 +73,7 @@ module FreeMonadsCM =
             | Free instr -> Free (mapI (fun p' -> this.Bind(p', f)) instr)
         //member this.Return x = Pure x
         member this.Return x = 
-            let x = x + 1
+            let x = (+) x 1
             Pure x
         member this.ReturnFrom p = p
 

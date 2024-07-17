@@ -6,10 +6,8 @@ module ConsoleFixers =
 
     let internal consoleAppProblemFixer () = 
 
-        try            
-            Ok <| System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance)         
-        with
-        | ex -> Error (string ex.Message) 
+        try Ok <| System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance)         
+        with ex -> Error (string ex.Message) 
         
         |> function
             | Ok value -> value
