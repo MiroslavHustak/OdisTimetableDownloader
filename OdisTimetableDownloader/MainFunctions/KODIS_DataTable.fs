@@ -7,6 +7,7 @@ open System
 open Types
 
 open Settings.Messages
+open Settings.SettingsKODIS
 open Settings.SettingsGeneral
 
 open Logging.Logging
@@ -16,7 +17,7 @@ open Helpers.FreeMonads
 
 open SubmainFunctions
 open SubmainFunctions.KODIS_SubmainDataTable
-open Settings.SettingsKODIS
+
 
 module WebScraping_KODISFMDataTable = 
     
