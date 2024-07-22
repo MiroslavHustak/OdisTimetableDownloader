@@ -59,11 +59,15 @@ module TransformationLayerSend =
             oldPrefix = dbDataSend.oldPrefix |> function OldPrefix value -> value
             newPrefix = dbDataSend.newPrefix |> function NewPrefix value -> value
             startDate =
-                let startdate = dbDataSend.startDate |> function StartDate value -> value
-                match parseDate () startdate with Some value -> value | None -> DateTime.MinValue
+                dbDataSend.startDate
+                |> function StartDate value -> value
+                |> parseDate () 
+                |> function Some value -> value | None -> DateTime.MinValue
             endDate = 
-                let endDate = dbDataSend.endDate |> function EndDate value -> value
-                match parseDate () endDate with Some value -> value | None -> DateTime.MinValue
+                dbDataSend.endDate
+                |> function EndDate value -> value
+                |> parseDate ()  
+                |> function Some value -> value | None -> DateTime.MinValue               
             totalDateInterval = dbDataSend.totalDateInterval |> function TotalDateInterval value -> value
             suffix = dbDataSend.suffix |> function Suffix value -> value
             jsGeneratedString = dbDataSend.jsGeneratedString |> function JsGeneratedString value -> value
@@ -76,11 +80,13 @@ module TransformationLayerSend =
             oldPrefix = dtDataSend.oldPrefix |> function OldPrefix value -> value
             newPrefix = dtDataSend.newPrefix |> function NewPrefix value -> value
             startDate =
-                let startdate = dtDataSend.startDate |> function StartDateDtOpt value -> value
-                match startdate with Some value -> value | None -> DateTime.MinValue
+                dtDataSend.startDate
+                |> function StartDateDtOpt value -> value
+                |> function Some value -> value | None -> DateTime.MinValue
             endDate = 
-                let endDate = dtDataSend.endDate |> function EndDateDtOpt value -> value
-                match endDate with Some value -> value | None -> DateTime.MinValue
+                dtDataSend.endDate
+                |> function EndDateDtOpt value -> value
+                |> function Some value -> value | None -> DateTime.MinValue
             totalDateInterval = dtDataSend.totalDateInterval |> function TotalDateInterval value -> value
             suffix = dtDataSend.suffix |> function Suffix value -> value
             jsGeneratedString = dtDataSend.jsGeneratedString |> function JsGeneratedString value -> value

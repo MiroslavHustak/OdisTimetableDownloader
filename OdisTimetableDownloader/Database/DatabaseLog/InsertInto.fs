@@ -75,10 +75,8 @@ module InsertInto =
                                     let (timestamp, logName, message) = item 
                                     
                                     let timestamp = 
-                                        try 
-                                            Ok <| DateTime.ParseExact(timestamp, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture) 
-                                        with
-                                        | _ -> Error String.Empty 
+                                        try Ok <| DateTime.ParseExact(timestamp, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture) 
+                                        with _ -> Error String.Empty 
 
                                         |> function
                                             | Ok value -> value
