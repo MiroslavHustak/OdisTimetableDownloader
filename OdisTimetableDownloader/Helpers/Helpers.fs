@@ -273,12 +273,9 @@ module CopyOrMoveFilesFM =
                                      with
                                      | ex ->
                                            match s, d with
-                                           | Ok s, Ok d ->
-                                                         Error <| sprintf "Chyba při kopírování nebo přemísťování souboru %s do %s. %s." s d (string ex.Message)
-                                           | Error e, _ ->
-                                                         Error e
-                                           | _, Error e ->
-                                                         Error e      
+                                           | Ok s, Ok d -> Error <| sprintf "Chyba při kopírování nebo přemísťování souboru %s do %s. %s." s d (string ex.Message)
+                                           | Error e, _ -> Error e
+                                           | _, Error e -> Error e      
 
     let internal copyOrMoveFiles config io =
 
