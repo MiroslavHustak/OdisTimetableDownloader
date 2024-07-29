@@ -11,7 +11,8 @@ open Settings.Messages
 
 open Helpers
 open Helpers.Builders
-            
+
+[<RequireQualifiedAccess>]            
 module Result = 
 
     let internal mapErr fOk (fErr: Lazy<'a>) =                          
@@ -54,7 +55,8 @@ module Result =
                                     match item with
                                     | Ok _      -> String.Empty
                                     | Error err -> err
-                         ) |> List.head //One exception or None is enough for the calculation to fail
+                         )
+                         |> List.head //One exception or None is enough for the calculation to fail
                  Error err
             | _ ->
                  let okList = 
@@ -80,6 +82,7 @@ module CloseApp =
         Console.ReadKey() |> ignore 
         System.Environment.Exit(1)  
 
+[<RequireQualifiedAccess>]
 module Option =
 
     let internal ofBool =                           

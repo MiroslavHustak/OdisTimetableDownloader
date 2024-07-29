@@ -50,4 +50,9 @@ module ReaderEC =
             run env (f x)
         ReaderEC newAction
 
+(*
+    let list1 = [1; 2; 3; 4; 5]
+    let list2 = [3; 4; 5; 6; 7]
 
+    let intersectedList = List.filter (fun item -> List.contains item list2) list1
+*)

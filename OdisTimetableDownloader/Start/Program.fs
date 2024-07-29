@@ -28,7 +28,6 @@ open MainFunctions.WebScraping_MDPO
 open MainFunctions.WebScraping_KODISFM
 open MainFunctions.WebScraping_KODISFMDataTable
 
-
 [<TailCall>] 
 let rec private pathToFolder () =
     

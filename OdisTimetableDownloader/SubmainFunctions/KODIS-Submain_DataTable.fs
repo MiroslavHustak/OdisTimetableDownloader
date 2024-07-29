@@ -38,6 +38,7 @@ open Helpers.ProgressBarFSharp
 open DataModelling.DataModel
 open TransformationLayers.TransformationLayerSend
 
+
 module KODIS_SubmainDataTable =    
         
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     
@@ -689,14 +690,11 @@ module KODIS_SubmainDataTable =
                      link, path 
                 )   
 
-        let selectDataFromDt = 
-            match param with 
-            | CurrentValidity           -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted CurrentValidity |> createPathsForDownloadedFiles
-            | FutureValidity            -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted FutureValidity |> createPathsForDownloadedFiles
-            // | ReplacementService     -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted ReplacementService |> createPathsForDownloadedFiles  
-            | WithoutReplacementService -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted WithoutReplacementService |> createPathsForDownloadedFiles 
-        
-        selectDataFromDt  
+        match param with 
+        | CurrentValidity           -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted CurrentValidity |> createPathsForDownloadedFiles
+        | FutureValidity            -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted FutureValidity |> createPathsForDownloadedFiles
+        // | ReplacementService     -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted ReplacementService |> createPathsForDownloadedFiles 
+        | WithoutReplacementService -> DataTable.InsertSelectSort.sortLinksOut () dataToBeInserted WithoutReplacementService |> createPathsForDownloadedFiles          
      
     //IO operations made separate in order to have some structure in the free-monad-based design (for educational purposes)   
     let internal deleteAllODISDirectories pathToDir = 

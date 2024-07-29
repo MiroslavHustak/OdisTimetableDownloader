@@ -3,9 +3,6 @@
 open System
 open System.Data
 
-open FsToolkit
-open FsToolkit.ErrorHandling
-
 //******************************
 
 open Types
