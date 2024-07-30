@@ -39,8 +39,7 @@ module ProgressBarFSharp =
             | true  -> Ok <| msgParam8 progressBar
             | false -> Ok <| msgParam9 progressBar
 
-        with
-        | ex -> Error <| string ex.Message
+        with ex -> Error <| string ex.Message
                                
         |> function
             | Ok value -> value  

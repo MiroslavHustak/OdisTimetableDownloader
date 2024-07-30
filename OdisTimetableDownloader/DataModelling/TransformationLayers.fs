@@ -76,6 +76,7 @@ module TransformationLayerSend =
             jsGeneratedString = dbDataSend.jsGeneratedString |> function JsGeneratedString value -> value
             completeLink = dbDataSend.completeLink |> function CompleteLink value -> value
             fileToBeSaved = dbDataSend.fileToBeSaved |> function FileToBeSaved value -> value
+            partialLink = dbDataSend.partialLink |> function PartialLink value -> value
         } 
 
     let internal dtDataTransformLayerSend (dtDataSend : DtDataSend) : DtDtoSend =

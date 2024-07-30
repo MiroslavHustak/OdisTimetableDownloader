@@ -14,7 +14,8 @@ CREATE TABLE TimetableLinks
     VT_Suffix NVARCHAR(50),
     JS_GeneratedString NVARCHAR(50),
     CompleteLink NVARCHAR(100) NOT NULL,
-    FileToBeSaved NVARCHAR(100)    
+    FileToBeSaved NVARCHAR(100), 
+    PartialLink NVARCHAR(100)
 );
 
 USE TimetableDownloader;
@@ -24,12 +25,12 @@ INSERT INTO TimetableLinks
 (
     OldPrefix, NewPrefix, StartDate, EndDate, 
     TotalDateInterval,VT_Suffix, JS_GeneratedString, 
-    CompleteLink, FileToBeSaved
+    CompleteLink, FileToBeSaved, PartialLink
 ) 
 VALUES
 (
     @OldPrefix, @NewPrefix, @StartDate, @EndDate, 
     @TotalDateInterval, @VT_Suffix, @JS_GeneratedString, 
-    @CompleteLink, @FileToBeSaved
+    @CompleteLink, @FileToBeSaved, @PartialLink
 );
 

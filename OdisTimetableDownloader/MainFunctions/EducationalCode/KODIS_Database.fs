@@ -5,6 +5,7 @@ open System
 open Types
 
 open Settings.Messages
+open Settings.SettingsKODIS
 open Settings.SettingsGeneral
     
 open Logging.Logging
@@ -17,6 +18,7 @@ open Database2.Connection
 
 open SubmainFunctions
 open SubmainFunctions.KODIS_Submain
+
 
 //******************************************************************************
 //Do you review my SQL skills? If so, you are at the right place :-).
@@ -64,65 +66,91 @@ module WebScraping_KODISFM =
                                                      interpret param
 
             | Free (DownloadAndSaveJsonFM next)     ->      
+                                                     (*
                                                      //Http request and IO operation (data from settings -> http request -> IO operation -> saving json files on HD)
-                                                     //let downloadAndSaveJson =  
-                                                        // startNetChecking ()
-                                                        // KODIS_Submain.downloadAndSaveJson ()  
-                                                        // in errorHandling downloadAndSaveJson
+                                                     let downloadAndSaveJson =  
 
+                                                         startNetChecking ()
+                                                         
+                                                         msg2 ()    
+                                                         msg15 ()
+        
+                                                         Console.Write("\r" + new string(' ', (-) Console.WindowWidth 1) + "\r")
+                                                         Console.CursorLeft <- 0  
+
+                                                         KODIS_Submain.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
+                                                         
+                                                         msg3 ()   
+                                                         msg11 ()    
+                                                         
+                                                         in errorHandling downloadAndSaveJson
+                                                     *) 
                                                      let param = next ()
-                                                     interpret param                                                
+                                                     interpret param                                            
                                                 
             | Free (DownloadSelectedVariantFM next) -> 
-                                                     let downloadSelectedVariant =                                                          
-                                                         match variantList |> List.length with
-                                                         //SingleVariantDownload
-                                                         | 1 -> 
-                                                              let variant = variantList |> List.head
+                                                     try
+                                                        
+                                                        let connection = Database.Connection.getConnection ()
+                                                        try
+                                                            match variantList |> List.length with
+                                                            //SingleVariantDownload
+                                                            | 1 -> 
+                                                                 let variant = variantList |> List.head
 
-                                                              //IO operation
-                                                              KODIS_Submain.deleteOneODISDirectory variant pathToDir 
+                                                                 //IO operation
+                                                                 KODIS_Submain.deleteOneODISDirectory variant pathToDir 
                                                               
-                                                              //operation on data
-                                                              let dirList =                                                                    
-                                                                  KODIS_Submain.createOneNewDirectory  //list -> aby bylo mozno pouzit funkci createFolders bez uprav  
-                                                                  <| pathToDir 
-                                                                  <| KODIS_Submain.createDirName variant listODISDefault4 
+                                                                 //operation on data
+                                                                 let dirList =                                                                    
+                                                                     KODIS_Submain.createOneNewDirectory  //list -> aby bylo mozno pouzit funkci createFolders bez uprav  
+                                                                     <| pathToDir 
+                                                                     <| KODIS_Submain.createDirName variant listODISDefault4 
 
-                                                              //IO operation 
-                                                              KODIS_Submain.createFolders dirList
+                                                                 //IO operation 
+                                                                 KODIS_Submain.createFolders dirList
 
-                                                              //operation on data 
-                                                              //input from saved json files -> change of input data -> output into array -> input from array -> change of input data -> output into database -> data filtering (link*path) 
-                                                              KODIS_Submain.operationOnDataFromJson variant (dirList |> List.head) 
+                                                                 //operation on data 
+                                                                 //input from saved json files -> change of input data -> output into array -> input from array -> change of input data -> output into database -> data filtering (link*path) 
+                                                                 KODIS_Submain.operationOnDataFromJson connection variant (dirList |> List.head) 
 
-                                                              //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
-                                                              |> KODIS_Submain.downloadAndSave (dirList |> List.head) 
+                                                                 //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
+                                                                 |> KODIS_Submain.downloadAndSave (dirList |> List.head) 
 
-                                                         //BulkVariantDownload       
-                                                         | _ ->  
-                                                              //IO operation
-                                                              KODIS_Submain.deleteAllODISDirectories pathToDir
+                                                            //BulkVariantDownload       
+                                                            | _ ->  
+                                                                 //IO operation
+                                                                 KODIS_Submain.deleteAllODISDirectories pathToDir
                                                               
-                                                              //operation on data 
-                                                              let dirList = KODIS_Submain.createNewDirectories pathToDir listODISDefault4
+                                                                 //operation on data 
+                                                                 let dirList = KODIS_Submain.createNewDirectories pathToDir listODISDefault4
                                                               
-                                                              //IO operation 
-                                                              KODIS_Submain.createFolders dirList 
+                                                                 //IO operation 
+                                                                 KODIS_Submain.createFolders dirList 
                                                               
-                                                              (variantList, dirList)
-                                                              ||> List.iter2 
-                                                                  (fun variant dir 
-                                                                      -> 
-                                                                       //operation on data 
-                                                                       //input from saved json files -> change of input data -> output into array -> input from array -> change of input data -> output into database -> data filtering (link*path) 
-                                                                       KODIS_Submain.operationOnDataFromJson variant dir 
+                                                                 (variantList, dirList)
+                                                                 ||> List.iter2 
+                                                                     (fun variant dir 
+                                                                         -> 
+                                                                          //operation on data 
+                                                                          //input from saved json files -> change of input data -> output into array -> input from array -> change of input data -> output into database -> data filtering (link*path) 
+                                                                          KODIS_Submain.operationOnDataFromJson connection variant dir 
 
-                                                                       //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
-                                                                       |> KODIS_Submain.downloadAndSave dir   
-                                                                  )     
+                                                                          //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
+                                                                          |> KODIS_Submain.downloadAndSave dir   
+                                                                     )     
                                                                                                              
-                                                         in errorHandling downloadSelectedVariant  
+                                                            Ok ()       
+                                                        finally
+                                                           closeConnection connection 
+                                                     with ex -> Error <| string ex.Message 
+                                                     
+                                                     |> function
+                                                         | Ok value  -> 
+                                                                      value  
+                                                         | Error err ->
+                                                                      logInfoMsg <| sprintf "Err050A %s" err
+                                                                      closeItBaby msg16   
 
                                                      let param = next ()
                                                      interpret param
@@ -149,8 +177,15 @@ module WebScraping_KODISFM =
         
         let endProcess = DateTime.Now
 
-        insertLogEntries getConnection2 closeConnection
-        insertProcessTime getConnection2 closeConnection [startProcess; endProcess]
+        try
+            let connection = Database2.Connection.getConnection2 ()
+
+            try
+                insertLogEntries connection
+                insertProcessTime connection [startProcess; endProcess]
+            finally
+                closeConnection connection 
+        with ex -> () 
         //*****************************************************************************************************************************************
 
         //CurrentValidity = JR striktne platne k danemu dni, tj. pokud je napr. na dany den vylukovy JR, stahne se tento JR, ne JR platny dalsi den

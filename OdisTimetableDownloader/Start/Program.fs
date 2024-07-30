@@ -48,8 +48,7 @@ let rec private pathToFolder () =
                      printfn "\nNebyl vybrán adresář. Tak znovu... Anebo klikni na křížek pro ukončení aplikace. \n"                                                                     
                      Ok <| pathToFolder ()   
    
-    with
-    | ex -> Error <| string ex.Message
+    with ex -> Error <| string ex.Message
                     
     |> function
         | Ok value  -> 
@@ -205,8 +204,8 @@ let main argv =
                                             
                                          Console.Clear()
                                             
-                                         webscraping_KODISFMDataTable path variant //datatable-based app
-                                         //webscraping_KODISFM path variant //database-based app
+                                         //webscraping_KODISFMDataTable path variant //datatable-based app
+                                         webscraping_KODISFM path variant //database-based app
                                             
                                          printfn "%c" <| char(32)         
                                          printfn "Pokud se v údajích KODISu nacházel odkaz na JŘ, který obsahoval chybné či neúplné údaje,"
@@ -230,8 +229,7 @@ let main argv =
                 match fn.Key with
                 | ConsoleKey.Escape -> Ok <| System.Environment.Exit(0)
                 | _                 -> Ok <| variant ()
-            with
-            | ex -> Error <| string ex.Message
+            with ex -> Error <| string ex.Message
                             
             |> function
                 | Ok value  -> 

@@ -32,6 +32,7 @@
     <Compile Include="DataModelling\DataModels.fs" />
     <Compile Include="DataModelling\Dtos.fs" />
     <Compile Include="DataModelling\TransformationLayers.fs" />
+    <Compile Include="DataTable\CreateDt.fs" />
     <Compile Include="DataTable\InsertSelectSort.fs" />
     <Content Include="Database\DatabaseSort\SQL_ITVFs.txt" />
     <Content Include="Database\DatabaseSort\SQL_Views.txt" />

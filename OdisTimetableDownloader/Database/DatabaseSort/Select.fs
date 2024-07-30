@@ -21,11 +21,9 @@ open TransformationLayers.TransformationLayerGet
 
 module Select =
 
-    let internal select getConnection closeConnection pathToDir itvfCall =
+    let internal select (connection : SqlConnection) pathToDir itvfCall =
         
-        try
-            let connection: SqlConnection = getConnection ()
-                     
+        try                     
             try  
                 //query je tady volani ITVF
                 let query = sprintf "SELECT * FROM %s" itvfCall
@@ -68,7 +66,7 @@ module Select =
                                  |> function
                                      | Some link, Some file 
                                          -> 
-                                          Ok (link, file)
+                                          Ok (CompleteLink link, FileToBeSaved file) //TDD provedeno takto slozite pouze quli kompatbilite se zmenenym DataTable for testing purposes 
                                      | _                   
                                          ->
                                           //failwith msg18 
@@ -77,10 +75,8 @@ module Select =
                 |> Result.sequence
                
             finally
-                closeConnection connection 
-
-        with
-        | ex -> Error <| string ex.Message
+                () //ponechano, kdyby neco...
+        with ex -> Error <| string ex.Message
                             
         |> function
             | Ok value  -> 

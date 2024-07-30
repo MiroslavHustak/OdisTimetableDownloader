@@ -22,7 +22,7 @@ open DataModelling.DataModel
 
 module InsertInto = 
 
-    let internal insertLogEntries getConnection2 closeConnection =
+    let internal insertLogEntries (connection : SqlConnection) =
 
         let dataToBeInserted = Database2.LogFileData.extractLogEntriesThoth2 () 
 
@@ -56,9 +56,7 @@ module InsertInto =
                 "                   
            
              try
-                 let isolationLevel = System.Data.IsolationLevel.Serializable 
-                                 
-                 let connection: SqlConnection = getConnection2 ()
+                 let isolationLevel = System.Data.IsolationLevel.Serializable                                  
                  let transaction: SqlTransaction = connection.BeginTransaction(isolationLevel)                 
 
                  try                        
@@ -101,10 +99,8 @@ module InsertInto =
                      Ok ()
                                       
                  finally
-                     transaction.Dispose()
-                     closeConnection connection 
-             with
-             | ex -> Error <| string ex.Message
+                     transaction.Dispose()                    
+             with ex -> Error <| string ex.Message
                              
              |> function
                  | Ok value  -> 
@@ -114,7 +110,7 @@ module InsertInto =
                               logInfoMsg <| sprintf "Err101 %s" err
                               closeItBaby err  
 
-    let internal insertProcessTime getConnection2 closeConnection (dataToBeInserted : DateTime list) =    
+    let internal insertProcessTime (connection : SqlConnection) (dataToBeInserted : DateTime list) =    
     
             match dataToBeInserted.Length with
             | 0 -> 
@@ -127,9 +123,7 @@ module InsertInto =
                     "  
                     
                  try
-                     let isolationLevel = System.Data.IsolationLevel.Serializable 
-                                     
-                     let connection: SqlConnection = getConnection2 () 
+                     let isolationLevel = System.Data.IsolationLevel.Serializable                                      
                      let transaction: SqlTransaction = connection.BeginTransaction(isolationLevel) 
                                      
                      try   
@@ -161,9 +155,7 @@ module InsertInto =
                                           
                      finally
                          transaction.Dispose()
-                         closeConnection connection  
-                 with
-                 | ex -> Error <| string ex.Message
+                 with ex -> Error <| string ex.Message
                                  
                  |> function
                      | Ok value  -> 

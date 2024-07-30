@@ -11,6 +11,7 @@ open FsToolkit.ErrorHandling
 
 open Settings.Messages
 
+open Helpers.Casting
 open Helpers.Builders
 open Helpers.CloseApp
 open Helpers.TryParserDate
@@ -20,25 +21,28 @@ open Logging.Logging
 open DataModelling.Dto
 open DataModelling.DataModel
 
-module InsertInto = 
 
-    let internal insert getConnection closeConnection (dataToBeInserted : DbDtoSend list) =
+module InsertInto =     
+
+    let internal insert (connection : SqlConnection) (dataToBeInserted : DbDtoSend list) =
     
         let queryDeleteAll = "DELETE FROM TimetableLinks"
-             
+
+        let queryCount = "SELECT COUNT(*) FROM TimetableLinks"
+   
         let queryInsert = 
             "           
             INSERT INTO TimetableLinks 
             (
                 OldPrefix, NewPrefix, StartDate, EndDate, 
                 TotalDateInterval,VT_Suffix, JS_GeneratedString, 
-                CompleteLink, FileToBeSaved
+                CompleteLink, FileToBeSaved, PartialLink
             ) 
             VALUES
             (
                 @OldPrefix, @NewPrefix, @StartDate, @EndDate, 
                 @TotalDateInterval, @VT_Suffix, @JS_GeneratedString, 
-                @CompleteLink, @FileToBeSaved
+                @CompleteLink, @FileToBeSaved, @PartialLink
             );
             "   
             
@@ -48,12 +52,16 @@ module InsertInto =
             //System.Data.IsolationLevel.RepeatableRead
             //System.Data.IsolationLevel.ReadUncommitted
                                
-            let connection: SqlConnection = getConnection()
             let transaction: SqlTransaction = connection.BeginTransaction(isolationLevel) //Transaction to be implemented for all commands linked to the connection
                 
             try 
-                use cmdDeleteAll = new SqlCommand(queryDeleteAll, connection, transaction)                                
-                                    
+                use cmdDeleteAll = new SqlCommand(queryDeleteAll, connection, transaction) 
+                use cmdCount = new SqlCommand(queryCount, connection, transaction)
+
+                cmdDeleteAll.ExecuteNonQuery() |> ignore
+                                
+                let rowCount = castAs<int> <| cmdCount.ExecuteScalar() 
+                                                   
                 let parameterStart = new SqlParameter()                 
                 parameterStart.ParameterName <- "@StartDate"  
                 parameterStart.SqlDbType <- SqlDbType.Date  
@@ -62,12 +70,12 @@ module InsertInto =
                 parameterEnd.ParameterName <- "@EndDate"  
                 parameterEnd.SqlDbType <- SqlDbType.Date  
     
-                match cmdDeleteAll.ExecuteNonQuery() > 0 with
+                match rowCount = Some 0 with 
                 | false -> 
                          Ok <| transaction.Rollback() 
                 | true  ->                                             
                          use cmdInsert = new SqlCommand(queryInsert, connection, transaction) 
-    
+                             
                          dataToBeInserted     
                          |> List.map
                              (fun item -> 
@@ -96,7 +104,8 @@ module InsertInto =
                                         cmdInsert.Parameters.AddWithValue("@VT_Suffix", item.suffix) |> ignore
                                         cmdInsert.Parameters.AddWithValue("@JS_GeneratedString", item.jsGeneratedString) |> ignore
                                         cmdInsert.Parameters.AddWithValue("@CompleteLink", item.completeLink) |> ignore
-                                        cmdInsert.Parameters.AddWithValue("@FileToBeSaved", item.fileToBeSaved) |> ignore   
+                                        cmdInsert.Parameters.AddWithValue("@FileToBeSaved", item.fileToBeSaved) |> ignore 
+                                        cmdInsert.Parameters.AddWithValue("@PartialLink", item.partialLink) |> ignore 
                                                                
                                         cmdInsert.ExecuteNonQuery() > 0
                              ) 
@@ -106,8 +115,7 @@ module InsertInto =
                              | false -> Ok <| transaction.Commit()  
 
             finally                              
-                transaction.Dispose()
-                closeConnection connection 
+                transaction.Dispose()            
         with
         | ex -> Error (string ex.Message)
 

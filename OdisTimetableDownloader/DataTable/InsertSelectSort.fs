@@ -23,36 +23,9 @@ open TransformationLayers.TransformationLayerGet
 
 
 //chyby vezme tryWith Err18
-module InsertSelectSort = 
-        
-    let private dt = 
-
-        let dtTimetableLinks = new DataTable()
-        
-        let addColumn (name : string) (dataType : Type) =
-            
-            let dtColumn = new DataColumn()
-
-            dtColumn.DataType <- dataType
-            dtColumn.ColumnName <- name
-
-            dtTimetableLinks.Columns.Add(dtColumn)
-        
-        //musi byt jen .NET type, aby nebyly problemy 
-        addColumn "OldPrefix" typeof<string>
-        addColumn "NewPrefix" typeof<string>
-        addColumn "StartDate" typeof<DateTime>
-        addColumn "EndDate" typeof<DateTime>
-        addColumn "TotalDateInterval" typeof<string>
-        addColumn "VT_Suffix" typeof<string>
-        addColumn "JS_GeneratedString" typeof<string>
-        addColumn "CompleteLink" typeof<string>
-        addColumn "FileToBeSaved" typeof<string>
-        addColumn "PartialLink" typeof<string>
-        
-        dtTimetableLinks
-
-    let private insertIntoDataTable (dataToBeInserted : DtDtoSend list) =
+module InsertSelectSort =      
+   
+    let private insertIntoDataTable (dt : DataTable) (dataToBeInserted : DtDtoSend list) =
             
         dataToBeInserted 
         |> List.iter 
@@ -85,12 +58,11 @@ module InsertSelectSort =
                        dt.Rows.Add(newRow)
             )                  
 
-    let internal sortLinksOut () (dataToBeInserted : DtDtoSend list) validity = 
+    let internal sortLinksOut dt (dataToBeInserted : DtDtoSend list) validity = 
 
-        try
-            try
-                
-                insertIntoDataTable dataToBeInserted  
+        try            
+            try                
+                insertIntoDataTable dt dataToBeInserted  
 
                 let condition dateValidityStart dateValidityEnd currentTime (fileToBeSaved : string) = 
 
@@ -222,12 +194,9 @@ module InsertSelectSort =
                                       |> List.ofSeq
                                       |> Ok
             finally
-                dt.Clear()
-                dt.Dispose()
+                dt.Clear()               
     
-        with 
-        | ex -> 
-              Error <| string ex.Message
+        with ex -> Error <| string ex.Message
         
         |> function
             | Ok value  -> 

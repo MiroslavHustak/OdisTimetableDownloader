@@ -36,8 +36,7 @@ module Logging =
                 sw.Close()
                 sw.Dispose()
                 jsonWriter.Close()
-        with
-        | ex -> Error <| string ex.Message
+        with ex -> Error <| string ex.Message
                                    
         |> function
             | Ok value  -> 

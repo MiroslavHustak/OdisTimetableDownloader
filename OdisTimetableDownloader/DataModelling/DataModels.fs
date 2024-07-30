@@ -37,6 +37,7 @@ module DataModel =
             jsGeneratedString : JsGeneratedString 
             completeLink : CompleteLink 
             fileToBeSaved : FileToBeSaved
+            partialLink : PartialLink
         }
 
     type DtDataSend = 

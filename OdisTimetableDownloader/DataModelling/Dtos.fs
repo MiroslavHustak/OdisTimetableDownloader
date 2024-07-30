@@ -32,6 +32,7 @@ module Dto =
             jsGeneratedString : string 
             completeLink : string 
             fileToBeSaved : string 
+            partialLink : string
         }
 
     type DtDtoSend = 
