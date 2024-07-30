@@ -70,52 +70,52 @@ module InsertInto =
                 parameterEnd.ParameterName <- "@EndDate"  
                 parameterEnd.SqlDbType <- SqlDbType.Date  
     
-                match rowCount = Some 0 with 
-                | false -> 
-                         Ok <| transaction.Rollback() 
-                | true  ->                                             
-                         use cmdInsert = new SqlCommand(queryInsert, connection, transaction) 
+                match rowCount with 
+                | Some 0 ->                              
+                          use cmdInsert = new SqlCommand(queryInsert, connection, transaction) 
                              
-                         dataToBeInserted     
-                         |> List.map
-                             (fun item -> 
-                                        (*   
-                                        let (startDate, endDate) =   
+                          dataToBeInserted     
+                          |> List.map
+                              (fun item -> 
+                                         (*   
+                                         let (startDate, endDate) =   
     
-                                            pyramidOfDoom
-                                                {
-                                                    let! startDate = item.startDate, (DateTime.MinValue, DateTime.MinValue)                                                      
-                                                    let! endDate = item.endDate, (DateTime.MinValue, DateTime.MinValue)                             
+                                             pyramidOfDoom
+                                                 {
+                                                     let! startDate = item.startDate, (DateTime.MinValue, DateTime.MinValue)                                                      
+                                                     let! endDate = item.endDate, (DateTime.MinValue, DateTime.MinValue)                             
                                               
-                                                    return (startDate, endDate)
+                                                     return (startDate, endDate)
                                                 }
-                                        *)
-                                        cmdInsert.Parameters.Clear() // Clear parameters for each iteration     
-                                        cmdInsert.Parameters.AddWithValue("@OldPrefix", item.oldPrefix) |> ignore
-                                        cmdInsert.Parameters.AddWithValue("@NewPrefix", item.newPrefix) |> ignore
+                                         *)
+                                         cmdInsert.Parameters.Clear() // Clear parameters for each iteration     
+                                         cmdInsert.Parameters.AddWithValue("@OldPrefix", item.oldPrefix) |> ignore
+                                         cmdInsert.Parameters.AddWithValue("@NewPrefix", item.newPrefix) |> ignore
     
-                                        parameterStart.Value <- item.startDate
-                                        cmdInsert.Parameters.Add(parameterStart) |> ignore
+                                         parameterStart.Value <- item.startDate
+                                         cmdInsert.Parameters.Add(parameterStart) |> ignore
     
-                                        parameterEnd.Value <- item.endDate                                
-                                        cmdInsert.Parameters.Add(parameterEnd) |> ignore
+                                         parameterEnd.Value <- item.endDate                                
+                                         cmdInsert.Parameters.Add(parameterEnd) |> ignore
     
-                                        cmdInsert.Parameters.AddWithValue("@TotalDateInterval", item.totalDateInterval) |> ignore
-                                        cmdInsert.Parameters.AddWithValue("@VT_Suffix", item.suffix) |> ignore
-                                        cmdInsert.Parameters.AddWithValue("@JS_GeneratedString", item.jsGeneratedString) |> ignore
-                                        cmdInsert.Parameters.AddWithValue("@CompleteLink", item.completeLink) |> ignore
-                                        cmdInsert.Parameters.AddWithValue("@FileToBeSaved", item.fileToBeSaved) |> ignore 
-                                        cmdInsert.Parameters.AddWithValue("@PartialLink", item.partialLink) |> ignore 
+                                         cmdInsert.Parameters.AddWithValue("@TotalDateInterval", item.totalDateInterval) |> ignore
+                                         cmdInsert.Parameters.AddWithValue("@VT_Suffix", item.suffix) |> ignore
+                                         cmdInsert.Parameters.AddWithValue("@JS_GeneratedString", item.jsGeneratedString) |> ignore
+                                         cmdInsert.Parameters.AddWithValue("@CompleteLink", item.completeLink) |> ignore
+                                         cmdInsert.Parameters.AddWithValue("@FileToBeSaved", item.fileToBeSaved) |> ignore 
+                                         cmdInsert.Parameters.AddWithValue("@PartialLink", item.partialLink) |> ignore 
                                                                
-                                        cmdInsert.ExecuteNonQuery() > 0
-                             ) 
-                         |> List.contains false
-                         |> function
-                             | true  -> Ok <| transaction.Rollback() 
-                             | false -> Ok <| transaction.Commit()  
+                                         cmdInsert.ExecuteNonQuery() > 0
+                              ) 
+                          |> List.contains false
+                          |> function
+                              | true  -> Ok <| transaction.Rollback() 
+                              | false -> Ok <| transaction.Commit() 
+                | _      -> 
+                          Error <| sprintf "Err033A %s" "Databázová tabulka není prázdná."          
 
             finally                              
-                transaction.Dispose()            
+                transaction.Dispose()          
         with
         | ex -> Error (string ex.Message)
 
