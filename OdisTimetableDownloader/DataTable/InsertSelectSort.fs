@@ -48,6 +48,7 @@ module InsertSelectSort =
         addColumn "JS_GeneratedString" typeof<string>
         addColumn "CompleteLink" typeof<string>
         addColumn "FileToBeSaved" typeof<string>
+        addColumn "PartialLink" typeof<string>
         
         dtTimetableLinks
 
@@ -79,6 +80,7 @@ module InsertSelectSort =
                        newRow.["JS_GeneratedString"] <- item.jsGeneratedString
                        newRow.["CompleteLink"] <- item.completeLink
                        newRow.["FileToBeSaved"] <- item.fileToBeSaved
+                       newRow.["PartialLink"] <- item.partialLink
                        
                        dt.Rows.Add(newRow)
             )                  
@@ -150,6 +152,7 @@ module InsertSelectSort =
                         endDate = Convert.ToDateTime (row.["EndDate"]) |> Option.ofNull
                         completeLink = Convert.ToString (row.["CompleteLink"]) |> Option.ofNullEmpty
                         fileToBeSaved = Convert.ToString (row.["FileToBeSaved"]) |> Option.ofNullEmpty
+                        partialLink = Convert.ToString (row.["PartialLink"]) |> Option.ofNullEmpty 
                     } 
 
                 let dataTransformation row =                                 
@@ -163,13 +166,15 @@ module InsertSelectSort =
                                      logInfoMsg <| sprintf "Err901A %s" err 
                                      closeItBaby err
                                      dtDataDtoGetDataTable >> dtDataTransformLayerGet <| row 
-        
+
                 let seqFromDataTable = dt.AsEnumerable() |> Seq.distinct 
                         
                 validity 
                 |> function
                     | FutureValidity ->                             
-                                      seqFromDataTable                          
+                                      seqFromDataTable    
+                                      |> Seq.groupBy (fun row -> (row |> dataTransformation).partialLink)
+                                      |> Seq.map (fun (partialLink, group) -> group |> Seq.head)
                                       |> Seq.filter
                                           (fun row ->
                                                     let startDate = (row |> dataTransformation).startDate |> function StartDateDt value -> value
@@ -183,12 +188,14 @@ module InsertSelectSort =
                                                     (row |> dataTransformation).completeLink,
                                                     (row |> dataTransformation).fileToBeSaved
                                           )
-                                      |> Seq.distinct //na rozdil od ITVF v SQL se musi pouzit distinct
+                                      |> Seq.distinct //na rozdil od ITVF v SQL se musi pouzit distinct                                     
                                       |> List.ofSeq
                                       |> Ok
 
                     | _              -> 
                                       seqFromDataTable
+                                      |> Seq.groupBy (fun row -> (row |> dataTransformation).partialLink)
+                                      |> Seq.map (fun (partialLink, group) -> group |> Seq.head)
                                       |> Seq.filter
                                           (fun row ->
                                                     let startDate = (row |> dataTransformation).startDate |> function StartDateDt value -> value
@@ -206,7 +213,7 @@ module InsertSelectSort =
                                                group |> Seq.head
                                           )
                                       |> Seq.map
-                                          (fun (_ , row) 
+                                          (fun (newPrefix, row) 
                                               ->
                                                (row |> dataTransformation).completeLink,
                                                (row |> dataTransformation).fileToBeSaved

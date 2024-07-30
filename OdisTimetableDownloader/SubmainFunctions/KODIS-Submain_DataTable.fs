@@ -384,7 +384,7 @@ module KODIS_SubmainDataTable =
                              msg5 ()
                              [||]      
 
-        Array.append <| task <| addOn() |> Array.distinct
+        (Array.append <| task <| addOn()) |> Array.distinct
     
     //input from array -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
     let private filterTimetables () param (pathToDir: string) diggingResult = 
@@ -615,14 +615,19 @@ module KODIS_SubmainDataTable =
                 jsGeneratedString = JsGeneratedString jsGeneratedString
                 completeLink = CompleteLink input
                 fileToBeSaved = FileToBeSaved fileToBeSaved
+                partialLink = 
+                    let pattern = Regex.Escape(jsGeneratedString)
+                    PartialLink <| Regex.Replace(input, pattern, String.Empty)
             }
             |> dtDataTransformLayerSend  
 
      
         //**********************Filtering and datatable data inserting********************************************************
-        let dataToBeInserted =           
-            diggingResult       
-            |> Array.Parallel.map 
+        let dataToBeInserted = 
+            
+            diggingResult     
+            |> Array.toList
+            |> List.Parallel.map 
                 (fun item -> 
                            let item = extractSubstring item      //"https://kodis-files.s3.eu-central-1.amazonaws.com/timetables/2_2023_03_13_2023_12_09.pdf                 
                            
@@ -630,7 +635,6 @@ module KODIS_SubmainDataTable =
                            | true  -> item.Replace("timetables/", String.Empty).Replace(".pdf", "_t.pdf")
                            | false -> item                                       
                 )  
-            |> Array.toList
             |> List.sort //jen quli testovani
             |> List.filter
                 (fun item -> 
@@ -849,8 +853,8 @@ module KODIS_SubmainDataTable =
                                                                    return! loop (n + i)
                                                      }
                                               loop 0
-                                         )                            
-                                  
+                                         )  
+
                                   env
                                   |>  List.unzip             
                                   ||> List.Parallel.map2 

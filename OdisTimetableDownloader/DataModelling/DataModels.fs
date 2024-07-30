@@ -23,6 +23,7 @@ module DataModel =
             endDate : EndDateDt 
             completeLink : CompleteLink 
             fileToBeSaved : FileToBeSaved  
+            partialLink : PartialLink
         } 
 
     type DbDataSend = 
@@ -49,4 +50,5 @@ module DataModel =
             jsGeneratedString : JsGeneratedString 
             completeLink : CompleteLink 
             fileToBeSaved : FileToBeSaved 
+            partialLink : PartialLink
         }

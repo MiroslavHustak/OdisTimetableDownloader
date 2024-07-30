@@ -18,6 +18,7 @@ module Dto =
             endDate : DateTime option  
             completeLink : string option  
             fileToBeSaved : string option  
+            partialLink : string option 
         } 
 
     type DbDtoSend = 
@@ -44,4 +45,5 @@ module Dto =
             jsGeneratedString : string 
             completeLink : string 
             fileToBeSaved : string  
+            partialLink : string  
         }

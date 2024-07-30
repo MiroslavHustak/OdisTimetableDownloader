@@ -132,8 +132,8 @@ let map2<'a, 'b, 'c> (mapping: 'a -> 'b -> 'c) (xs1: 'a list) (xs2: 'b list) =
     | false -> 
              let listToParallel (xs1, xs2) = (xs1, xs2) ||> List.map2 mapping    
                                 
-             let numberOfThreads = numberOfThreads l    
-        
+             let numberOfThreads = numberOfThreads l  
+
              let myList =       
                  (splitListIntoEqualParts numberOfThreads xs1, splitListIntoEqualParts numberOfThreads xs2)  
                  ||> List.zip                 

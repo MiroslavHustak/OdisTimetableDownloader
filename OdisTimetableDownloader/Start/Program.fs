@@ -64,7 +64,7 @@ let rec private pathToFolder () =
 let main argv = 
     
     //*****************************Console******************************  
-    let updateDate = "12-07-2024"
+    let updateDate = "30-07-2024"
 
     try
         consoleAppProblemFixer() 

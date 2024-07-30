@@ -14,6 +14,7 @@ type [<Struct>] TotalDateInterval = TotalDateInterval of string
 type [<Struct>] Suffix = Suffix of string
 type [<Struct>] JsGeneratedString = JsGeneratedString of string
 type [<Struct>] CompleteLink = CompleteLink of string
+type [<Struct>] PartialLink = PartialLink of string
 type [<Struct>] FileToBeSaved = FileToBeSaved of string
 type [<Struct>] StartDateDt = StartDateDt of DateTime
 type [<Struct>] EndDateDt = EndDateDt of DateTime

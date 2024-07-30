@@ -30,6 +30,7 @@ module TransformationLayerGet =
             endDate = EndDateDt DateTime.MinValue
             completeLink = CompleteLink String.Empty
             fileToBeSaved = FileToBeSaved String.Empty
+            partialLink = PartialLink String.Empty
         } 
 
     let internal dtDataTransformLayerGet (dtDtoGet : DtDtoGet) : DtDataGet =  
@@ -41,6 +42,7 @@ module TransformationLayerGet =
                let! endDate = dtDtoGet.endDate, dtDataTransformLayerGetDefault 
                let! completeLink = dtDtoGet.completeLink, dtDataTransformLayerGetDefault 
                let! fileToBeSaved = dtDtoGet.fileToBeSaved, dtDataTransformLayerGetDefault 
+               let! partialLink = dtDtoGet.partialLink, dtDataTransformLayerGetDefault
 
                return //vraci pouze pokud je vse spravne
                    {      
@@ -49,6 +51,7 @@ module TransformationLayerGet =
                        endDate = EndDateDt endDate
                        completeLink = CompleteLink completeLink
                        fileToBeSaved = FileToBeSaved fileToBeSaved
+                       partialLink = PartialLink partialLink
                    } 
            }
 
@@ -92,4 +95,5 @@ module TransformationLayerSend =
             jsGeneratedString = dtDataSend.jsGeneratedString |> function JsGeneratedString value -> value
             completeLink = dtDataSend.completeLink |> function CompleteLink value -> value
             fileToBeSaved = dtDataSend.fileToBeSaved |> function FileToBeSaved value -> value
+            partialLink = dtDataSend.partialLink |> function PartialLink value -> value
         }

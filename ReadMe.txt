@@ -2,7 +2,7 @@ Konzolová aplikace pro hromadné stahování jízdních řádů
 ************************************************************************************************
 Vyžaduje .NET 8, teoreticky OS Windows 7 a vyšší, prakticky zkoušeno jen pod OS Windows 10.
 
-Poslední aktualizace instalačního souboru: 03-07-2024
+Poslední aktualizace instalačního souboru: 30-07-2024
 
 
 Poznámky pro instalaci:
@@ -35,7 +35,7 @@ Z těchto důvodů raději častěji stahujte instalační soubor a kontrolujte 
 
 Pokud naleznete problém, ocením, když mi pošlete informaci na emailovou adresu miroslav.hustak@atlas.cz .
 
-"Mobilní" verze toho programu bude k dispozici, až najdu někoho, kdo pomůže s UX/UE. 
+"Mobilní" verze toho programu bude k dispozici, až najdu někoho, kdo pomůže s UX/UE. Není to někdo, koho znáte? Uvítám doporučení. 
 
 Zdrojový kód:
 https://github.com/MiroslavHustak/OdisTimetableDownloader
