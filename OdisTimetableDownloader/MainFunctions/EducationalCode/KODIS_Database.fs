@@ -65,8 +65,7 @@ module WebScraping_KODISFM =
                                                      let param = next ()
                                                      interpret param
 
-            | Free (DownloadAndSaveJsonFM next)     ->      
-                                                     (*
+            | Free (DownloadAndSaveJsonFM next)     ->    
                                                      //Http request and IO operation (data from settings -> http request -> IO operation -> saving json files on HD)
                                                      let downloadAndSaveJson =  
 
@@ -84,14 +83,14 @@ module WebScraping_KODISFM =
                                                          msg11 ()    
                                                          
                                                          in errorHandling downloadAndSaveJson
-                                                     *) 
+                                                      
                                                      let param = next ()
                                                      interpret param                                            
                                                 
             | Free (DownloadSelectedVariantFM next) -> 
-                                                     try
-                                                        
+                                                     try                                                        
                                                         let connection = Database.Connection.getConnection ()
+
                                                         try
                                                             match variantList |> List.length with
                                                             //SingleVariantDownload
@@ -185,10 +184,4 @@ module WebScraping_KODISFM =
                 insertProcessTime connection [startProcess; endProcess]
             finally
                 closeConnection connection 
-        with ex -> () 
-        //*****************************************************************************************************************************************
-
-        //CurrentValidity = JR striktne platne k danemu dni, tj. pokud je napr. na dany den vylukovy JR, stahne se tento JR, ne JR platny dalsi den
-        //FutureValidity = JR platne v budouci dobe, ktere se uz vyskytuji na webu KODISu
-        //ReplacementService = pouze vylukove JR, JR NAD a JR X linek
-        //WithoutReplacementService = JR dlouhodobe platne bez jakykoliv vyluk. Tento vyber neobsahuje ani dlouhodobe nekolikamesicni vyluky, muze se ale hodit v pripade, ze zakladni slozka s JR obsahuje jedno ci dvoudenni vylukove JR.     
+        with ex -> ()      

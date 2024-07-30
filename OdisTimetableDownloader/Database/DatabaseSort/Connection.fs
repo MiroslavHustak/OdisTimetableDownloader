@@ -12,21 +12,21 @@ module Connection =
 
     let internal getConnection () =  
     
-            let connString = @"Data Source=Misa\SQLEXPRESS;Initial Catalog=TimetableDownloader;Integrated Security=True;Encrypt=False"
+        let connString = @"Data Source=Misa\SQLEXPRESS;Initial Catalog=TimetableDownloader;Integrated Security=True;Encrypt=False"
     
-            try
-                let connection = new SqlConnection(connString)
-                connection.Open()
-                Ok connection   
-            with ex -> Error <| string ex.Message
+        try
+            let connection = new SqlConnection(connString)
+            connection.Open()
+            Ok connection   
+        with ex -> Error <| string ex.Message
                             
-            |> function
-                | Ok value  -> 
-                             value  
-                | Error err ->
-                             logInfoMsg <| sprintf "Err031 %s" err
-                             closeItBaby msg16 
-                             new SqlConnection(connString)   
+        |> function
+            | Ok value  -> 
+                         value  
+            | Error err ->
+                         logInfoMsg <| sprintf "Err031 %s" err
+                         closeItBaby msg16 
+                         new SqlConnection(connString)   
     
     let internal closeConnection (connection: SqlConnection) =  
             
