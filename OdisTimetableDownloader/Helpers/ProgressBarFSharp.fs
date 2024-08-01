@@ -4,7 +4,6 @@ open System
 
 //*********************
 
-open Helpers.CloseApp
 open Settings.Messages
 
 module ProgressBarFSharp =

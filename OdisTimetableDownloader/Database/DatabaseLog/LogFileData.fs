@@ -3,20 +3,14 @@
 open System
 open System.IO
 open Thoth.Json.Net
-open Newtonsoft.Json
 open Newtonsoft.Json.Linq
-
-open FSharp.Control
 
 //**************************
 
 open Helpers
 open Helpers.Builders
-open Helpers.CloseApp
 
 open Types.ErrorTypes
-
-open Logging.Logging
 
 open Settings.SettingsGeneral  
       

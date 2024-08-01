@@ -5,20 +5,11 @@ open System.Data
 open System.Globalization
 open Microsoft.Data.SqlClient
 
-open FsToolkit.ErrorHandling
-
 //******************************
 
-open Settings.Messages
-
-open Helpers.Builders
-open Helpers.CloseApp
-open Helpers.TryParserDate
-
 open Logging.Logging
-
-open DataModelling.Dto
-open DataModelling.DataModel
+open Helpers.CloseApp
+open Settings.Messages
 
 module InsertInto = 
 

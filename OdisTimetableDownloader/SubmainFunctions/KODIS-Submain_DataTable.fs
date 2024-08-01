@@ -10,7 +10,6 @@ open System.Text.RegularExpressions
 open FsHttp
 open FSharp.Control
 open FsToolkit.ErrorHandling
-open Microsoft.FSharp.Quotations
 open FSharp.Quotations.Evaluator.QuotationEvaluationExtensions
 
 //************************************************************
@@ -31,7 +30,6 @@ open Helpers
 open Helpers.MyString
 open Helpers.Builders
 open Helpers.CloseApp   
-open Helpers.ConsoleFixers
 open Helpers.MsgBoxClosing
 open Helpers.ProgressBarFSharp  
 

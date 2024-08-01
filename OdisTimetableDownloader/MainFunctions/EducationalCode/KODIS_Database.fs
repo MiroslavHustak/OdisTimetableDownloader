@@ -1,6 +1,8 @@
 ﻿namespace MainFunctions
 
 open System
+
+//**********************************
          
 open Types
 
@@ -18,12 +20,6 @@ open Database2.Connection
 
 open SubmainFunctions
 open SubmainFunctions.KODIS_Submain
-
-
-//******************************************************************************
-//Do you review my SQL skills? If so, you are at the right place :-).
-//If not, please direct your attention to code contained in KODIS_DataTable.fs.
-//******************************************************************************
 
 module WebScraping_KODISFM = 
         

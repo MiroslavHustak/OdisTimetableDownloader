@@ -8,11 +8,8 @@ open System.Net.NetworkInformation
 open System.Text.RegularExpressions
 
 open FsHttp
-open FSharp.Data
 open FSharp.Control
 open FsToolkit.ErrorHandling
-open Microsoft.FSharp.Quotations
-open FSharp.Quotations.Evaluator.QuotationEvaluationExtensions
 
 open Types
 
@@ -32,14 +29,11 @@ open Helpers
 open Helpers.MyString
 open Helpers.Builders
 open Helpers.CloseApp    
-open Helpers.ConsoleFixers
 open Helpers.MsgBoxClosing
 open Helpers.ProgressBarFSharp  
-open Helpers.CollectionSplitting
 
 open Database.Select
 open Database.InsertInto
-open Database.Connection
 
 open DataModelling.DataModel
 open TransformationLayers.TransformationLayerSend

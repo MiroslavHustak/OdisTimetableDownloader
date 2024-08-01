@@ -9,9 +9,6 @@ open FSharp.Control
 //*************************************
 
 open Types 
-
-open Builders
-open ConsoleFixers
 open Settings.Messages
 
 module MsgBoxClosing =  

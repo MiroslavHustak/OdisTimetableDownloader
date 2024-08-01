@@ -8,12 +8,10 @@ open System.Data
 open Types
 
 open Helpers
-open Helpers.Builders
 open Helpers.CloseApp
 
 open Logging.Logging
 
-open Settings
 open Settings.SettingsKODIS
 
 open DataModelling.Dto
