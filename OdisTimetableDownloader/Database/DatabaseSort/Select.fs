@@ -21,15 +21,16 @@ module Select =
 
     let internal select (connection : SqlConnection) pathToDir itvfCall =
         
-        try                     
-            try  
-                //query je tady volani ITVF
-                let query = sprintf "SELECT * FROM %s" itvfCall
+        try  
+            //query je tady volani ITVF
+            let query = sprintf "SELECT * FROM %s" itvfCall
 
-                use cmdCallITVFunction = new SqlCommand(query, connection)          
-                
-                let reader = cmdCallITVFunction.ExecuteReader() 
-                
+            use cmdCallITVFunction = new SqlCommand(query, connection)          
+            
+            use reader = cmdCallITVFunction.ExecuteReader() 
+
+            try   
+
                 //V pripade pouziti Oracle zkontroluj skutecny typ sloupce v .NET   
                 //let columnType = reader.GetFieldType(reader.GetOrdinal("OperatorID"))
                 //printfn "Column Type: %s" columnType.Name
@@ -73,7 +74,9 @@ module Select =
                 |> Result.sequence
                
             finally
-                () //ponechano, kdyby neco...
+                ()
+                // reader.Dispose()
+
         with ex -> Error <| string ex.Message
                             
         |> function

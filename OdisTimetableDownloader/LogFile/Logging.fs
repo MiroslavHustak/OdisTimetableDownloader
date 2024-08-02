@@ -16,8 +16,9 @@ module Logging =
     let private formatLogEntry (msg: LogMessage) =
         try
             let sb = System.Text.StringBuilder()
-            let sw = new System.IO.StringWriter(sb) //prip. use
-            let jsonWriter = new JsonTextWriter(sw) //prip. use
+            
+            use sw = new System.IO.StringWriter(sb) 
+            use jsonWriter = new JsonTextWriter(sw) 
 
             try     
                 jsonWriter.WriteStartArray()
@@ -33,9 +34,11 @@ module Logging =
                 Option.ofNullEmpty >> Result.fromOption <| sb             
 
             finally
-                sw.Close()
-                sw.Dispose()
-                jsonWriter.Close()
+                ()
+                //sw.Close()
+                //sw.Dispose()
+                //jsonWriter.Close()
+
         with ex -> Error <| string ex.Message
                                    
         |> function
