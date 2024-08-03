@@ -5,7 +5,7 @@ Hromadné stahování JŘ ODIS (varianta s immutable List)
 Bulk downloading of timetables from the ODIS public transport system in Northern Moravia and (a part of) Silesia (these lands are located 
 in the north-eastern part of the Czech Republic, in case you happen not to know it :-) ).
 
-Stále ve vývojové fázi... :-). Varianta s Array je nevýznamně rychlejší (v průměru o cca 15-20 vteřin). Celková doba stahování je samozřejmě
+Stále ve vývojové fázi... :-). Varianta s Array (tento kód v tomto repozitáři není) je nevýznamně rychlejší (v průměru o cca 15-20 vteřin) než varianta s immutable List. Celková doba stahování je samozřejmě
 závislá mj. na počtu vláken a rychlosti stahování, očekávejte řádově 3 až 10 minut.
 
 Under development (a re-write of my old console app).
