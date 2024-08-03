@@ -35,7 +35,6 @@ module Logging =
 
             finally
                 ()
-                //sw.Close()
                 //sw.Dispose()
                 //jsonWriter.Close()
 

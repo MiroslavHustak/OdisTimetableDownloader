@@ -32,7 +32,7 @@ let private splitListIntoEqualParts (numParts: int) (originalList: 'a list) =   
                               
                       totalLength % n > 0
                       |> function
-                          | true  -> partLength + 1
+                          | true  -> (+) partLength 1
                           | false -> partLength 
     
                   match acc.Equals(numParts) with

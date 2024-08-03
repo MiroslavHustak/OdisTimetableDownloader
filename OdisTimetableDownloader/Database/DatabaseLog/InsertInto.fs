@@ -90,7 +90,8 @@ module InsertInto =
                      Ok ()
                                       
                  finally
-                     transaction.Dispose()                    
+                     transaction.Dispose()         
+                     
              with ex -> Error <| string ex.Message
                              
              |> function

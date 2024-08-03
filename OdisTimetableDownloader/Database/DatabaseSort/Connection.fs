@@ -17,7 +17,8 @@ module Connection =
         try
             let connection = new SqlConnection(connString)
             connection.Open()
-            Ok connection   
+            Ok connection  
+            
         with ex -> Error <| string ex.Message
                             
         |> function
@@ -33,6 +34,7 @@ module Connection =
         try 
             try Ok <| connection.Close()                
             finally connection.Dispose()
+
         with ex -> Error <| string ex.Message
                             
         |> function

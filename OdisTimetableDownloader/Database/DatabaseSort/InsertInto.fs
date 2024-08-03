@@ -115,7 +115,8 @@ module InsertInto =
                           Error <| sprintf "Err033A %s" "Databázová tabulka není prázdná."          
 
             finally                              
-                transaction.Dispose()          
+                transaction.Dispose()     
+                
         with
         | ex -> Error (string ex.Message)
 
