@@ -106,7 +106,7 @@ module WebScraping_KODISFM =
                                                                   KODIS_Submain.createFolders dirList
 
                                                                   //operation on data 
-                                                                  //input from saved json files -> change of input data -> output into array -> input from array -> change of input data -> output into database -> data filtering (link*path) 
+                                                                  //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into database -> data filtering (link*path) 
                                                                   KODIS_Submain.operationOnDataFromJson connection variant (dirList |> List.head) 
 
                                                                   //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
@@ -128,7 +128,7 @@ module WebScraping_KODISFM =
                                                                       (fun variant dir 
                                                                           -> 
                                                                            //operation on data 
-                                                                           //input from saved json files -> change of input data -> output into array -> input from array -> change of input data -> output into database -> data filtering (link*path) 
+                                                                           //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into database -> data filtering (link*path) 
                                                                            KODIS_Submain.operationOnDataFromJson connection variant dir 
 
                                                                            //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)

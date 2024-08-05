@@ -51,8 +51,6 @@ module WebScraping_MDPO =
 
     let internal webscraping_MDPO pathToDir =  
 
-         //tryWith block is in the main() function  
-
         let stateReducer (state: State) (action: Actions) (environment: Environment) =
 
             let dirList pathToDir = [ sprintf"%s\%s"pathToDir ODISDefault.odisDir6 ]

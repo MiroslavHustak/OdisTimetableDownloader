@@ -16,9 +16,11 @@ module ProgressBarFSharp =
 
         try
             //437 je tzv. Extended ASCII   
-            let bytes = System.Text.Encoding.GetEncoding(437).GetBytes("█")    
+            let bytes =
+                System.Text.Encoding.GetEncoding(437).GetBytes("█")    
                    
-            let output = System.Text.Encoding.GetEncoding(852).GetChars(bytes)
+            let output = 
+                System.Text.Encoding.GetEncoding(852).GetChars(bytes) |> Seq.ofArray |> Option.ofNull
                       
             let progressBar = 
 
@@ -26,7 +28,8 @@ module ProgressBarFSharp =
                 let percentComplete = (currentProgress * 101) / (totalProgress + 1) //101 proto, ze pri deleni 100 to po zaokrouhleni dalo jen 99%                    
                 let barFill = (currentProgress * barWidth) / totalProgress 
                
-                let characterToFill = string (Array.item 0 output) //moze byt baj aji "#" //Option.ofNullEmpty tady nestoji za tu namahu
+                let characterToFill =
+                    string (output |> function Some output -> output |> Seq.head | None -> (char)32) //moze byt baj aji "#" //resit Seq.tryHead tady nestoji za tu namahu
             
                 let bar = string <| String.replicate barFill characterToFill //Option.ofNullEmpty tady nestoji za tu namahu
                                                  

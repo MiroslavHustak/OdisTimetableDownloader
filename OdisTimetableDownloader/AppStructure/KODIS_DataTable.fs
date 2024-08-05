@@ -113,7 +113,7 @@ module WebScraping_KODISFMDataTable =
                                                                 msg10 () 
 
                                                                 //operation on data 
-                                                                //input from saved json files -> change of input data -> output into array -> input from array -> change of input data -> output into datatable -> data filtering (link*path)  
+                                                                //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into datatable -> data filtering (link*path)  
                                                                 KODIS_SubmainDataTable.operationOnDataFromJson dt variant (dirList |> List.head) 
 
                                                                 //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
@@ -137,7 +137,7 @@ module WebScraping_KODISFMDataTable =
                                                                     (fun variant dir 
                                                                         -> 
                                                                         //operation on data 
-                                                                        //input from saved json files -> change of input data -> output into array -> input from array -> change of input data -> output into datatable -> data filtering (link*path)  
+                                                                        //input from saved json files -> change of input data -> output into seq -> input from seq -> seq of input data -> output into datatable -> data filtering (link*path)  
                                                                         KODIS_SubmainDataTable.operationOnDataFromJson dt variant dir 
 
                                                                         //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)

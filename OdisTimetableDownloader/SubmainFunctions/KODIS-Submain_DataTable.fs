@@ -131,10 +131,10 @@ module KODIS_SubmainDataTable =
                 return value |> List.head
             }           
     
-    //input from saved json files -> change of input data -> output into array
+    //input from saved json files -> change of input data -> output into seq
     let private digThroughJsonStructure () = //prohrabeme se strukturou json souboru 
         
-        let kodisTimetables : Reader<string list, string array> = 
+        let kodisTimetables : Reader<string list, string seq> = 
 
             reader //Reader monad for educational purposes only, no real benefit here  
                 {
@@ -142,8 +142,8 @@ module KODIS_SubmainDataTable =
 
                     let result () = 
                         pathToJsonList 
-                        |> Array.ofList 
-                        |> Array.collect 
+                        |> Seq.ofList 
+                        |> Seq.collect 
                             (fun pathToJson 
                                 ->   
                                  let json = 
@@ -162,17 +162,24 @@ module KODIS_SubmainDataTable =
                                  JsonProvider1.Parse(json) 
                                  |> Option.ofNull  
                                  |> function 
-                                     | Some value -> value |> Array.map _.Timetable                                                
-                                     | None       -> [||] //tady nelze Result.sequence 
+                                     | Some value -> value |> Seq.map _.Timetable                                                
+                                     | None       -> Seq.empty //tady nelze Result.sequence 
                             )  
                         
                     return
                         try
+                           let (|EmptySeq|_|) a =
+                               match Seq.isEmpty a with
+                               | true  -> Some () 
+                               | false -> None
+                            
                            let value = result ()   
+                           
                            value
                            |> function
-                               | [||] -> Error msg16                                        
-                               | _    -> Ok value
+                               | EmptySeq -> Error msg16                                        
+                               | _        -> Ok value
+
                         with ex -> Error <| string ex.Message  
 
                         |> function
@@ -181,10 +188,10 @@ module KODIS_SubmainDataTable =
                             | Error err -> 
                                          logInfoMsg <| sprintf "Err004A %s" err 
                                          closeItBaby msg16 
-                                         [||]      
+                                         Seq.empty      
                 }
             
-        let kodisTimetables2 : Reader<string list, string array> = 
+        let kodisTimetables2 : Reader<string list, string seq> = 
 
             reader //Reader monad for educational purposes only, no real benefit here  
                 {
@@ -193,8 +200,8 @@ module KODIS_SubmainDataTable =
                     let result () = 
 
                         pathToJsonList2 
-                        |> Array.ofList 
-                        |> Array.collect 
+                        |> Seq.ofList 
+                        |> Seq.collect 
                             (fun pathToJson 
                                 ->                                       
                                  let json = //tady nelze Result.sequence 
@@ -217,18 +224,18 @@ module KODIS_SubmainDataTable =
                                      |> function 
                                          | Some value -> 
                                                        value.Data
-                                                       |> Array.map _.Timetable  //quli tomuto je nutno Array //nejde Some, nejde Ok
+                                                       |> Seq.map _.Timetable  //nejde Some, nejde Ok
                                          | None       -> 
-                                                       [||]   
+                                                       Seq.empty  
                                  
                                  let vyluky = 
                                      kodisJsonSamples 
                                      |> function 
                                         | Some value -> 
                                                       value.Data 
-                                                      |> Array.collect _.Vyluky  //quli tomuto je nutno Array //nejde Some, nejde Ok
+                                                      |> Seq.collect _.Vyluky  //nejde Some, nejde Ok
                                         | None       -> 
-                                                      [||]  
+                                                      Seq.empty  
                                  
                                  let attachments = 
                                      vyluky
@@ -236,24 +243,31 @@ module KODIS_SubmainDataTable =
                                      |> function
                                          | Some value ->
                                                        value
-                                                       |> Array.collect (fun item -> item.Attachments)
-                                                       |> List.ofArray
+                                                       |> Seq.collect (fun item -> item.Attachments)
+                                                       |> List.ofSeq
                                                        |> List.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace)                                
                                                        |> List.choose id //co neprojde, to beze slova ignoruju
-                                                       |> List.toArray 
+                                                       |> List.toSeq
                                          | None       ->
-                                                       [||]  
+                                                       Seq.empty  
 
-                                 Array.append timetables attachments   
+                                 Seq.append timetables attachments   
                             )                     
                         
                     return
-                        try
-                            let value = result ()   
+                        try 
+                            let (|EmptySeq|_|) a =
+                               match Seq.isEmpty a with
+                               | true  -> Some () 
+                               | false -> None
+
+                            let value = result () 
+                            
                             value
                             |> function
-                                | [||] -> Error msg16                                        
-                                | _    -> Ok value
+                                | EmptySeq -> Error msg16                                        
+                                | _        -> Ok value
+
                         with ex -> Error <| string ex.Message  
 
                         |> function
@@ -262,10 +276,10 @@ module KODIS_SubmainDataTable =
                             | Error err ->
                                          logInfoMsg <| sprintf "Err004 %s" err 
                                          closeItBaby msg16 
-                                         [||]       
+                                         Seq.empty      
                 }       
          
-        let kodisAttachments : Reader<string list, string array> = //Reader monad for educational purposes only, no real benefit here
+        let kodisAttachments : Reader<string list, string seq> = //Reader monad for educational purposes only, no real benefit here
             
                 reader 
                     {
@@ -274,18 +288,18 @@ module KODIS_SubmainDataTable =
                         let result () = 
 
                             pathToJsonList
-                            |> Array.ofList 
-                            |> Array.collect  //vzhledem ke komplikovanosti nepouzivam Result.sequence pro Array.collect, nejde Some, nejde Ok jako vyse
+                            |> Seq.ofList 
+                            |> Seq.collect  //vzhledem ke komplikovanosti nepouzivam Result.sequence pro Array.collect (po zmene na seq ocekavam to same), nejde Some, nejde Ok jako vyse
                                 (fun pathToJson 
                                     -> 
-                                     let fn1 (value: JsonProvider1.Attachment array) = 
+                                     let fn1 (value: JsonProvider1.Attachment seq) = 
                                          value
-                                         |> List.ofArray
+                                         |> List.ofSeq
                                          |> List.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace) //jj, funguje to :-)                                    
                                          |> List.choose id //co neprojde, to beze slova ignoruju
-                                         |> List.toArray
+                                         |> List.toSeq
 
-                                     let fn2 (item: JsonProvider1.Vyluky) =  //quli tomuto je nutno Array     
+                                     let fn2 (item: JsonProvider1.Vyluky) =    
                                          item.Attachments 
                                          |> Option.ofNull        
                                          |> function 
@@ -294,18 +308,18 @@ module KODIS_SubmainDataTable =
                                              | None       -> 
                                                            msg5 () 
                                                            logInfoMsg <| sprintf "007A %s" "resulting in None"
-                                                           [||]                 
+                                                           Seq.empty                
 
-                                     let fn3 (item: JsonProvider1.Root) =  //quli tomuto je nutno Array 
+                                     let fn3 (item: JsonProvider1.Root) =  
                                          item.Vyluky
                                          |> Option.ofNull  
                                          |> function 
                                              | Some value ->
-                                                           value |> Array.collect fn2 
+                                                           value |> Seq.collect fn2 
                                              | None       ->
                                                            msg5 () 
                                                            logInfoMsg <| sprintf "007B %s" "resulting in None"
-                                                           [||] 
+                                                           Seq.empty   
 
                                      let json = //tady nelze Result.sequence 
                                          pyramidOfDoom
@@ -325,20 +339,27 @@ module KODIS_SubmainDataTable =
                                      kodisJsonSamples 
                                      |> function 
                                          | Some value -> 
-                                                       value |> Array.collect fn3 
+                                                       value |> Seq.collect fn3 
                                          | None       -> 
                                                        msg5 () 
                                                        logInfoMsg <| sprintf "007C %s" "resulting in None"
-                                                       [||]                                 
+                                                       Seq.empty                                
                                 ) 
                     
                         return 
                             try
-                                let value = result ()   
+                                let (|EmptySeq|_|) a =
+                                    match Seq.isEmpty a with
+                                    | true  -> Some () 
+                                    | false -> None
+
+                                let value = result () 
+                                 
                                 value
                                 |> function
-                                    | [||] -> Error msg16                                        
-                                    | _    -> Ok value
+                                    | EmptySeq -> Error msg16                                        
+                                    | _        -> Ok value
+
                             with ex -> Error <| string ex.Message  
 
                             |> function
@@ -348,7 +369,7 @@ module KODIS_SubmainDataTable =
                                              logInfoMsg <| sprintf "Err006A %s" err 
                                              msg5 ()   
                                              closeItBaby msg16 
-                                             [||]      
+                                             Seq.empty     
                     }
         
         let addOn () =  
@@ -358,8 +379,7 @@ module KODIS_SubmainDataTable =
                 @"https://kodis-files.s3.eu-central-1.amazonaws.com/46_A_2024_07_01_2024_09_01_faa5f15c1b.pdf"
                 @"https://kodis-files.s3.eu-central-1.amazonaws.com/46_B_2024_07_01_2024_09_01_b5f542c755.pdf"
             ]
-            |> List.toArray 
-        
+            |> List.toSeq         
       
         let task = 
             [
@@ -373,15 +393,15 @@ module KODIS_SubmainDataTable =
             |> Result.ofChoice                      
             |> function
                 | Ok value  ->
-                             value |> Array.concat  
+                             value |> Seq.ofArray |> Seq.concat  
                 | Error err ->
                              logInfoMsg <| sprintf "Err214 %s" (string err.Message)
                              msg5 ()
-                             [||]      
+                             Seq.empty    
 
-        (Array.append <| task <| addOn()) |> Array.distinct
+        (Seq.append <| task <| addOn()) |> Seq.distinct
     
-    //input from array -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
+    //input from seq -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
     let private filterTimetables dt param (pathToDir: string) diggingResult = 
 
         //*************************************Helpers for SQL columns********************************************
@@ -490,7 +510,7 @@ module KODIS_SubmainDataTable =
             let oldPrefix = 
                 try
                     Regex.Split(input, extractSubstring1 input) 
-                    |> Array.toList
+                    |> List.ofArray
                     |> List.item 0
                     |> splitString
                     |> List.item 1
@@ -510,7 +530,7 @@ module KODIS_SubmainDataTable =
             let partAfter =
                 try
                     Regex.Split(input, totalDateInterval)
-                    |> Array.toList
+                    |> List.ofArray
                     |> List.item 1 
                     |> Ok
                 with ex -> Error <| string ex.Message
@@ -617,7 +637,7 @@ module KODIS_SubmainDataTable =
         let dataToBeInserted = 
             
             diggingResult     
-            |> Array.toList
+            |> List.ofSeq
             |> List.Parallel.map 
                 (fun item -> 
                            let item = extractSubstring item      //"https://kodis-files.s3.eu-central-1.amazonaws.com/timetables/2_2023_03_13_2023_12_09.pdf                 
@@ -703,7 +723,7 @@ module KODIS_SubmainDataTable =
                     return 
                         try
                             //rozdil mezi Directory a DirectoryInfo viz Unique_Identifier_And_Metadata_File_Creator.sln -> MainLogicDG.fs
-                            let dirInfo = new DirectoryInfo(pathToDir)                                                       
+                            let dirInfo = new DirectoryInfo(pathToDir)                                                   
                                 in
                                 dirInfo.EnumerateDirectories() 
                                 |> Seq.filter (fun item -> getDefaultRecordValues |> List.contains item.Name) //prunik dvou kolekci (plus jeste Seq.distinct pro unique items)
@@ -889,7 +909,7 @@ module KODIS_SubmainDataTable =
     let internal operationOnDataFromJson dt variant dir =   
 
         //operation on data
-        //input from saved json files -> change of input data -> output into array >> input from array -> change of input data -> output into datatable -> data filtering (links*paths)  
+        //input from saved json files -> change of input data -> output into seq >> input from seq -> change of input data -> output into datatable -> data filtering (links*paths)  
         
         try digThroughJsonStructure >> filterTimetables dt variant dir <| () |> Ok
         with ex -> Error <| string ex.Message

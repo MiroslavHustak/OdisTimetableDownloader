@@ -55,7 +55,7 @@ module LogFileData =
                         return 
                             jsonContent
                             |> fun content -> content.Split([|Environment.NewLine|], StringSplitOptions.RemoveEmptyEntries)
-                            |> Array.toList
+                            |> List.ofArray
                             |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) 
                             |> List.distinct 
                             |> Result.sequence    
