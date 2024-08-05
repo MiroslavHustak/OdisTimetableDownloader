@@ -5,6 +5,7 @@ open System
 //****************************
 
 open Types
+open Types.Types
 
 open Settings.Messages
 open Settings.SettingsKODIS
@@ -112,12 +113,25 @@ module WebScraping_KODISFMDataTable =
 
                                                                 msg10 () 
 
+                                                                let dir = (dirList |> List.head)
+
                                                                 //operation on data 
                                                                 //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into datatable -> data filtering (link*path)  
-                                                                KODIS_SubmainDataTable.operationOnDataFromJson dt variant (dirList |> List.head) 
+                                                                let list = KODIS_SubmainDataTable.operationOnDataFromJson dt variant dir 
+
+                                                                let context listMappingFunction = 
+                                                                    {
+                                                                        listMappingFunction = listMappingFunction
+                                                                        dir = dir
+                                                                        list = list
+                                                                    }   
+                                                             
+                                                                match variant with
+                                                                | FutureValidity -> context List.map2 
+                                                                | _              -> context List.Parallel.map2  
 
                                                                 //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
-                                                                |> KODIS_SubmainDataTable.downloadAndSave (dirList |> List.head) 
+                                                                |> KODIS_SubmainDataTable.downloadAndSave 
 
                                                             //BulkVariantDownload       
                                                             | _ ->
@@ -131,17 +145,28 @@ module WebScraping_KODISFMDataTable =
                                                                 KODIS_SubmainDataTable.createFolders dirList 
 
                                                                 msg10 ()
-                                                              
+                                                                
                                                                 (variantList, dirList)
                                                                 ||> List.iter2 
                                                                     (fun variant dir 
                                                                         -> 
                                                                         //operation on data 
                                                                         //input from saved json files -> change of input data -> output into seq -> input from seq -> seq of input data -> output into datatable -> data filtering (link*path)  
-                                                                        KODIS_SubmainDataTable.operationOnDataFromJson dt variant dir 
+                                                                        let list = KODIS_SubmainDataTable.operationOnDataFromJson dt variant dir 
+
+                                                                        let context listMappingFunction = 
+                                                                            {
+                                                                                listMappingFunction = listMappingFunction
+                                                                                dir = dir
+                                                                                list = list
+                                                                            }                                                 
+                                                  
+                                                                        match variant with
+                                                                        | FutureValidity -> context List.map2 
+                                                                        | _              -> context List.Parallel.map2 
 
                                                                         //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
-                                                                        |> KODIS_SubmainDataTable.downloadAndSave dir   
+                                                                        |> KODIS_SubmainDataTable.downloadAndSave 
                                                                     )  
                                                             Ok ()       
                                                         finally

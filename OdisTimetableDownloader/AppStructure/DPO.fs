@@ -6,7 +6,7 @@ open System.Net
 
 //*********************
 
-open Types.DirNames   
+open Types.Types   
 open Logging.Logging
 open Helpers.CloseApp
    

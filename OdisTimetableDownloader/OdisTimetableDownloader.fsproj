@@ -12,7 +12,7 @@
     <Compile Include="AssemblyInfo\AssemblyInfo.fs" />
     <Compile Include="EducationalCode\EducationalCode.fs" />
     <Compile Include="Types\SCDUs.fs" />
-    <Compile Include="Types\DirNames.fs" />
+    <Compile Include="Types\Types.fs" />
     <Compile Include="Types\ErrorTypes.fs" />
     <Compile Include="Types\DiscriminatedUnions.fs" />
     <Compile Include="Settings\Messages.fs" />

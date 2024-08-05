@@ -136,7 +136,7 @@ module MDPO_Submain =
                                                  
                      async                                                
                          {   
-                             progressBarContinuous i l   
+                             progressBarContinuous (i + 1) l   
                              return! downloadFileTaskAsync link pathToFile                                                                                                                               
                          } 
                      |> Async.Catch

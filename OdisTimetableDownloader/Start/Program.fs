@@ -16,7 +16,7 @@ open Helpers.CloseApp
 open Helpers.ConsoleFixers
 
 open Types
-open Types.DirNames
+open Types.Types
 
 open Logging.Logging
 
@@ -215,8 +215,8 @@ let main argv =
                                             
                                          Console.Clear()
                                             
-                                         //webscraping_KODISFMDataTable path variant //datatable-based app
-                                         webscraping_KODISFM path variant //database-based app
+                                         webscraping_KODISFMDataTable path variant //datatable-based app
+                                         //webscraping_KODISFM path variant //database-based app
                                             
                                          printfn "%c" <| char(32)         
                                          printfn "Pokud se v údajích KODISu nacházel odkaz na JŘ, který obsahoval chybné či neúplné údaje,"

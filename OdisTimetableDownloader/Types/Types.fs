@@ -1,6 +1,6 @@
 ﻿namespace Types
 
-module DirNames =
+module Types =
 
     [<Struct>]   //vhodne pro 16 bytes => 4096 characters
     type internal ODIS =  
@@ -12,3 +12,11 @@ module DirNames =
             odisDir5 : string
             odisDir6 : string
         }   
+
+    [<Struct>] 
+    type Context<'a, 'b, 'c> = 
+        {
+            listMappingFunction : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list
+            dir : string
+            list : (string * string) list
+        }

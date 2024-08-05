@@ -194,7 +194,7 @@ module DPO_Submain =
                                                  
                      async                                                
                          {   
-                             progressBarContinuous i l  
+                             progressBarContinuous (i + 1) l  
                              return! downloadFileTaskAsync client link pathToFile                                                                                                                               
                          } 
                      |> Async.Catch
