@@ -882,8 +882,27 @@ module KODIS_SubmainDataTable =
                                               use! response = get >> Request.sendAsync <| uri  
                                                 
                                               match response.statusCode with
-                                              | HttpStatusCode.OK -> return! response.SaveFileAsync >> Async.AwaitTask <| pathToFile      //Original FsHttp library function                                                                                                 
-                                              | _                 -> return () //msgParam8 msg22       //nechame chybu projit v loop                                                                                                                                  
+                                              | HttpStatusCode.OK 
+                                                  -> 
+                                                   let pathToFileExist =  
+                                                       pyramidOfDoom
+                                                           {
+                                                               let filepath = Path.GetFullPath(pathToFile) |> Option.ofNullEmpty 
+                                                               let! filepath = filepath, None
+
+                                                               let fInfodat: FileInfo = new FileInfo(filepath)
+                                                               let! _ =  fInfodat.Exists |> Option.ofBool, None   
+                                                                               
+                                                               return Some ()
+                                                           } 
+                                                                           
+                                                   match pathToFileExist with
+                                                   | Some _ -> return! response.SaveFileAsync >> Async.AwaitTask <| pathToFile      //Original FsHttp library function    
+                                                   | None   -> return ()  //nechame chybu tise projit  
+                                                                                                                                                                
+                                              | _                
+                                                  -> 
+                                                   return ()      //nechame chybu tise projit                                                                                                                                         
                                  } 
                              |> Async.Catch
                              |> Async.RunSynchronously  
