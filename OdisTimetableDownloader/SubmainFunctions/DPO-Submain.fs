@@ -9,8 +9,8 @@ open FSharp.Data
 open FsToolkit.ErrorHandling
 
 open Helpers
-open Helpers.CloseApp
 open Helpers.Builders
+open Helpers.CloseApp
 open Helpers.ProgressBarFSharp
 
 open Logging.Logging
