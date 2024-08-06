@@ -900,7 +900,7 @@ module KODIS_Submain =
                                                                let! filepath = filepath, None
 
                                                                let fInfodat: FileInfo = new FileInfo(filepath)
-                                                               let! _ =  fInfodat.Exists |> Option.ofBool, None   
+                                                               let! _ = not fInfodat.Exists |> Option.ofBool, None   
                                                                                
                                                                return Some ()
                                                            } 
@@ -958,8 +958,11 @@ module KODIS_Submain =
                              try
                                  //input from data filtering (links*paths) -> http request -> saving pdf files on HD
                                  match context.list with
-                                 | [] -> msgParam13 context.dir       
-                                 | _  -> downloadAndSaveTimetables context     
+                                 | [] ->
+                                       msgParam13 context.dir       
+                                 | _  ->
+                                       downloadAndSaveTimetables context  
+                                       msgParam4 context.dir     
                              with
                              | ex -> 
                                    logInfoMsg <| sprintf "Err019 %s" (string ex.Message)

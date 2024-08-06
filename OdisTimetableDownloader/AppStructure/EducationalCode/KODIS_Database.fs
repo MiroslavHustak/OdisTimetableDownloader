@@ -32,40 +32,40 @@ module WebScraping_KODISFM =
             
         let rec interpret clp  = 
 
-            let errorHandling fn = 
-                try
-                    fn
-                with
-                | ex ->
-                      logInfoMsg <| sprintf "Err050 %s" (string ex.Message)
-                      closeItBaby msg16           
-
             //function //CommandLineProgram<unit> -> unit
             match clp with
             | Pure x                                -> 
                                                      x //nevyuzito
 
             | Free (StartProcessFM next)            -> 
-                                                     let processStartTime =    
+                                                     try   
                                                          Console.Clear()
+
                                                          let processStartTime = 
                                                              try   
                                                                  startNetChecking ()
                                                                  sprintf "Začátek procesu: %s" <| DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") 
                                                              with
                                                              | ex ->       
-                                                                   logInfoMsg <| sprintf "Err503 %s" (string ex.Message)
-                                                                   sprintf "Začátek procesu nemohl býti ustanoven."   
-                                                             in msgParam7 processStartTime 
-                                                         in errorHandling processStartTime
+                                                                   logInfoMsg <| sprintf "Err503 %s" (string ex.Message)                                                                    
+                                                                   "Začátek procesu nemohl býti ustanoven."
+                                                             in msgParam7 processStartTime |> Ok
+                                                     with 
+                                                     | ex -> Error <| string ex.Message 
+                                                     
+                                                     |> function
+                                                         | Ok value  -> 
+                                                                      value  
+                                                         | Error err ->
+                                                                      logInfoMsg <| sprintf "Err050A %s" err
+                                                                      closeItBaby msg16    
 
                                                      let param = next ()
                                                      interpret param
 
             | Free (DownloadAndSaveJsonFM next)     ->    
                                                      //Http request and IO operation (data from settings -> http request -> IO operation -> saving json files on HD)
-                                                     let downloadAndSaveJson =  
-
+                                                     try 
                                                          startNetChecking ()
                                                          
                                                          msg2 ()    
@@ -77,9 +77,19 @@ module WebScraping_KODISFM =
                                                          KODIS_Submain.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
                                                          
                                                          msg3 ()   
-                                                         msg11 ()    
+                                                         msg11 ()   
                                                          
-                                                         in errorHandling downloadAndSaveJson
+                                                         Ok ()
+                                                         
+                                                     with 
+                                                     | ex -> Error <| string ex.Message 
+                                                     
+                                                     |> function
+                                                         | Ok value  -> 
+                                                                      value  
+                                                         | Error err ->
+                                                                      logInfoMsg <| sprintf "Err050B %s" err
+                                                                      closeItBaby msg16    
                                                       
                                                      let param = next ()
                                                      interpret param                                            
@@ -158,34 +168,43 @@ module WebScraping_KODISFM =
 
                                                                            //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
                                                                            |> KODIS_Submain.downloadAndSave    
-                                                                      )     
-                                                                      
+                                                                      ) 
                                                              Ok ()       
                                                          finally
                                                              closeConnection connection 
-                                                      with ex -> Error <| string ex.Message 
+                                                     with 
+                                                     | ex -> Error <| string ex.Message 
                                                      
                                                      |> function
                                                          | Ok value  -> 
                                                                       value  
                                                          | Error err ->
-                                                                      logInfoMsg <| sprintf "Err050A %s" err
+                                                                      logInfoMsg <| sprintf "Err050C %s" err
                                                                       closeItBaby msg16   
 
                                                      let param = next ()
                                                      interpret param
 
             | Free (EndProcessFM _)                 ->
-                                                     let processEndTime =                                                          
+                                                     try                                                         
                                                         let processEndTime = 
                                                              try    
                                                                  sprintf "Konec procesu: %s" <| DateTime.Now.ToString("HH:mm:ss")  
                                                              with
                                                              | ex ->       
                                                                    logInfoMsg <| sprintf "Err502 %s" (string ex.Message)
-                                                                   sprintf "Konec procesu nemohl býti ustanoven."   
-                                                             in msgParam7 processEndTime
-                                                         in errorHandling processEndTime
+                                                                   "Konec procesu nemohl býti ustanoven."   
+                                                             in msgParam7 processEndTime |> Ok
+                                                     with 
+                                                     | ex -> Error <| string ex.Message 
+                                                     
+                                                     |> function
+                                                         | Ok value  -> 
+                                                                      value  
+                                                         | Error err ->
+                                                                      logInfoMsg <| sprintf "Err050D %s" err
+                                                                      closeItBaby msg16   
+                                                                      
         cmdBuilder
             {
                 let! _ = Free (StartProcessFM Pure)
@@ -205,4 +224,4 @@ module WebScraping_KODISFM =
                 insertProcessTime connection [startProcess; endProcess]
             finally
                 closeConnection connection 
-        with ex -> ()      
+        with ex -> () //zapis do log file neprovaden, to bych to mel za chvili plne....     

@@ -69,13 +69,7 @@ module Result =
                          )   
                  Ok okList 
 
-module CloseApp =      
-
-    let internal closeItDpo (client: HttpClient) err = 
-        msgParam1 err      
-        Console.ReadKey() |> ignore 
-        client.Dispose()
-        System.Environment.Exit(1)     
+module CloseApp = 
 
     let internal closeItBaby err = 
         msgParam1 err      

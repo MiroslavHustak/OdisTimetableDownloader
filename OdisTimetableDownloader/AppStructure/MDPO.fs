@@ -22,12 +22,12 @@ module WebScraping_MDPO =
 
     type private State =  //not used
         { 
-            TimetablesDownloadedAndSaved: unit
+            TimetablesDownloadedAndSaved: string //zatim nevyuzito
         }
 
     let private stateDefault = 
         {          
-            TimetablesDownloadedAndSaved = ()
+            TimetablesDownloadedAndSaved = String.Empty //zatim nevyuzito
         }
 
     type private Actions =
@@ -55,62 +55,97 @@ module WebScraping_MDPO =
 
             let dirList pathToDir = [ sprintf"%s\%s"pathToDir ODISDefault.odisDir6 ]
            
-            let errorHandling fn = 
-                
-                try Ok fn
-                with ex -> Error <| string ex.Message
-                                
-                |> function
-                    | Ok value  -> 
-                                 value  
-                    | Error err ->
-                                 logInfoMsg <| sprintf "Err051 %s" err
-                                 closeItBaby msg16      
-
             match action with                                                   
             | StartProcess           -> 
-                                      let processStartTime =  
+                                      try 
                                           Console.Clear()
                                           let processStartTime = sprintf "Začátek procesu: %s" <| DateTime.Now.ToString("HH:mm:ss") 
-                                              in msgParam7 processStartTime 
-                                          in errorHandling processStartTime                      
+                                              in msgParam7 processStartTime |> Ok
+                                      with
+                                      | ex -> Error <| string ex.Message        
+                                      |> function
+                                          | Ok value  -> 
+                                                       value  
+                                          | Error err ->
+                                                       logInfoMsg <| sprintf "Err051 %s" err
+                                                       closeItBaby msg16                        
 
             | DeleteOneODISDirectory ->                                     
-                                      let dirName = ODISDefault.odisDir6                                    
-                                      let myDeleteFunction =  
+                                                                          
+                                      try
+                                          let dirName = ODISDefault.odisDir6
                                           //rozdil mezi Directory a DirectoryInfo viz Unique_Identifier_And_Metadata_File_Creator.sln -> MainLogicDG.fs
                                           let dirInfo = new DirectoryInfo(pathToDir)    
                                               in 
                                               dirInfo.EnumerateDirectories()
                                               |> Seq.filter (fun item -> item.Name = dirName) 
-                                              |> Seq.iter _.Delete(true)//(fun item -> item.Delete(true)) //trochu je to hack, ale nemusim se zabyvat tryHead, bo moze byt empty kolekce    
-                                          in errorHandling myDeleteFunction  
+                                              |> Seq.iter _.Delete(true) //trochu je to hack, ale nemusim se zabyvat tryHead, bo moze byt empty kolekce
+                                              |> Ok
+
+                                      with
+                                      | ex -> Error <| string ex.Message
+                                      
+                                      |> function
+                                      | Ok value  -> 
+                                                   value  
+                                      | Error err ->
+                                                   logInfoMsg <| sprintf "Err051A %s" err
+                                                   closeItBaby msg16    
                                       msg12 () 
                                     
             | CreateFolders          -> 
-                                      let myFolderCreation = 
+                                      try
                                           dirList pathToDir
-                                          |> List.iter (fun dir -> Directory.CreateDirectory(dir) |> ignore)                    
-                                          in errorHandling myFolderCreation           
+                                          |> List.iter (fun dir -> Directory.CreateDirectory(dir) |> ignore)
+                                          |> Ok
+
+                                      with
+                                      | ex -> Error <| string ex.Message  
+                                      
+                                      |> function
+                                          | Ok value  -> 
+                                                       value  
+                                          | Error err ->
+                                                       logInfoMsg <| sprintf "Err051B %s" err
+                                                       closeItBaby msg16             
                               
             | FilterDownloadSave     -> 
                                       //filtering timetable links, downloading and saving timetables in the pdf format 
-                                      let filterDownloadSave = 
+                                      try
                                           let pathToSubdir = dirList pathToDir |> List.head    
+                                          
                                           match pathToSubdir |> Directory.Exists with 
                                           | false ->                                              
                                                    msgParam5 pathToSubdir   
-                                                   msg1 ()                                                
+                                                   msg1 () 
+                                                   Error String.Empty
                                           | true  -> 
                                                    environment.filterTimetables pathToSubdir 
-                                                   |> environment.downloadAndSaveTimetables pathToSubdir                                       
-                                          in errorHandling filterDownloadSave           
+                                                   |> environment.downloadAndSaveTimetables pathToSubdir 
+                                                   |> Ok
+                                      with
+                                      | ex -> Error <| string ex.Message  
+                                      
+                                      |> function
+                                          | Ok value  -> 
+                                                       value  
+                                          | Error err ->
+                                                       logInfoMsg <| sprintf "Err051C %s" err
+                                                       closeItBaby msg16               
                                                                                 
             | EndProcess             -> 
-                                      let processEndTime =    
+                                      try  
                                           let processEndTime = sprintf "Konec procesu: %s" <| DateTime.Now.ToString("HH:mm:ss")                       
-                                              in msgParam7 processEndTime
-                                          in errorHandling processEndTime           
+                                              in msgParam7 processEndTime |> Ok
+                                      with
+                                      | ex -> Error <| string ex.Message  
+
+                                      |> function
+                                          | Ok value  -> 
+                                                       value  
+                                          | Error err ->
+                                                       logInfoMsg <| sprintf "Err051D %s" err
+                                                       closeItBaby msg16              
                                  
         stateReducer stateDefault StartProcess environment
         stateReducer stateDefault DeleteOneODISDirectory environment

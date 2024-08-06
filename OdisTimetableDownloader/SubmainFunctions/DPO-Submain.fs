@@ -8,55 +8,36 @@ open System.Net.Http
 open FSharp.Data
 open FsToolkit.ErrorHandling
 
-//***************************
+open Helpers
+open Helpers.CloseApp
+open Helpers.Builders
+open Helpers.ProgressBarFSharp
+
+open Logging.Logging
+
+open Types.ErrorTypes  
 
 open Settings.Messages
 open Settings.SettingsDPO
 open Settings.SettingsGeneral
 
-open Logging.Logging
-
-open Types.ErrorTypes   
-
-open Helpers
-open Helpers.CloseApp
-open Helpers.ProgressBarFSharp
-
+//HttpClient
 module DPO_Submain =
 
     //************************Submain functions************************************************************************
-
-    let internal client () =         
-
-        let client = new HttpClient()
-        
-        match client |> Option.ofNull with
-        | Some value -> 
-                      value
-        | None       ->
-                      logInfoMsg <| sprintf "Err034 %s" "new HttpClient() is null"
-                      client.Dispose()
-                      closeItBaby msg20
-                      new HttpClient()                              
 
     //[<TailCall>]
     let internal filterTimetables pathToDir = 
 
         let getLastThreeCharacters input =
             match String.length input <= 3 with
-            | true  -> 
-                     msgParam6 input 
-                     input 
-            | false -> 
-                     input.Substring(input.Length - 3)
+            | true  -> input 
+            | false -> input.Substring(input.Length - 3)
 
         let removeLastFourCharacters input =
             match String.length input <= 4 with
-            | true  -> 
-                     msgParam6 input 
-                     String.Empty
-            | false ->
-                     input.[..(input.Length - 5)]                    
+            | true  -> String.Empty
+            | false -> input.[..(input.Length - 5)]                    
     
         let urlList = 
             [
@@ -95,10 +76,10 @@ module DPO_Submain =
                                             let lineName = 
                                                 let s adaptedLineName = sprintf"%s_%s" (getLastThreeCharacters adaptedLineName) adaptedLineName  
                                                 let s1 s = removeLastFourCharacters s 
-                                                let result = sprintf"%s%s" <| (s >> s1) adaptedLineName <| ".pdf"
-                                                result.Replace("?", String.Empty)
+                                                sprintf"%s%s" <| (s >> s1) adaptedLineName <| ".pdf"
                                             
                                             let pathToFile = 
+                                                let item2 = item2.Replace("?", String.Empty)
                                                 let lineName = 
                                                     match item2.Contains("NAD") with
                                                     | true when item2.Contains("NAD1") -> "NAD1.pdf"
@@ -119,48 +100,61 @@ module DPO_Submain =
                       |> List.distinct
             ) 
 
-    let internal downloadAndSaveTimetables client (pathToDir: string) (filterTimetables: (string*string) list) =  
+    let internal downloadAndSaveTimetables pathToDir (filterTimetables: (string*string) list) =  
 
-        let downloadFileTaskAsync (client: Http.HttpClient) (uri: string) (path: string) : Async<Result<unit, string>> =  
+        let downloadFileTaskAsync (uri: string) (pathToFile: string) : Async<Result<unit, string>> =  
        
             async
                 {                      
                     try    
-                        match File.Exists(path) with
-                        | true  -> 
-                                 return Ok () 
-                        | false -> 
-                                 let! response = client.GetAsync(uri) |> Async.AwaitTask
-                        
-                                 match response.IsSuccessStatusCode with //true if StatusCode was in the range 200-299; otherwise, false.
-                                 | true  -> 
-                                          let! stream = response.Content.ReadAsStreamAsync() |> Async.AwaitTask    
-                                          use fileStream = new FileStream(path, FileMode.CreateNew) 
-                                          do! stream.CopyToAsync(fileStream) |> Async.AwaitTask
-                                      
-                                          return Ok ()
+                        let client = 
+                            
+                            pyramidOfDoom
+                                {
+                                    let!_ = not <| File.Exists(pathToFile) |> Option.ofBool, Error String.Empty
+                                    let! client = new HttpClient() |> Option.ofNull, Error String.Empty
 
-                                 | false -> 
-                                          let errorType = 
-                                              match response.StatusCode with
-                                              | HttpStatusCode.BadRequest          -> Error connErrorCodeDefault.BadRequest
-                                              | HttpStatusCode.InternalServerError -> Error connErrorCodeDefault.InternalServerError
-                                              | HttpStatusCode.NotImplemented      -> Error connErrorCodeDefault.NotImplemented
-                                              | HttpStatusCode.ServiceUnavailable  -> Error connErrorCodeDefault.ServiceUnavailable
-                                              | HttpStatusCode.NotFound            -> Error uri  
-                                              | _                                  -> Error connErrorCodeDefault.CofeeMakerUnavailable   
-                                          
-                                          return errorType     
+                                    return Ok client        
+                                }
+                        
+                        match client with
+                        | Ok client ->      
+                                     use! response = client.GetAsync(uri) |> Async.AwaitTask
+                        
+                                     match response.IsSuccessStatusCode with //true if StatusCode was in the range 200-299; otherwise, false.
+                                     | true  -> 
+                                              let! stream = response.Content.ReadAsStreamAsync() |> Async.AwaitTask  
+                                              let pathToFile = pathToFile.Replace("?", String.Empty)
+                                              use fileStream = new FileStream(pathToFile, FileMode.CreateNew) 
+                                              do! stream.CopyToAsync(fileStream) |> Async.AwaitTask  
+                                              
+                                              return Ok ()
+                                     | false -> 
+                                              let errorType = 
+                                                  match response.StatusCode with
+                                                  | HttpStatusCode.BadRequest          -> Error connErrorCodeDefault.BadRequest
+                                                  | HttpStatusCode.InternalServerError -> Error connErrorCodeDefault.InternalServerError
+                                                  | HttpStatusCode.NotImplemented      -> Error connErrorCodeDefault.NotImplemented
+                                                  | HttpStatusCode.ServiceUnavailable  -> Error connErrorCodeDefault.ServiceUnavailable
+                                                  | HttpStatusCode.NotFound            -> Error uri  
+                                                  | _                                  -> Error connErrorCodeDefault.CofeeMakerUnavailable   
+                                         
+                                              return errorType   
+                                
+                        | Error err -> 
+                                     logInfoMsg <| sprintf "Err034 %s" err
+                                     return Error String.Empty 
+                           
                     with                                                         
-                    | ex ->  
+                    | ex ->
                           logInfoMsg <| sprintf "Err035 %s" (string ex.Message)
-                          closeItDpo client msg20 
-                          return Error msg20    
-                }   
-    
+                          closeItBaby msg20 
+                          return Error String.Empty   
+                } 
+
         msgParam3 pathToDir 
     
-        let downloadTimetables (client: HttpClient) = 
+        let downloadTimetables = 
         
             let l = filterTimetables |> List.length
         
@@ -177,12 +171,12 @@ module DPO_Submain =
                                        |> function
                                            | Some err ->
                                                        logInfoMsg <| sprintf "Err036 %s" err
-                                                       closeItDpo client err                                                                      
+                                                       closeItBaby err                                                                      
                                            | None     -> 
                                                        msgParam2 link 
                           | Error err ->
                                        logInfoMsg <| sprintf "Err037 %s" err
-                                       closeItDpo client err              
+                                       closeItBaby err              
 
                      let mapErr2 = 
                          function
@@ -195,7 +189,7 @@ module DPO_Submain =
                      async                                                
                          {   
                              progressBarContinuous (i + 1) l  
-                             return! downloadFileTaskAsync client link pathToFile                                                                                                                               
+                             return! downloadFileTaskAsync link pathToFile                                                                                                                               
                          } 
                      |> Async.Catch
                      |> Async.RunSynchronously
@@ -203,6 +197,6 @@ module DPO_Submain =
                      |> Result.mapErr mapErr2 (lazy msgParam2 link)                                                   
                 ) 
 
-        downloadTimetables client     
-   
+        downloadTimetables 
+
         msgParam4 pathToDir

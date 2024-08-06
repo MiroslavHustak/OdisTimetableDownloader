@@ -19,7 +19,6 @@ open Helpers.FreeMonads
 open SubmainFunctions
 open SubmainFunctions.KODIS_SubmainDataTable
 
-
 module WebScraping_KODISFMDataTable = 
     
     //FREE MONAD 
@@ -28,48 +27,45 @@ module WebScraping_KODISFMDataTable =
             
         let rec interpret clp  = 
 
-            let errorHandling fn = 
-
-                try Ok fn
-                with ex -> Error <| string ex.Message
-                                
-                |> function
-                    | Ok value  -> 
-                                 value  
-                    | Error err ->
-                                 logInfoMsg <| sprintf "Err049 %s" err
-                                 closeItBaby msg16             
-
             //function //CommandLineProgram<unit> -> unit
             match clp with
             | Pure x                                -> 
                                                      x //nevyuzito
 
             | Free (StartProcessFM next)            -> 
-                                                     let processStartTime =    
-
+                                                     try   
                                                          Console.Clear()
+
                                                          let processStartTime = 
                                                              try 
                                                                  startNetChecking ()
                                                                  Ok (sprintf "Začátek procesu: %s" <| DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"))  
-                                                             with ex -> Error <| string ex.Message
+                                                             with
+                                                             | ex -> Error <| string ex.Message
                                                                              
                                                              |> function
                                                                  | Ok value  -> 
                                                                               value  
                                                                  | Error err ->
                                                                               logInfoMsg <| sprintf "Err503 %s" err
-                                                                              sprintf "Začátek procesu nemohl býti ustanoven."      
-                                                             in msgParam7 processStartTime 
-                                                         in errorHandling processStartTime
+                                                                              "Začátek procesu nemohl býti ustanoven."      
+                                                             in msgParam7 processStartTime |> Ok
+                                                     with
+                                                     | ex -> Error <| string ex.Message
+                                                                     
+                                                     |> function
+                                                         | Ok value  -> 
+                                                                      value  
+                                                         | Error err ->
+                                                                      logInfoMsg <| sprintf "Err049A %s" err
+                                                                      closeItBaby msg16
 
                                                      let param = next ()
                                                      interpret param
 
             | Free (DownloadAndSaveJsonFM next)     ->      
                                                      //Http request and IO operation (data from settings -> http request -> IO operation -> saving json files on HD)
-                                                     let downloadAndSaveJson =  
+                                                     try 
 
                                                          startNetChecking ()
                                                          
@@ -82,9 +78,19 @@ module WebScraping_KODISFMDataTable =
                                                          KODIS_SubmainDataTable.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
                                                          
                                                          msg3 ()   
-                                                         msg11 ()    
+                                                         msg11 () 
                                                          
-                                                         in errorHandling downloadAndSaveJson
+                                                         Ok ()
+                                                         
+                                                     with
+                                                     | ex -> Error <| string ex.Message
+                                                                     
+                                                     |> function
+                                                         | Ok value  -> 
+                                                                      value  
+                                                         | Error err ->
+                                                                      logInfoMsg <| sprintf "Err049B %s" err
+                                                                      closeItBaby msg16
 
                                                      let param = next ()
                                                      interpret param                                                
@@ -171,20 +177,21 @@ module WebScraping_KODISFMDataTable =
                                                             Ok ()       
                                                         finally
                                                             dt.Dispose()
-                                                     with ex -> Error <| string ex.Message 
+                                                     with 
+                                                     | ex -> Error <| string ex.Message 
                                                      
                                                      |> function
                                                          | Ok value  -> 
                                                                       value  
                                                          | Error err ->
-                                                                      logInfoMsg <| sprintf "Err049 %s" err
+                                                                      logInfoMsg <| sprintf "Err049C %s" err
                                                                       closeItBaby msg16           
 
                                                      let param = next ()
                                                      interpret param
 
             | Free (EndProcessFM _)                 ->
-                                                     let processEndTime =    
+                                                     try 
 
                                                          let processEndTime = 
                                                              try Ok (sprintf "Konec procesu: %s" <| DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"))                                                                    
@@ -196,8 +203,16 @@ module WebScraping_KODISFMDataTable =
                                                                  | Error err ->
                                                                               logInfoMsg <| sprintf "Err504 %s" err
                                                                               sprintf "Konec procesu nemohl býti ustanoven." 
-                                                             in msgParam7 processEndTime
-                                                         in errorHandling processEndTime
+                                                             in msgParam7 processEndTime |> Ok
+                                                     with
+                                                     | ex -> Error <| string ex.Message
+                                                                     
+                                                     |> function
+                                                         | Ok value  -> 
+                                                                      value  
+                                                         | Error err ->
+                                                                      logInfoMsg <| sprintf "Err049D %s" err
+                                                                      closeItBaby msg16
         cmdBuilder
             {
                 let! _ = Free (StartProcessFM Pure)
@@ -208,10 +223,3 @@ module WebScraping_KODISFMDataTable =
             } 
             
         |> interpret 
-
-        //*****************************************************************************************************************************************
-
-        //CurrentValidity = JR striktne platne k danemu dni, tj. pokud je napr. na dany den vylukovy JR, stahne se tento JR, ne JR platny dalsi den
-        //FutureValidity = JR platne v budouci dobe, ktere se uz vyskytuji na webu KODISu
-        //ReplacementService = pouze vylukove JR, JR NAD a JR X linek
-        //WithoutReplacementService = JR dlouhodobe platne bez jakykoliv vyluk. Tento vyber neobsahuje ani dlouhodobe nekolikamesicni vyluky, muze se ale hodit v pripade, ze zakladni slozka s JR obsahuje jedno ci dvoudenni vylukove JR.     
