@@ -79,19 +79,16 @@ module KODIS_SubmainDataTable =
         let l = jsonLinkList |> List.length
 
         let counterAndProgressBar =
-            MailboxProcessor.Start
-                (fun inbox 
+            MailboxProcessor.Start <|
+                fun inbox 
                     ->
                      let rec loop n =
                          async
                              { 
                                  match! inbox.Receive() with
-                                 | Inc i ->
-                                          progressBarContinuous n l                                                        
-                                          return! loop (n + i)
+                                 | Inc i -> progressBarContinuous n l; return! loop (n + i)
                              }
                      loop 0
-                )
 
         let result = 
             (jsonLinkList, pathToJsonList)
@@ -845,19 +842,17 @@ module KODIS_SubmainDataTable =
                 let l = context.list |> List.length
 
                 let counterAndProgressBar =
-                    MailboxProcessor.Start
-                        (fun inbox 
+                    MailboxProcessor.Start <|
+                        fun inbox 
                             ->
                              let rec loop n =
                                  async
                                      { 
                                          match! inbox.Receive() with
-                                         | Inc i -> 
-                                                  progressBarContinuous n l                                                                   
-                                                  return! loop (n + i)
+                                         | Inc i -> progressBarContinuous n l; return! loop (n + i)
                                      }
                              loop 0
-                         )                            
+                                                 
                 return                  
                     context.list
                     |> List.unzip             

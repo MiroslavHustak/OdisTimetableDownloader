@@ -192,7 +192,6 @@ module WebScraping_KODISFMDataTable =
 
             | Free (EndProcessFM _)                 ->
                                                      try 
-
                                                          let processEndTime = 
                                                              try Ok (sprintf "Konec procesu: %s" <| DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"))                                                                    
                                                              with ex -> Error <| string ex.Message
