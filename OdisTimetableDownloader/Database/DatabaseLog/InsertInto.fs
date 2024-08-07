@@ -50,8 +50,7 @@ module InsertInto =
                  let isolationLevel = System.Data.IsolationLevel.Serializable                                  
                  let transaction: SqlTransaction = connection.BeginTransaction(isolationLevel)                 
 
-                 try                        
-                    
+                 try 
                      use cmdInsert = new SqlCommand(queryInsert, connection, transaction)
 
                      let parameterTimeStamp = new SqlParameter()                 
@@ -79,7 +78,7 @@ module InsertInto =
                                     cmdInsert.Parameters.AddWithValue("@Message", message) |> ignore
                                               
                                     cmdInsert.ExecuteNonQuery() > 0   //number of affected rows                                                           
-                     )                                       
+                         )                                       
                      |> List.contains false   
                      |> function
                          | true  -> transaction.Rollback()  
@@ -92,7 +91,8 @@ module InsertInto =
                  finally
                      transaction.Dispose()         
                      
-             with ex -> Error <| string ex.Message
+             with 
+             | ex -> Error <| string ex.Message
                              
              |> function
                  | Ok value  -> 
@@ -147,7 +147,8 @@ module InsertInto =
                                           
                      finally
                          transaction.Dispose()
-                 with ex -> Error <| string ex.Message
+                 with 
+                 | ex -> Error <| string ex.Message
                                  
                  |> function
                      | Ok value  -> 
