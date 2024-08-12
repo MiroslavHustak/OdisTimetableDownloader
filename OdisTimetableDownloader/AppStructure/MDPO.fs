@@ -22,12 +22,12 @@ module WebScraping_MDPO =
 
     type private State =  //not used
         { 
-            TimetablesDownloadedAndSaved: string //zatim nevyuzito
+            TimetablesDownloadedAndSaved : unit //zatim nevyuzito
         }
 
     let private stateDefault = 
         {          
-            TimetablesDownloadedAndSaved = String.Empty //zatim nevyuzito
+            TimetablesDownloadedAndSaved = () //zatim nevyuzito
         }
 
     type private Actions =
@@ -39,7 +39,7 @@ module WebScraping_MDPO =
 
     type private Environment = 
         {
-            filterTimetables : string -> Map<string, string>
+            filterTimetables : unit -> string -> Map<string, string>
             downloadAndSaveTimetables : string -> Map<string, string> -> unit
         }
 
@@ -120,7 +120,7 @@ module WebScraping_MDPO =
                                                    msg1 () 
                                                    Error String.Empty
                                           | true  -> 
-                                                   environment.filterTimetables pathToSubdir 
+                                                   environment.filterTimetables () pathToSubdir 
                                                    |> environment.downloadAndSaveTimetables pathToSubdir 
                                                    |> Ok
                                       with

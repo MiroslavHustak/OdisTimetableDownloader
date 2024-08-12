@@ -110,7 +110,7 @@ module WebScraping_KODISFMDataTable =
                                                                                                                            
                                                                 //operation on data 
                                                                 let dirList =                                                                    
-                                                                    KODIS_SubmainDataTable.createOneNewDirectory  //list -> aby bylo mozno pouzit funkci createFolders bez uprav  
+                                                                    KODIS_SubmainDataTable.createOneNewDirectoryPath  //list -> aby bylo mozno pouzit funkci createFolders bez uprav  
                                                                     <| pathToDir 
                                                                     <| KODIS_SubmainDataTable.createDirName variant listODISDefault4 
 
@@ -123,7 +123,7 @@ module WebScraping_KODISFMDataTable =
 
                                                                 //operation on data 
                                                                 //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into datatable -> data filtering (link*path)  
-                                                                let list = KODIS_SubmainDataTable.operationOnDataFromJson dt variant dir 
+                                                                let list = KODIS_SubmainDataTable.operationOnDataFromJson () dt variant dir 
 
                                                                 let context listMappingFunction = 
                                                                     {
@@ -145,7 +145,7 @@ module WebScraping_KODISFMDataTable =
                                                                 KODIS_SubmainDataTable.deleteAllODISDirectories pathToDir                                                              
                                                               
                                                                 //operation on data 
-                                                                let dirList = KODIS_SubmainDataTable.createNewDirectories pathToDir listODISDefault4
+                                                                let dirList = KODIS_SubmainDataTable.createNewDirectoryPaths pathToDir listODISDefault4
                                                               
                                                                 //IO operation 
                                                                 KODIS_SubmainDataTable.createFolders dirList 
@@ -158,7 +158,7 @@ module WebScraping_KODISFMDataTable =
                                                                         -> 
                                                                         //operation on data 
                                                                         //input from saved json files -> change of input data -> output into seq -> input from seq -> seq of input data -> output into datatable -> data filtering (link*path)  
-                                                                        let list = KODIS_SubmainDataTable.operationOnDataFromJson dt variant dir 
+                                                                        let list = KODIS_SubmainDataTable.operationOnDataFromJson () dt variant dir 
 
                                                                         let context listMappingFunction = 
                                                                             {

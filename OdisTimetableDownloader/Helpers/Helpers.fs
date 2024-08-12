@@ -10,7 +10,7 @@ module ConsoleFixers =
         with ex -> Error (string ex.Message) 
         
         |> function
-            | Ok value -> value
+            | Ok value  -> value
             | Error err -> printfn "Err123 %s" err         
       
     let internal consoleWindowSettings () =
@@ -37,16 +37,16 @@ module LogicalAliases =
     (*
     let rec internal nXor operands =
         match operands with
-        | []    -> false  
-        | x::xs -> (x && not (nXor xs)) || ((not x) && (nXor xs))
+        | []      -> false  
+        | x :: xs -> (x && not (nXor xs)) || ((not x) && (nXor xs))
     *)
 
     [<TailCall>]
     let internal nXor operands =
         let rec nXor_tail_recursive acc operands =
             match operands with
-            | []    -> acc
-            | x::xs -> nXor_tail_recursive ((x && not acc) || ((not x) && acc)) xs
+            | []      -> acc
+            | x :: xs -> nXor_tail_recursive ((x && not acc) || ((not x) && acc)) xs
         nXor_tail_recursive false operands
        
 module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled nazev velkym kvuli DLL pro C#        
@@ -54,7 +54,7 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
     open System
     
     [<CompiledName "CreateStringAcc">]      
-    let internal createStringAcc (strSeqNum: int, stringToAdd: string): string = 
+    let internal createStringAcc (strSeqNum : int, stringToAdd: string): string = 
         
         let initialString = String.Empty   //initial value of the string
         let listRange = [ 1 .. strSeqNum ] 
@@ -71,7 +71,7 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
         loop listRange initialString
     
     [<CompiledName "CreateStringCps">]
-    let internal createStringCps (strSeqNum: int, stringToAdd: string): string =
+    let internal createStringCps (strSeqNum : int, stringToAdd: string): string =
 
         let listRange = [ 1 .. strSeqNum ]
         
@@ -101,8 +101,8 @@ module CheckNetConnection =
         try
             use myPing = new Ping()      
                 
-            let host: string = "8.8.4.4" //IP google.com
-            let buffer: byte[] = Array.zeroCreate <| 32
+            let host : string = "8.8.4.4" //IP google.com
+            let buffer : byte[] = Array.zeroCreate <| 32
             
             let pingOptions: PingOptions = new PingOptions()                
      
@@ -205,9 +205,9 @@ module CopyOrMoveFilesFM =
     [<Struct>]
     type internal Config =
         {
-            source: string
-            destination: string
-            fileName: string
+            source : string
+            destination : string
+            fileName : string
         }
 
     [<Struct>]

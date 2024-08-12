@@ -25,9 +25,8 @@ open Settings.SettingsGeneral
 module DPO_Submain =
 
     //************************Submain functions************************************************************************
-
-    //[<TailCall>]
-    let internal filterTimetables pathToDir = 
+    
+    let internal filterTimetables () pathToDir = 
 
         let getLastThreeCharacters input =
             match String.length input <= 3 with
@@ -100,9 +99,9 @@ module DPO_Submain =
                       |> List.distinct
             ) 
 
-    let internal downloadAndSaveTimetables pathToDir (filterTimetables: (string*string) list) =  
+    let internal downloadAndSaveTimetables pathToDir (filterTimetables : (string*string) list) =  
 
-        let downloadFileTaskAsync (uri: string) (pathToFile: string) : Async<Result<unit, string>> =  
+        let downloadFileTaskAsync (uri : string) (pathToFile: string) : Async<Result<unit, string>> =  
        
             async
                 {                      

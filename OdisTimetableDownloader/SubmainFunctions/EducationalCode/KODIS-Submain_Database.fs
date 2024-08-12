@@ -409,7 +409,7 @@ module KODIS_Submain =
         (Seq.append <| task <| addOn()) |> Seq.distinct
     
     //input from seq -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
-    let private filterTimetables connection param (pathToDir: string) diggingResult = 
+    let private filterTimetables () connection param (pathToDir : string) diggingResult = 
 
         //*************************************Helpers for SQL columns********************************************
 
@@ -453,7 +453,7 @@ module KODIS_Submain =
                              msg9 ()
                              String.Empty     
 
-        let extractSubstring2 (input: string) : (string option * int) =
+        let extractSubstring2 (input : string) : (string option * int) =
 
             let prefix = "NAD_"
             
@@ -475,7 +475,7 @@ module KODIS_Submain =
                                        (None, 0)
 
         //zamerne nepouzivam jednotny kod pro NAD (extractSubstring2) a X - pro pripad, ze KODIS zase neco zmeni
-        let extractSubstring3 (input: string) : (string option * int) =
+        let extractSubstring3 (input : string) : (string option * int) =
 
             match input with            
             | _ when input.[0] = 'X' ->
@@ -754,7 +754,7 @@ module KODIS_Submain =
         deleteIt listODISDefault4 
  
     //Operations on data made separate in order to have some structure in the free-monad-based design (for educational purposes)   
-    let internal createNewDirectories pathToDir : Reader<string list, string list> =
+    let internal createNewDirectoryPaths pathToDir : Reader<string list, string list> =
         
         reader
             { 
@@ -811,7 +811,7 @@ module KODIS_Submain =
  
     //list -> aby bylo mozno pouzit funkci createFolders bez uprav
     //Operations on data made separate in order to have some structure in the free-monad-based design (for educational purposes)     
-    let internal createOneNewDirectory pathToDir dirName = [ sprintf"%s\%s"pathToDir dirName ] 
+    let internal createOneNewDirectoryPath pathToDir dirName = [ sprintf"%s\%s"pathToDir dirName ] 
   
     //IO operations made separate in order to have some structure in the free-monad-based design (for educational purposes)    
     let internal createFolders dirList =  
@@ -840,7 +840,7 @@ module KODIS_Submain =
                          logInfoMsg <| sprintf "Err013 %s" err
                          closeItBaby msg16   
     
-    //input from data filtering (links*paths) -> http request -> IO operation -> saving pdf data files on HD    
+    //input from data filtering (links * paths) -> http request -> IO operation -> saving pdf data files on HD    
     let private downloadAndSaveTimetables =      //FsHttp         
         
         cts.Cancel()  
@@ -926,12 +926,12 @@ module KODIS_Submain =
                     |> List.head 
             } 
      
-    let internal operationOnDataFromJson dt variant dir =   
+    let internal operationOnDataFromJson () dt variant dir =   
 
         //operation on data
         //input from saved json files -> change of input data -> output into seq >> input from seq -> change of input data -> output into datatable -> data filtering (links*paths)  
         
-        try digThroughJsonStructure >> filterTimetables dt variant dir <| () |> Ok
+        try digThroughJsonStructure >> filterTimetables () dt variant dir <| () |> Ok
         with ex -> Error <| string ex.Message
         
         |> function

@@ -400,7 +400,7 @@ module KODIS_SubmainDataTable =
         (Seq.append <| task <| addOn()) |> Seq.distinct
     
     //input from seq -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
-    let private filterTimetables dt param (pathToDir: string) diggingResult = 
+    let private filterTimetables () dt param (pathToDir: string) diggingResult = 
 
         //*************************************Helpers for SQL columns********************************************
 
@@ -742,7 +742,7 @@ module KODIS_SubmainDataTable =
         deleteIt listODISDefault4 
  
     //Operations on data made separate in order to have some structure in the free-monad-based design (for educational purposes)   
-    let internal createNewDirectories pathToDir : Reader<string list, string list> =
+    let internal createNewDirectoryPaths pathToDir : Reader<string list, string list> =
         
         reader
             { 
@@ -799,7 +799,7 @@ module KODIS_SubmainDataTable =
  
     //list -> aby bylo mozno pouzit funkci createFolders bez uprav
     //Operations on data made separate in order to have some structure in the free-monad-based design (for educational purposes)     
-    let internal createOneNewDirectory pathToDir dirName = [ sprintf"%s\%s"pathToDir dirName ] 
+    let internal createOneNewDirectoryPath pathToDir dirName = [ sprintf"%s\%s"pathToDir dirName ] 
   
     //IO operations made separate in order to have some structure in the free-monad-based design (for educational purposes)    
     let internal createFolders dirList =  
@@ -914,12 +914,12 @@ module KODIS_SubmainDataTable =
             } 
         
      
-    let internal operationOnDataFromJson dt variant dir =   
+    let internal operationOnDataFromJson () dt variant dir =   
 
         //operation on data
         //input from saved json files -> change of input data -> output into seq >> input from seq -> change of input data -> output into datatable -> data filtering (links*paths)  
         
-        try digThroughJsonStructure >> filterTimetables dt variant dir <| () |> Ok
+        try digThroughJsonStructure >> filterTimetables () dt variant dir <| () |> Ok
         with ex -> Error <| string ex.Message
         
         |> function

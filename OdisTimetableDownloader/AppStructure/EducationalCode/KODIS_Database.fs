@@ -26,7 +26,7 @@ module WebScraping_KODISFM =
         
     //FREE MONAD 
 
-    let internal webscraping_KODISFM pathToDir (variantList: Validity list) = 
+    let internal webscraping_KODISFM pathToDir (variantList : Validity list) = 
 
         let startProcess = DateTime.Now
             
@@ -109,7 +109,7 @@ module WebScraping_KODISFM =
                                                               
                                                                   //operation on data
                                                                   let dirList =                                                                    
-                                                                      KODIS_Submain.createOneNewDirectory  //list -> aby bylo mozno pouzit funkci createFolders bez uprav  
+                                                                      KODIS_Submain.createOneNewDirectoryPath  //list -> aby bylo mozno pouzit funkci createFolders bez uprav  
                                                                       <| pathToDir 
                                                                       <| KODIS_Submain.createDirName variant listODISDefault4 
 
@@ -120,7 +120,7 @@ module WebScraping_KODISFM =
 
                                                                   //operation on data 
                                                                   //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into database -> data filtering (link*path) 
-                                                                  let list = KODIS_Submain.operationOnDataFromJson connection variant dir
+                                                                  let list = KODIS_Submain.operationOnDataFromJson () connection variant dir
 
                                                                   let context listMappingFunction = 
                                                                      {
@@ -133,7 +133,7 @@ module WebScraping_KODISFM =
                                                                   | FutureValidity -> context List.map2 
                                                                   | _              -> context List.Parallel.map2  
 
-                                                                  //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
+                                                                  //IO operation (data filtering (link * path) -> http request -> saving pdf files on HD)
                                                                   |> KODIS_Submain.downloadAndSave 
 
                                                              //BulkVariantDownload       
@@ -142,7 +142,7 @@ module WebScraping_KODISFM =
                                                                   KODIS_Submain.deleteAllODISDirectories pathToDir
                                                               
                                                                   //operation on data 
-                                                                  let dirList = KODIS_Submain.createNewDirectories pathToDir listODISDefault4
+                                                                  let dirList = KODIS_Submain.createNewDirectoryPaths pathToDir listODISDefault4
                                                               
                                                                   //IO operation 
                                                                   KODIS_Submain.createFolders dirList 
@@ -153,7 +153,7 @@ module WebScraping_KODISFM =
                                                                           -> 
                                                                            //operation on data 
                                                                            //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into database -> data filtering (link*path) 
-                                                                           let list = KODIS_Submain.operationOnDataFromJson connection variant dir 
+                                                                           let list = KODIS_Submain.operationOnDataFromJson () connection variant dir 
 
                                                                            let context listMappingFunction = 
                                                                               {
@@ -166,7 +166,7 @@ module WebScraping_KODISFM =
                                                                            | FutureValidity -> context List.map2 
                                                                            | _              -> context List.Parallel.map2
 
-                                                                           //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
+                                                                           //IO operation (data filtering (link * path) -> http request -> saving pdf files on HD)
                                                                            |> KODIS_Submain.downloadAndSave    
                                                                       ) 
                                                              Ok ()       

@@ -56,8 +56,8 @@ module InsertSelectSort =
                        dt.Rows.Add(newRow)
             )                  
 
-    let internal sortLinksOut dt (dataToBeInserted : DtDtoSend list) validity = 
-
+    let internal sortLinksOut (dt : DataTable) (dataToBeInserted : DtDtoSend list) validity = 
+               
         try            
             try                
                 insertIntoDataTable dt dataToBeInserted  
