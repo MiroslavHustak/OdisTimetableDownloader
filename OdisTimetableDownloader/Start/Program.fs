@@ -111,7 +111,7 @@ let main argv =
         | ConsoleKey.Enter ->                                                                                     
                             Console.Clear()   
                             
-                            match pathToFolder >> Option.ofNullEmpty <| () with
+                            match (>>) pathToFolder Option.ofNullEmpty <| () with
                             | Some path ->  
                                          printfn "Skvěle! Adresář byl vybrán. Nyní stiskni cokoliv pro stažení aktuálních JŘ dopravce DP Ostrava."
                                          Console.Clear()
@@ -235,7 +235,7 @@ let main argv =
     //[<TailCall>] //kontrolovano jako module function, bez varovnych hlasek
     let rec variant () = 
 
-        let timetableVariant (fn: ConsoleKeyInfo) = 
+        let timetableVariant (fn : ConsoleKeyInfo) = 
             try
                 match fn.Key with
                 | ConsoleKey.Escape -> Ok <| System.Environment.Exit(0)
