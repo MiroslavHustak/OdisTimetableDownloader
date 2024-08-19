@@ -43,7 +43,7 @@ module WebScraping_MDPO =
             downloadAndSaveTimetables : string -> Map<string, string> -> unit
         }
 
-    let private environment: Environment =
+    let private environment : Environment =
         { 
             filterTimetables = filterTimetables 
             downloadAndSaveTimetables = downloadAndSaveTimetables       

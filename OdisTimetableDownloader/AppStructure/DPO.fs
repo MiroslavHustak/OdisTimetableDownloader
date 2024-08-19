@@ -44,7 +44,7 @@ module WebScraping_DPO =
             downloadAndSaveTimetables : string -> (string * string) list -> unit
         }
 
-    let private environment: Environment =
+    let private environment : Environment =
         { 
             filterTimetables = filterTimetables
             downloadAndSaveTimetables = downloadAndSaveTimetables
