@@ -89,21 +89,21 @@ module InsertInto =
                                                 }
                                          *)
                                          cmdInsert.Parameters.Clear() // Clear parameters for each iteration     
-                                         cmdInsert.Parameters.AddWithValue("@OldPrefix", item.oldPrefix) |> ignore
-                                         cmdInsert.Parameters.AddWithValue("@NewPrefix", item.newPrefix) |> ignore
+                                         cmdInsert.Parameters.AddWithValue("@OldPrefix", item.OldPrefix) |> ignore
+                                         cmdInsert.Parameters.AddWithValue("@NewPrefix", item.NewPrefix) |> ignore
     
-                                         parameterStart.Value <- item.startDate
+                                         parameterStart.Value <- item.StartDate
                                          cmdInsert.Parameters.Add(parameterStart) |> ignore
     
-                                         parameterEnd.Value <- item.endDate                                
+                                         parameterEnd.Value <- item.EndDate                                
                                          cmdInsert.Parameters.Add(parameterEnd) |> ignore
     
-                                         cmdInsert.Parameters.AddWithValue("@TotalDateInterval", item.totalDateInterval) |> ignore
-                                         cmdInsert.Parameters.AddWithValue("@VT_Suffix", item.suffix) |> ignore
-                                         cmdInsert.Parameters.AddWithValue("@JS_GeneratedString", item.jsGeneratedString) |> ignore
-                                         cmdInsert.Parameters.AddWithValue("@CompleteLink", item.completeLink) |> ignore
-                                         cmdInsert.Parameters.AddWithValue("@FileToBeSaved", item.fileToBeSaved) |> ignore 
-                                         cmdInsert.Parameters.AddWithValue("@PartialLink", item.partialLink) |> ignore 
+                                         cmdInsert.Parameters.AddWithValue("@TotalDateInterval", item.TotalDateInterval) |> ignore
+                                         cmdInsert.Parameters.AddWithValue("@VT_Suffix", item.Suffix) |> ignore
+                                         cmdInsert.Parameters.AddWithValue("@JS_GeneratedString", item.JsGeneratedString) |> ignore
+                                         cmdInsert.Parameters.AddWithValue("@CompleteLink", item.CompleteLink) |> ignore
+                                         cmdInsert.Parameters.AddWithValue("@FileToBeSaved", item.FileToBeSaved) |> ignore 
+                                         cmdInsert.Parameters.AddWithValue("@PartialLink", item.PartialLink) |> ignore 
                                                                
                                          cmdInsert.ExecuteNonQuery() > 0
                               ) 

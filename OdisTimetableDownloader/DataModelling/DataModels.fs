@@ -12,44 +12,44 @@ module DataModel =
 
     type DbDataGet = 
         {            
-            completeLink : CompleteLinkOpt
-            fileToBeSaved : FileToBeSavedOpt
+            CompleteLink : CompleteLinkOpt
+            FileToBeSaved : FileToBeSavedOpt
         }
 
     type DtDataGet = 
         {           
-            newPrefix : NewPrefix  
-            startDate : StartDateDt
-            endDate : EndDateDt 
-            completeLink : CompleteLink 
-            fileToBeSaved : FileToBeSaved  
-            partialLink : PartialLink
+            NewPrefix : NewPrefix  
+            StartDate : StartDateDt
+            EndDate : EndDateDt 
+            CompleteLink : CompleteLink 
+            FileToBeSaved : FileToBeSaved  
+            PartialLink : PartialLink
         } 
 
     type DbDataSend = 
         {
-            oldPrefix : OldPrefix 
-            newPrefix : NewPrefix 
-            startDate : StartDate 
-            endDate : EndDate 
-            totalDateInterval : TotalDateInterval 
-            suffix : Suffix 
-            jsGeneratedString : JsGeneratedString 
-            completeLink : CompleteLink 
-            fileToBeSaved : FileToBeSaved
-            partialLink : PartialLink
+            OldPrefix : OldPrefix 
+            NewPrefix : NewPrefix 
+            StartDate : StartDate 
+            EndDate : EndDate 
+            TotalDateInterval : TotalDateInterval 
+            Suffix : Suffix 
+            JsGeneratedString : JsGeneratedString 
+            CompleteLink : CompleteLink 
+            FileToBeSaved : FileToBeSaved
+            PartialLink : PartialLink
         }
 
     type DtDataSend = 
         {
-            oldPrefix : OldPrefix 
-            newPrefix : NewPrefix 
-            startDate : StartDateDtOpt 
-            endDate : EndDateDtOpt 
-            totalDateInterval : TotalDateInterval 
-            suffix : Suffix 
-            jsGeneratedString : JsGeneratedString 
-            completeLink : CompleteLink 
-            fileToBeSaved : FileToBeSaved 
-            partialLink : PartialLink
+            OldPrefix : OldPrefix 
+            NewPrefix : NewPrefix 
+            StartDate : StartDateDtOpt 
+            EndDate : EndDateDtOpt 
+            TotalDateInterval : TotalDateInterval 
+            Suffix : Suffix 
+            JsGeneratedString : JsGeneratedString 
+            CompleteLink : CompleteLink 
+            FileToBeSaved : FileToBeSaved 
+            PartialLink : PartialLink
         }

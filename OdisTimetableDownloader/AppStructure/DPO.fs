@@ -54,7 +54,7 @@ module WebScraping_DPO =
 
         let stateReducer (state: State) (action: Actions) (environment: Environment) =
 
-            let dirList pathToDir = [ sprintf"%s\%s"pathToDir ODISDefault.odisDir5 ]
+            let dirList pathToDir = [ sprintf"%s\%s"pathToDir ODISDefault.OdisDir5 ]
 
             match action with                                                   
             | StartProcess           ->
@@ -74,7 +74,7 @@ module WebScraping_DPO =
 
             | DeleteOneODISDirectory ->
                                       try  
-                                          let dirName = ODISDefault.odisDir5                                    
+                                          let dirName = ODISDefault.OdisDir5                                    
                                       
                                             //rozdil mezi Directory a DirectoryInfo viz Unique_Identifier_And_Metadata_File_Creator.sln -> MainLogicDG.fs
                                           let dirInfo = new DirectoryInfo(pathToDir)   

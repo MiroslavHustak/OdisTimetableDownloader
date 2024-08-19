@@ -615,16 +615,16 @@ module KODIS_SubmainDataTable =
             let fileToBeSaved = sprintf "%s%s%s.pdf" (newPrefix oldPrefix) totalDateInterval suffix
 
             {
-                oldPrefix = OldPrefix oldPrefix
-                newPrefix = NewPrefix (newPrefix oldPrefix)
-                startDate = StartDateDtOpt (TryParserDate.parseDate () <| extractStartDate totalDateInterval)
-                endDate = EndDateDtOpt (TryParserDate.parseDate () <| extractEndDate totalDateInterval)
-                totalDateInterval = TotalDateInterval totalDateInterval
-                suffix = Suffix suffix
-                jsGeneratedString = JsGeneratedString jsGeneratedString
-                completeLink = CompleteLink input
-                fileToBeSaved = FileToBeSaved fileToBeSaved
-                partialLink = 
+                OldPrefix = OldPrefix oldPrefix
+                NewPrefix = NewPrefix (newPrefix oldPrefix)
+                StartDate = StartDateDtOpt (TryParserDate.parseDate () <| extractStartDate totalDateInterval)
+                EndDate = EndDateDtOpt (TryParserDate.parseDate () <| extractEndDate totalDateInterval)
+                TotalDateInterval = TotalDateInterval totalDateInterval
+                Suffix = Suffix suffix
+                JsGeneratedString = JsGeneratedString jsGeneratedString
+                CompleteLink = CompleteLink input
+                FileToBeSaved = FileToBeSaved fileToBeSaved
+                PartialLink = 
                     let pattern = Regex.Escape(jsGeneratedString)
                     PartialLink <| Regex.Replace(input, pattern, String.Empty)
             }

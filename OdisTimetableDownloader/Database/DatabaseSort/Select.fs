@@ -46,8 +46,8 @@ module Select =
 
                                     let record : DbDtoGet = 
                                         {
-                                            completeLink = reader.GetString(indexCompleteLink) |> Option.ofNullEmpty
-                                            fileToBeSaved = reader.GetString(indexFileToBeSaved) |> Option.ofNullEmpty
+                                            CompleteLink = reader.GetString(indexCompleteLink) |> Option.ofNullEmpty
+                                            FileToBeSaved = reader.GetString(indexFileToBeSaved) |> Option.ofNullEmpty
                                         }
 
                                     yield record    
@@ -58,8 +58,8 @@ module Select =
                     (fun record -> 
                                  let result = dbDataTransformLayerGet record
 
-                                 let link = result.completeLink |> function CompleteLinkOpt value -> value
-                                 let file = result.fileToBeSaved |> function FileToBeSavedOpt value -> value
+                                 let link = result.CompleteLink |> function CompleteLinkOpt value -> value
+                                 let file = result.FileToBeSaved |> function FileToBeSavedOpt value -> value
 
                                  (link, file)
                                  |> function

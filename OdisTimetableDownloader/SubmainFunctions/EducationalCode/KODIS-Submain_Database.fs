@@ -625,16 +625,16 @@ module KODIS_Submain =
 
             let record : DbDataSend = 
                 {
-                    oldPrefix = OldPrefix oldPrefix
-                    newPrefix = NewPrefix (newPrefix oldPrefix)
-                    startDate = StartDate (extractStartDate totalDateInterval)
-                    endDate = EndDate (extractEndDate totalDateInterval)
-                    totalDateInterval = TotalDateInterval totalDateInterval
-                    suffix = Suffix suffix
-                    jsGeneratedString = JsGeneratedString jsGeneratedString
-                    completeLink = CompleteLink input
-                    fileToBeSaved = FileToBeSaved fileToBeSaved
-                    partialLink = 
+                    OldPrefix = OldPrefix oldPrefix
+                    NewPrefix = NewPrefix (newPrefix oldPrefix)
+                    StartDate = StartDate (extractStartDate totalDateInterval)
+                    EndDate = EndDate (extractEndDate totalDateInterval)
+                    TotalDateInterval = TotalDateInterval totalDateInterval
+                    Suffix = Suffix suffix
+                    JsGeneratedString = JsGeneratedString jsGeneratedString
+                    CompleteLink = CompleteLink input
+                    FileToBeSaved = FileToBeSaved fileToBeSaved
+                    PartialLink = 
                         let pattern = Regex.Escape(jsGeneratedString)
                         PartialLink <| Regex.Replace(input, pattern, String.Empty)
                 }

@@ -19,39 +19,39 @@ module TransformationLayerGet =
         
     let internal dbDataTransformLayerGet (dbDtoGet : DbDtoGet) : DbDataGet =
         {      
-            completeLink = CompleteLinkOpt dbDtoGet.completeLink
-            fileToBeSaved = FileToBeSavedOpt dbDtoGet.fileToBeSaved
+            CompleteLink = CompleteLinkOpt dbDtoGet.CompleteLink
+            FileToBeSaved = FileToBeSavedOpt dbDtoGet.FileToBeSaved
         }
 
     let private dtDataTransformLayerGetDefault : DtDataGet = 
         {      
-            newPrefix = NewPrefix String.Empty
-            startDate = StartDateDt DateTime.MinValue
-            endDate = EndDateDt DateTime.MinValue
-            completeLink = CompleteLink String.Empty
-            fileToBeSaved = FileToBeSaved String.Empty
-            partialLink = PartialLink String.Empty
+            NewPrefix = NewPrefix String.Empty
+            StartDate = StartDateDt DateTime.MinValue
+            EndDate = EndDateDt DateTime.MinValue
+            CompleteLink = CompleteLink String.Empty
+            FileToBeSaved = FileToBeSaved String.Empty
+            PartialLink = PartialLink String.Empty
         } 
 
     let internal dtDataTransformLayerGet (dtDtoGet : DtDtoGet) : DtDataGet =  
         
         pyramidOfDoom
            {
-               let! newPrefix = dtDtoGet.newPrefix, dtDataTransformLayerGetDefault //pri nesouladu se vraci vse jako default bez ohledu na ostatni vysledky
-               let! startDate = dtDtoGet.startDate, dtDataTransformLayerGetDefault 
-               let! endDate = dtDtoGet.endDate, dtDataTransformLayerGetDefault 
-               let! completeLink = dtDtoGet.completeLink, dtDataTransformLayerGetDefault 
-               let! fileToBeSaved = dtDtoGet.fileToBeSaved, dtDataTransformLayerGetDefault 
-               let! partialLink = dtDtoGet.partialLink, dtDataTransformLayerGetDefault
+               let! newPrefix = dtDtoGet.NewPrefix, dtDataTransformLayerGetDefault //pri nesouladu se vraci vse jako default bez ohledu na ostatni vysledky
+               let! startDate = dtDtoGet.StartDate, dtDataTransformLayerGetDefault 
+               let! endDate = dtDtoGet.EndDate, dtDataTransformLayerGetDefault 
+               let! completeLink = dtDtoGet.CompleteLink, dtDataTransformLayerGetDefault 
+               let! fileToBeSaved = dtDtoGet.FileToBeSaved, dtDataTransformLayerGetDefault 
+               let! partialLink = dtDtoGet.PartialLink, dtDataTransformLayerGetDefault
 
                return //vraci pouze pokud je vse spravne
                    {      
-                       newPrefix = NewPrefix newPrefix
-                       startDate = StartDateDt startDate
-                       endDate = EndDateDt endDate
-                       completeLink = CompleteLink completeLink
-                       fileToBeSaved = FileToBeSaved fileToBeSaved
-                       partialLink = PartialLink partialLink
+                       NewPrefix = NewPrefix newPrefix
+                       StartDate = StartDateDt startDate
+                       EndDate = EndDateDt endDate
+                       CompleteLink = CompleteLink completeLink
+                       FileToBeSaved = FileToBeSaved fileToBeSaved
+                       PartialLink = PartialLink partialLink
                    } 
            }
 
@@ -59,42 +59,42 @@ module TransformationLayerSend =
         
     let internal dbDataTransformLayerSend (dbDataSend : DbDataSend) : DbDtoSend =
         {
-            oldPrefix = dbDataSend.oldPrefix |> function OldPrefix value -> value
-            newPrefix = dbDataSend.newPrefix |> function NewPrefix value -> value
-            startDate =
-                dbDataSend.startDate
+            OldPrefix = dbDataSend.OldPrefix |> function OldPrefix value -> value
+            NewPrefix = dbDataSend.NewPrefix |> function NewPrefix value -> value
+            StartDate =
+                dbDataSend.StartDate
                 |> function StartDate value -> value
                 |> parseDate () 
                 |> function Some value -> value | None -> DateTime.MinValue
-            endDate = 
-                dbDataSend.endDate
+            EndDate = 
+                dbDataSend.EndDate
                 |> function EndDate value -> value
                 |> parseDate ()  
                 |> function Some value -> value | None -> DateTime.MinValue               
-            totalDateInterval = dbDataSend.totalDateInterval |> function TotalDateInterval value -> value
-            suffix = dbDataSend.suffix |> function Suffix value -> value
-            jsGeneratedString = dbDataSend.jsGeneratedString |> function JsGeneratedString value -> value
-            completeLink = dbDataSend.completeLink |> function CompleteLink value -> value
-            fileToBeSaved = dbDataSend.fileToBeSaved |> function FileToBeSaved value -> value
-            partialLink = dbDataSend.partialLink |> function PartialLink value -> value
+            TotalDateInterval = dbDataSend.TotalDateInterval |> function TotalDateInterval value -> value
+            Suffix = dbDataSend.Suffix |> function Suffix value -> value
+            JsGeneratedString = dbDataSend.JsGeneratedString |> function JsGeneratedString value -> value
+            CompleteLink = dbDataSend.CompleteLink |> function CompleteLink value -> value
+            FileToBeSaved = dbDataSend.FileToBeSaved |> function FileToBeSaved value -> value
+            PartialLink = dbDataSend.PartialLink |> function PartialLink value -> value
         } 
 
     let internal dtDataTransformLayerSend (dtDataSend : DtDataSend) : DtDtoSend =
         {
-            oldPrefix = dtDataSend.oldPrefix |> function OldPrefix value -> value
-            newPrefix = dtDataSend.newPrefix |> function NewPrefix value -> value
-            startDate =
-                dtDataSend.startDate
+            OldPrefix = dtDataSend.OldPrefix |> function OldPrefix value -> value
+            NewPrefix = dtDataSend.NewPrefix |> function NewPrefix value -> value
+            StartDate =
+                dtDataSend.StartDate
                 |> function StartDateDtOpt value -> value
                 |> function Some value -> value | None -> DateTime.MinValue
-            endDate = 
-                dtDataSend.endDate
+            EndDate = 
+                dtDataSend.EndDate
                 |> function EndDateDtOpt value -> value
                 |> function Some value -> value | None -> DateTime.MinValue
-            totalDateInterval = dtDataSend.totalDateInterval |> function TotalDateInterval value -> value
-            suffix = dtDataSend.suffix |> function Suffix value -> value
-            jsGeneratedString = dtDataSend.jsGeneratedString |> function JsGeneratedString value -> value
-            completeLink = dtDataSend.completeLink |> function CompleteLink value -> value
-            fileToBeSaved = dtDataSend.fileToBeSaved |> function FileToBeSaved value -> value
-            partialLink = dtDataSend.partialLink |> function PartialLink value -> value
+            TotalDateInterval = dtDataSend.TotalDateInterval |> function TotalDateInterval value -> value
+            Suffix = dtDataSend.Suffix |> function Suffix value -> value
+            JsGeneratedString = dtDataSend.JsGeneratedString |> function JsGeneratedString value -> value
+            CompleteLink = dtDataSend.CompleteLink |> function CompleteLink value -> value
+            FileToBeSaved = dtDataSend.FileToBeSaved |> function FileToBeSaved value -> value
+            PartialLink = dtDataSend.PartialLink |> function PartialLink value -> value
         }

@@ -100,7 +100,7 @@ let main argv =
         printfn "********************************************************************"
         printfn "Nyní je třeba vybrat si adresář pro uložení JŘ dopravce DP Ostrava."
         printfn "Pokud ve vybraném adresáři existuje následující podadresář, jeho obsah bude nahrazen nově staženými JŘ."
-        printfn "[%s]" <| ODISDefault.odisDir5
+        printfn "[%s]" <| ODISDefault.OdisDir5
         printfn "%c" <| char(32)
         printfn "Přečti si pozorně výše uvedené a stiskni:"
         printfn "Esc pro ukončení aplikace, ENTER pro výběr adresáře, nebo cokoliv jiného pro návrat na hlavní stránku."
@@ -138,7 +138,7 @@ let main argv =
         printfn "********************************************************************"
         printfn "Nyní je třeba vybrat si adresář pro uložení JŘ dopravce MDP Opava."
         printfn "Pokud ve vybraném adresáři existuje následující podadresář, jeho obsah bude nahrazen nově staženými JŘ."
-        printfn "[%s]" <| ODISDefault.odisDir6       
+        printfn "[%s]" <| ODISDefault.OdisDir6       
         printfn "%c" <| char(32) 
         printfn "Přečti si pozorně výše uvedené a stiskni:"
         printfn "Esc pro ukončení aplikace, ENTER pro výběr adresáře, nebo cokoliv jiného pro návrat na hlavní stránku."
@@ -175,10 +175,10 @@ let main argv =
         printfn "********************************************************************"
         printfn "Nyní je třeba vybrat si adresář pro uložení JŘ všech dopravců v systému ODIS."
         printfn "Pokud ve vybraném adresáři existují následující podadresáře, jejich obsah bude nahrazen nově staženými JŘ."
-        printfn "%4c[%s]" <| char(32) <| ODISDefault.odisDir1
-        printfn "%4c[%s]" <| char(32) <| ODISDefault.odisDir2
+        printfn "%4c[%s]" <| char(32) <| ODISDefault.OdisDir1
+        printfn "%4c[%s]" <| char(32) <| ODISDefault.OdisDir2
         //printfn "%4c[%s]" <| char(32) <| ODISDefault.odisDir3
-        printfn "%4c[%s]" <| char(32) <| ODISDefault.odisDir4  
+        printfn "%4c[%s]" <| char(32) <| ODISDefault.OdisDir4  
         printfn "%c" <| char(32) 
         printfn "Přečti si pozorně výše uvedené a stiskni:"
         printfn "Esc pro ukončení aplikace, ENTER pro výběr adresáře, nebo cokoliv jiného pro návrat na hlavní stránku."
