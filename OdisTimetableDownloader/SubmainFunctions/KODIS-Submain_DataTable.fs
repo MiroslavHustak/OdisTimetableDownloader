@@ -97,13 +97,13 @@ module KODIS_SubmainDataTable =
                     ->                       
                      async
                          {    
-                             use! response = get >> Request.sendAsync <| uri 
+                             use! response = (>>) get Request.sendAsync <| uri 
 
                              match response.statusCode with
                              | HttpStatusCode.OK
                                  ->                                                                                                   
                                   counterAndProgressBar.Post(Inc 1)                                                   
-                                  do! response.SaveFileAsync >> Async.AwaitTask <| path                                                   
+                                  do! (>>) response.SaveFileAsync Async.AwaitTask <| path                                                   
                                   return Ok ()                                
                              | _ ->  
                                   return Error "HttpStatusCode.OK is not OK"     
@@ -290,14 +290,14 @@ module KODIS_SubmainDataTable =
                             |> Seq.collect  //vzhledem ke komplikovanosti nepouzivam Result.sequence pro Array.collect (po zmene na seq ocekavam to same), nejde Some, nejde Ok jako vyse
                                 (fun pathToJson 
                                     -> 
-                                     let fn1 (value: JsonProvider1.Attachment seq) = 
+                                     let fn1 (value : JsonProvider1.Attachment seq) = 
                                          value
                                          |> List.ofSeq
                                          |> List.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace) //jj, funguje to :-)                                    
                                          |> List.choose id //co neprojde, to beze slova ignoruju
                                          |> List.toSeq
 
-                                     let fn2 (item: JsonProvider1.Vyluky) =    
+                                     let fn2 (item : JsonProvider1.Vyluky) =    
                                          item.Attachments 
                                          |> Option.ofNull        
                                          |> function 
@@ -308,7 +308,7 @@ module KODIS_SubmainDataTable =
                                                            logInfoMsg <| sprintf "007A %s" "resulting in None"
                                                            Seq.empty                
 
-                                     let fn3 (item: JsonProvider1.Root) =  
+                                     let fn3 (item : JsonProvider1.Root) =  
                                          item.Vyluky
                                          |> Option.ofNull  
                                          |> function 
@@ -400,7 +400,7 @@ module KODIS_SubmainDataTable =
         (Seq.append <| task <| addOn()) |> Seq.distinct
     
     //input from seq -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
-    let private filterTimetables () dt param (pathToDir: string) diggingResult = 
+    let private filterTimetables () dt param (pathToDir : string) diggingResult = 
 
         //*************************************Helpers for SQL columns********************************************
 
@@ -444,7 +444,7 @@ module KODIS_SubmainDataTable =
                              msg9 ()
                              String.Empty     
 
-        let extractSubstring2 (input: string) : (string option * int) =
+        let extractSubstring2 (input : string) : (string option * int) =
 
             let prefix = "NAD_"
             
@@ -466,7 +466,7 @@ module KODIS_SubmainDataTable =
                                        (None, 0)
 
         //zamerne nepouzivam jednotny kod pro NAD (extractSubstring2) a X - pro pripad, ze KODIS zase neco zmeni
-        let extractSubstring3 (input: string) : (string option * int) =
+        let extractSubstring3 (input : string) : (string option * int) =
 
             match input with            
             | _ when input.[0] = 'X' ->
@@ -828,7 +828,7 @@ module KODIS_SubmainDataTable =
                          logInfoMsg <| sprintf "Err013 %s" err
                          closeItBaby msg16   
     
-    //input from data filtering (links*paths) -> http request -> IO operation -> saving pdf data files on HD    
+    //input from data filtering (links * paths) -> http request -> IO operation -> saving pdf data files on HD    
     let private downloadAndSaveTimetables =      //FsHttp         
         
         cts.Cancel()  
@@ -944,7 +944,7 @@ module KODIS_SubmainDataTable =
                              logInfoMsg <| sprintf "Err019A, directory %s does not exist" context.dir
                     | true  ->
                              try
-                                 //input from data filtering (links*paths) -> http request -> saving pdf files on HD
+                                 //input from data filtering (links * paths) -> http request -> saving pdf files on HD
                                  match context.list with
                                  | [] ->
                                        msgParam13 context.dir       

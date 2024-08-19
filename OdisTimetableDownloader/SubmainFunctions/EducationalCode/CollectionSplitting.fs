@@ -13,9 +13,9 @@ open Settings.SettingsKODIS
 module CollectionSplitting =
 
     //tady pouze pro educational code 
-    let internal splitListByPrefix message (list: string list) : string list list = 
+    let internal splitListByPrefix message (list : string list) : string list list = 
                 
-        let prefix = fun (item: string) -> item.Substring(0, lineNumberLength)
+        let prefix = fun (item : string) -> item.Substring(0, lineNumberLength)
 
         try
             (prefix, list)
@@ -28,7 +28,7 @@ module CollectionSplitting =
               [ [] ]   
     
     //tady pouze pro educational code 
-    let internal splitListByPrefixExplanation message (list: string list) : string list list = 
+    let internal splitListByPrefixExplanation message (list : string list) : string list list = 
                 
         let prefix = fun (item: string) -> item.Substring(0, lineNumberLength)
         try
@@ -42,7 +42,7 @@ module CollectionSplitting =
               [ [] ]   
     
     //tady pouze pro educational code a z toho vyplyvajici testy
-    let internal splitListIntoEqualParts (numParts: int) (originalList: 'a list) =   //almost equal parts :-)    
+    let internal splitListIntoEqualParts (numParts : int) (originalList : 'a list) =   //almost equal parts :-)    
             
         //[<TailCall>] vyzkouseno separatne, bez varovnych hlasek
         let rec splitAccumulator remainingList partsAccumulator acc =
@@ -78,12 +78,12 @@ module CollectionSplitting =
         
         let numberOfThreads = Environment.ProcessorCount //nesu exceptions
         
-        match numberOfThreads > 0 with //non-nullable
+        match (>) numberOfThreads 0 with //non-nullable
         | true  ->                            
-                 match l >= numberOfThreads with
-                 | true             -> numberOfThreads
-                 | false when l > 0 -> l
-                 | _                -> 1  
+                 match (>=) l numberOfThreads with
+                 | true               -> numberOfThreads
+                 | false when (>) l 0 -> l
+                 | _                  -> 1  
         | false ->
                  logInfoMsg <| sprintf "Err026C %s" "Cannot count the number of processors available to the current process" 
                  1

@@ -99,9 +99,9 @@ module DPO_Submain =
                       |> List.distinct
             ) 
 
-    let internal downloadAndSaveTimetables pathToDir (filterTimetables : (string*string) list) =  
+    let internal downloadAndSaveTimetables pathToDir (filterTimetables : (string * string) list) =  
 
-        let downloadFileTaskAsync (uri : string) (pathToFile: string) : Async<Result<unit, string>> =  
+        let downloadFileTaskAsync (uri : string) (pathToFile : string) : Async<Result<unit, string>> =  
        
             async
                 {                      

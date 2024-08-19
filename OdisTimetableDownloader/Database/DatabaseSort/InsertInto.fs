@@ -52,7 +52,7 @@ module InsertInto =
             //System.Data.IsolationLevel.RepeatableRead
             //System.Data.IsolationLevel.ReadUncommitted
                                
-            let transaction: SqlTransaction = connection.BeginTransaction(isolationLevel) //Transaction to be implemented for all commands linked to the connection
+            let transaction : SqlTransaction = connection.BeginTransaction(isolationLevel) //Transaction to be implemented for all commands linked to the connection
                 
             try 
                 use cmdDeleteAll = new SqlCommand(queryDeleteAll, connection, transaction) 

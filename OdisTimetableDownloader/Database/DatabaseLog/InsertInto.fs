@@ -48,7 +48,7 @@ module InsertInto =
            
              try
                  let isolationLevel = System.Data.IsolationLevel.Serializable                                  
-                 let transaction: SqlTransaction = connection.BeginTransaction(isolationLevel)                 
+                 let transaction : SqlTransaction = connection.BeginTransaction(isolationLevel)                 
 
                  try 
                      use cmdInsert = new SqlCommand(queryInsert, connection, transaction)

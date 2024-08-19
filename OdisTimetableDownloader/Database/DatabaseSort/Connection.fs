@@ -29,7 +29,7 @@ module Connection =
                          closeItBaby msg16 
                          new SqlConnection(connString)   
     
-    let internal closeConnection (connection: SqlConnection) =  
+    let internal closeConnection (connection : SqlConnection) =  
             
         try 
             try Ok <| connection.Close()                

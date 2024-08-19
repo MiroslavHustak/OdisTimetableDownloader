@@ -149,7 +149,7 @@ let main argv =
         | ConsoleKey.Enter ->                                                                                     
                             Console.Clear()      
                             
-                            match pathToFolder >> Option.ofNullEmpty <| () with
+                            match (>>) pathToFolder Option.ofNullEmpty <| () with
                             | Some path ->  
                                          printfn "Skvěle! Adresář byl vybrán. Nyní stiskni cokoliv pro stažení aktuálních JŘ dopravce MDP Opava."
                                          Console.Clear()
@@ -188,7 +188,7 @@ let main argv =
         match pressedKey.Key with
         | ConsoleKey.Enter ->                                                                                     
                             Console.Clear()           
-                            match pathToFolder >> Option.ofNullEmpty <| () with
+                            match (>>) pathToFolder Option.ofNullEmpty <| () with
                             | Some path ->  
                                          Console.Clear()          
                                          printfn "Skvěle! Adresář byl vybrán. Nyní prosím vyber variantu (číslice plus ENTER, příp. jen ENTER pro kompletně všechno)."
@@ -215,8 +215,8 @@ let main argv =
                                             
                                          Console.Clear()
                                             
-                                         webscraping_KODISFMDataTable path variant //datatable-based app
-                                         //webscraping_KODISFM path variant //database-based app
+                                         //webscraping_KODISFMDataTable path variant //datatable-based app
+                                         webscraping_KODISFM path variant //database-based app
                                             
                                          printfn "%c" <| char(32)         
                                          printfn "Pokud se v údajích KODISu nacházel odkaz na JŘ, který obsahoval chybné či neúplné údaje,"
@@ -285,7 +285,7 @@ let main argv =
                          )  
                          |> ignore
                          
-                     checkConnect << checkNetConnection <| 500 //timeout
+                     (<<) checkConnect checkNetConnection <| 500 //timeout
         
         checkConnect checkNetConnF
            

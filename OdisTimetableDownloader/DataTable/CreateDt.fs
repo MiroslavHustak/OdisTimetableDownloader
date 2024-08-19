@@ -3,7 +3,7 @@
 open System
 open System.Data
 
-//chyby vezme tryWith Err901B
+//viz tryWith Err901B
 module CreateDt = 
         
     let internal dt () = 

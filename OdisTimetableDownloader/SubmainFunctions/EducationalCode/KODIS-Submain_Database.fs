@@ -106,13 +106,13 @@ module KODIS_Submain =
                     ->                       
                      async
                          {    
-                             use! response = get >> Request.sendAsync <| uri 
+                             use! response = (>>) get Request.sendAsync <| uri 
 
                              match response.statusCode with
                              | HttpStatusCode.OK
                                  ->                                                                                                   
                                   counterAndProgressBar.Post(Inc 1)                                                   
-                                  do! response.SaveFileAsync >> Async.AwaitTask <| path                                                   
+                                  do! (>>) response.SaveFileAsync Async.AwaitTask <| path                                                   
                                   return Ok ()                                
                              | _ ->  
                                   return Error "HttpStatusCode.OK is not OK"     
@@ -299,14 +299,14 @@ module KODIS_Submain =
                             |> Seq.collect  //vzhledem ke komplikovanosti nepouzivam Result.sequence pro Array.collect (po zmene na seq ocekavam to same), nejde Some, nejde Ok jako vyse
                                 (fun pathToJson 
                                     -> 
-                                     let fn1 (value: JsonProvider1.Attachment seq) = 
+                                     let fn1 (value : JsonProvider1.Attachment seq) = 
                                          value
                                          |> List.ofSeq
                                          |> List.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace) //jj, funguje to :-)                                    
                                          |> List.choose id //co neprojde, to beze slova ignoruju
                                          |> List.toSeq
 
-                                     let fn2 (item: JsonProvider1.Vyluky) =    
+                                     let fn2 (item : JsonProvider1.Vyluky) =    
                                          item.Attachments 
                                          |> Option.ofNull        
                                          |> function 
@@ -317,7 +317,7 @@ module KODIS_Submain =
                                                            logInfoMsg <| sprintf "007A %s" "resulting in None"
                                                            Seq.empty                
 
-                                     let fn3 (item: JsonProvider1.Root) =  
+                                     let fn3 (item : JsonProvider1.Root) =  
                                          item.Vyluky
                                          |> Option.ofNull  
                                          |> function 
@@ -871,7 +871,7 @@ module KODIS_Submain =
                     context.list
                     |> List.unzip             
                     ||> context.listMappingFunction
-                        (fun uri (pathToFile: string) 
+                        (fun uri (pathToFile : string) 
                             ->                         
                              async
                                  {    

@@ -49,12 +49,12 @@ let private numberOfThreads l =
         
     let numberOfThreads = Environment.ProcessorCount //all List.Parallel.iter/iter2/map/map2 are impure because of that :-(
         
-    match numberOfThreads > 0 with 
+    match (>) numberOfThreads 0 with 
     | true  ->                            
-             match l >= numberOfThreads with
-             | true             -> numberOfThreads
-             | false when l > 0 -> l
-             | _                -> 1  
+             match (>=) l numberOfThreads with
+             | true               -> numberOfThreads
+             | false when (>) l 0 -> l
+             | _                  -> 1  
     | false ->
              1
 

@@ -31,7 +31,7 @@ module MsgBoxClosing =
     let private sendMessageMethod (hwnd: IntPtr) =
             
         let hwndChild = //handle
-            match hwnd <> IntPtr.Zero with
+            match (<>) hwnd IntPtr.Zero with
             | true  -> FindWindowEx(hwnd, IntPtr.Zero, "Button", "OK")
             | false -> IntPtr.Zero
            
@@ -42,7 +42,7 @@ module MsgBoxClosing =
     
     let private sendMessageMethodX (hwndX: IntPtr) =
 
-         match hwndX <> IntPtr.Zero with
+         match (<>) hwndX IntPtr.Zero with
          | true  -> SendMessage(hwndX, WM_CLOSE, 0, IntPtr.Zero) |> ignore //WM_CLOSE to je ten krizek
          | false -> ()
 
@@ -89,7 +89,7 @@ module MsgBoxClosing =
                             match! inbox.Receive() with
                             | Incr i            
                                 -> 
-                                 match n = 0 with
+                                 match (=) n 0 with
                                  | false -> 
                                           do! Async.Sleep(360000)
                                  | true  -> 
