@@ -103,77 +103,77 @@ module WebScraping_KODISFMDataTable =
                                                             match variantList |> List.length with
                                                             //SingleVariantDownload
                                                             | 1 -> 
-                                                                let variant = variantList |> List.head
+                                                                 let variant = variantList |> List.head
 
-                                                                //IO operation
-                                                                KODIS_SubmainDataTable.deleteOneODISDirectory variant pathToDir 
+                                                                 //IO operation
+                                                                 KODIS_SubmainDataTable.deleteOneODISDirectory variant pathToDir 
                                                                                                                            
-                                                                //operation on data 
-                                                                let dirList =                                                                    
-                                                                    KODIS_SubmainDataTable.createOneNewDirectoryPath  //list -> aby bylo mozno pouzit funkci createFolders bez uprav  
-                                                                    <| pathToDir 
-                                                                    <| KODIS_SubmainDataTable.createDirName variant listODISDefault4 
+                                                                 //operation on data 
+                                                                 let dirList =                                                                    
+                                                                     KODIS_SubmainDataTable.createOneNewDirectoryPath  //list -> aby bylo mozno pouzit funkci createFolders bez uprav  
+                                                                     <| pathToDir 
+                                                                     <| KODIS_SubmainDataTable.createDirName variant listODISDefault4 
 
-                                                                //IO operation 
-                                                                KODIS_SubmainDataTable.createFolders dirList
+                                                                 //IO operation 
+                                                                 KODIS_SubmainDataTable.createFolders dirList
 
-                                                                msg10 () 
+                                                                 msg10 () 
 
-                                                                let dir = (dirList |> List.head)
+                                                                 let dir = (dirList |> List.head)
 
-                                                                //operation on data 
-                                                                //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into datatable -> data filtering (link*path)  
-                                                                let list = KODIS_SubmainDataTable.operationOnDataFromJson () dt variant dir 
+                                                                 //operation on data 
+                                                                 //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into datatable -> data filtering (link*path)  
+                                                                 let list = KODIS_SubmainDataTable.operationOnDataFromJson () dt variant dir 
 
-                                                                let context listMappingFunction = 
-                                                                    {
-                                                                        listMappingFunction = listMappingFunction
-                                                                        dir = dir
-                                                                        list = list
-                                                                    }   
+                                                                 let context listMappingFunction = 
+                                                                     {
+                                                                         listMappingFunction = listMappingFunction
+                                                                         dir = dir
+                                                                         list = list
+                                                                     }   
                                                              
-                                                                match variant with
-                                                                | FutureValidity -> context List.map2 
-                                                                | _              -> context List.Parallel.map2  
+                                                                 match variant with
+                                                                 | FutureValidity -> context List.map2 
+                                                                 | _              -> context List.Parallel.map2  
 
-                                                                //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
-                                                                |> KODIS_SubmainDataTable.downloadAndSave 
+                                                                 //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
+                                                                 |> KODIS_SubmainDataTable.downloadAndSave 
 
-                                                            //BulkVariantDownload       
+                                                             //BulkVariantDownload       
                                                             | _ ->
-                                                                //IO operation
-                                                                KODIS_SubmainDataTable.deleteAllODISDirectories pathToDir                                                              
+                                                                 //IO operation
+                                                                 KODIS_SubmainDataTable.deleteAllODISDirectories pathToDir                                                              
                                                               
-                                                                //operation on data 
-                                                                let dirList = KODIS_SubmainDataTable.createNewDirectoryPaths pathToDir listODISDefault4
+                                                                 //operation on data 
+                                                                 let dirList = KODIS_SubmainDataTable.createNewDirectoryPaths pathToDir listODISDefault4
                                                               
-                                                                //IO operation 
-                                                                KODIS_SubmainDataTable.createFolders dirList 
+                                                                 //IO operation 
+                                                                 KODIS_SubmainDataTable.createFolders dirList 
 
-                                                                msg10 ()
+                                                                 msg10 ()
                                                                 
-                                                                (variantList, dirList)
-                                                                ||> List.iter2 
-                                                                    (fun variant dir 
-                                                                        -> 
-                                                                        //operation on data 
-                                                                        //input from saved json files -> change of input data -> output into seq -> input from seq -> seq of input data -> output into datatable -> data filtering (link*path)  
-                                                                        let list = KODIS_SubmainDataTable.operationOnDataFromJson () dt variant dir 
+                                                                 (variantList, dirList)
+                                                                 ||> List.iter2 
+                                                                     (fun variant dir 
+                                                                         -> 
+                                                                          //operation on data 
+                                                                          //input from saved json files -> change of input data -> output into seq -> input from seq -> seq of input data -> output into datatable -> data filtering (link*path)  
+                                                                          let list = KODIS_SubmainDataTable.operationOnDataFromJson () dt variant dir 
 
-                                                                        let context listMappingFunction = 
-                                                                            {
-                                                                                listMappingFunction = listMappingFunction
-                                                                                dir = dir
-                                                                                list = list
-                                                                            }                                                 
+                                                                          let context listMappingFunction = 
+                                                                              {
+                                                                                  listMappingFunction = listMappingFunction
+                                                                                  dir = dir
+                                                                                  list = list
+                                                                              }                                                 
                                                   
-                                                                        match variant with
-                                                                        | FutureValidity -> context List.map2 
-                                                                        | _              -> context List.Parallel.map2 
+                                                                          match variant with
+                                                                          | FutureValidity -> context List.map2 
+                                                                          | _              -> context List.Parallel.map2 
 
-                                                                        //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
-                                                                        |> KODIS_SubmainDataTable.downloadAndSave 
-                                                                    )  
+                                                                          //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
+                                                                          |> KODIS_SubmainDataTable.downloadAndSave 
+                                                                     )  
                                                             Ok ()       
                                                         finally
                                                             dt.Dispose()
