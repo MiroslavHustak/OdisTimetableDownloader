@@ -186,7 +186,7 @@ let main argv =
         let pressedKey = Console.ReadKey()
 
         match pressedKey.Key with
-        | ConsoleKey.Enter ->                                                                                     
+        | ConsoleKey.Enter ->  
                             Console.Clear()           
                             match (>>) pathToFolder Option.ofNullEmpty <| () with
                             | Some path ->  

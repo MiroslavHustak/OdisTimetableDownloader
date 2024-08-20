@@ -892,7 +892,7 @@ module KODIS_SubmainDataTable =
                                                            } 
                                                                            
                                                    match pathToFileExist with
-                                                   | Some _ -> return! response.SaveFileAsync >> Async.AwaitTask <| pathToFile      //Original FsHttp library function    
+                                                   | Some _ -> return! (>>) response.SaveFileAsync Async.AwaitTask <| pathToFile      //Original FsHttp library function    
                                                    | None   -> return ()  //nechame chybu tise projit  
                                                                                                                                                                 
                                               | _                
