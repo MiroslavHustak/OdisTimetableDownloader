@@ -1,6 +1,6 @@
 ﻿namespace Helpers
 
-//FreeMonadCommandLineWorkflows
+//Free monad command line workflows
 
 module CommandLineWorkflowCM =
         
