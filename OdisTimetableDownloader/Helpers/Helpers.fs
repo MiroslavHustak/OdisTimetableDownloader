@@ -131,10 +131,10 @@ module CopyOrMoveFiles = //output -> Result type
                 let! sourceFilepath = Path.GetFullPath(source) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" source
                 let! destinFilepath = Path.GetFullPath(destination) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" destination
 
-                let fInfodat: FileInfo = new FileInfo(sourceFilepath)  
+                let fInfodat : FileInfo = new FileInfo(sourceFilepath)  
                 let! _ = fInfodat.Exists |> Option.ofBool, Error <| sprintf "Zdrojový soubor %s neexistuje" sourceFilepath 
 
-                let dInfodat: DirectoryInfo = new DirectoryInfo(destinFilepath) //Overit vhodnost pred pouzitim
+                let dInfodat : DirectoryInfo = new DirectoryInfo(destinFilepath) //Overit vhodnost pred pouzitim
                 let! _ = dInfodat.Exists |> Option.ofBool, Error <| sprintf "Destinační adresář %s neexistuje" destinFilepath  //Overit vhodnost pred pouzitim
                                     
                 return Ok <| action sourceFilepath destinFilepath

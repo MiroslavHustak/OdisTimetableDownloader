@@ -13,7 +13,7 @@ open Settings.SettingsGeneral
 module Logging =     
 
     // Function to format log entry as JSON array
-    let private formatLogEntry (msg: LogMessage) =
+    let private formatLogEntry (msg : LogMessage) =
 
         try
             let sb = System.Text.StringBuilder()
@@ -32,7 +32,7 @@ module Logging =
                 jsonWriter.WriteValue(msg.Message)
                 jsonWriter.WriteEndArray()
 
-                Option.ofNullEmpty >> Result.fromOption <| sb             
+                (>>) Option.ofNullEmpty Result.fromOption <| sb             
 
             finally
                 ()

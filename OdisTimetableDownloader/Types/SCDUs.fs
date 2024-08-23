@@ -2,21 +2,21 @@
 
 open System
 
-//SCDUs for type-driven development (TDD)  
+//SCDUs for type-driven development (TDD)  //See textbooks by Isaac Abraham
 
-type [<Struct>] CompleteLinkOpt = CompleteLinkOpt of string option
-type [<Struct>] FileToBeSavedOpt = FileToBeSavedOpt of string option
-type [<Struct>] OldPrefix = OldPrefix of string
-type [<Struct>] NewPrefix = NewPrefix of string
-type [<Struct>] StartDate = StartDate of string
-type [<Struct>] EndDate = EndDate of string
-type [<Struct>] TotalDateInterval = TotalDateInterval of string
-type [<Struct>] Suffix = Suffix of string
-type [<Struct>] JsGeneratedString = JsGeneratedString of string
-type [<Struct>] CompleteLink = CompleteLink of string
-type [<Struct>] PartialLink = PartialLink of string
-type [<Struct>] FileToBeSaved = FileToBeSaved of string
-type [<Struct>] StartDateDt = StartDateDt of DateTime
-type [<Struct>] EndDateDt = EndDateDt of DateTime
-type [<Struct>] StartDateDtOpt = StartDateDtOpt of DateTime option
-type [<Struct>] EndDateDtOpt = EndDateDtOpt of DateTime option
+type [<Struct>] internal CompleteLinkOpt = CompleteLinkOpt of string option
+type [<Struct>] internal FileToBeSavedOpt = FileToBeSavedOpt of string option
+type [<Struct>] internal OldPrefix = OldPrefix of string
+type [<Struct>] internal NewPrefix = NewPrefix of string
+type [<Struct>] internal StartDate = StartDate of string
+type [<Struct>] internal EndDate = EndDate of string
+type [<Struct>] internal TotalDateInterval = TotalDateInterval of string
+type [<Struct>] internal Suffix = Suffix of string
+type [<Struct>] internal JsGeneratedString = JsGeneratedString of string
+type [<Struct>] internal CompleteLink = CompleteLink of string
+type [<Struct>] internal PartialLink = PartialLink of string
+type [<Struct>] internal FileToBeSaved = FileToBeSaved of string
+type [<Struct>] internal StartDateDt = StartDateDt of DateTime
+type [<Struct>] internal EndDateDt = EndDateDt of DateTime
+type [<Struct>] internal StartDateDtOpt = StartDateDtOpt of DateTime option
+type [<Struct>] internal EndDateDtOpt = EndDateDtOpt of DateTime option

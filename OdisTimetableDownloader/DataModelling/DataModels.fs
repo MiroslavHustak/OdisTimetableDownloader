@@ -10,13 +10,13 @@ open Types
 
 module DataModel = 
 
-    type DbDataGet = 
+    type internal DbDataGet = 
         {            
             CompleteLink : CompleteLinkOpt
             FileToBeSaved : FileToBeSavedOpt
         }
 
-    type DtDataGet = 
+    type internal DtDataGet = 
         {           
             NewPrefix : NewPrefix  
             StartDate : StartDateDt
@@ -26,7 +26,7 @@ module DataModel =
             PartialLink : PartialLink
         } 
 
-    type DbDataSend = 
+    type internal DbDataSend = 
         {
             OldPrefix : OldPrefix 
             NewPrefix : NewPrefix 
@@ -40,7 +40,7 @@ module DataModel =
             PartialLink : PartialLink
         }
 
-    type DtDataSend = 
+    type internal DtDataSend = 
         {
             OldPrefix : OldPrefix 
             NewPrefix : NewPrefix 

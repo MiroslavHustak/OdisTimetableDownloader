@@ -5,13 +5,13 @@ open System.Data
 
 module Dto = 
 
-    type DbDtoGet = 
+    type internal DbDtoGet = 
         {
             CompleteLink : string option             
             FileToBeSaved : string option  
         }
 
-    type DtDtoGet = 
+    type internal DtDtoGet = 
         {           
             NewPrefix : string option  
             StartDate : DateTime option 
@@ -21,7 +21,7 @@ module Dto =
             PartialLink : string option 
         } 
 
-    type DbDtoSend = 
+    type internal DbDtoSend = 
         {
             OldPrefix : string 
             NewPrefix : string 
@@ -35,7 +35,7 @@ module Dto =
             PartialLink : string
         }
 
-    type DtDtoSend = 
+    type internal DtDtoSend = 
         {
             OldPrefix : string 
             NewPrefix : string 
