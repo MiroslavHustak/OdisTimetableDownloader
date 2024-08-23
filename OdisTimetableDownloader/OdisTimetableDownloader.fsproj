@@ -20,8 +20,8 @@
     <Compile Include="Settings\SettingsMDPO.fs" />
     <Compile Include="Settings\SettingsDPO.fs" />
     <Compile Include="Settings\SettingsKODIS.fs" />
-    <Compile Include="Helpers\FMCmdLineWorkflows.fs" />
     <Compile Include="Helpers\CEBuilders.fs" />
+    <Compile Include="Helpers\FMCmdLineWorkflows.fs" />
     <Compile Include="Helpers\Parsing.fs" />
     <Compile Include="Helpers\ErrorHandlers.fs" />
     <Compile Include="Helpers\Helpers.fs" />

@@ -2,8 +2,8 @@
 
 //Free monad command line workflows
 
-module CommandLineWorkflowCM =
         
+module CommandLineWorkflowCM =
 //***************************Copy/Move********************************
            
     type internal CommandLineInstruction<'a> =
@@ -69,8 +69,8 @@ module CommandLineWorkflowCM =
             | Pure x     -> f x
             | Free instr -> Free (mapI (fun p' -> this.Bind(p', f)) instr)
         //member this.Return x = Pure x
-        member this.Return x = 
-            let x = (+) x 1
+        member this.Return = 
+            let x = (+) 1
             Pure x
         member this.ReturnFrom p = p
 

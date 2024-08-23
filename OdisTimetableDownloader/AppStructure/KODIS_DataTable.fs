@@ -131,12 +131,12 @@ module WebScraping_KODISFMDataTable =
                                                                      {
                                                                          listMappingFunction = listMappingFunction
                                                                          dir = dir
-                                                                         list = list
-                                                                     }   
-                                                             
-                                                                 match variant with
-                                                                 | FutureValidity -> context List.map2 
-                                                                 | _              -> context List.Parallel.map2  
+                                                                         list = list 
+                                                                     }                                                                
+                                                               
+                                                                 match list.Length >= 8 with
+                                                                 | true  -> context List.Parallel.map2
+                                                                 | false -> context List.map2  
 
                                                                  //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
                                                                  |> KODIS_SubmainDataTable.downloadAndSave 
