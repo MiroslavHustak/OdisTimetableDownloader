@@ -134,7 +134,7 @@ module InsertSelectSort =
                         | Error err ->
                                      logInfoMsg <| sprintf "Err901A %s" err 
                                      closeItBaby err
-                                     dtDataDtoGetDataTable >> dtDataTransformLayerGet <| row 
+                                     (>>) dtDataDtoGetDataTable dtDataTransformLayerGet <| row 
 
                 let seqFromDataTable = dt.AsEnumerable() |> Seq.distinct 
                         
