@@ -1,10 +1,9 @@
 ﻿namespace Helpers
 
-module FreeMonadsCM =
+//FreeMonadCommandLineWorkflows
 
-    //Free monads are just a general way of turning functors into monads.
-    //A free monad is a sequence of actions where subsequent actions can depend on the result of previous ones.
-
+module CommandLineWorkflowCM =
+        
 //***************************Copy/Move********************************
            
     type internal CommandLineInstruction<'a> =
@@ -39,9 +38,7 @@ module FreeMonadsCM =
     let internal cmdBuilder = CommandLineProgramBuilder 
    
 
- module FreeMonads =   
-
-//***************************For the FREE MONAD Design Pattern********************************  
+ module CommandLineWorkflow  =   
 
     type internal CommandLineInstruction<'a> =
         | StartProcessFM of (unit -> 'a)

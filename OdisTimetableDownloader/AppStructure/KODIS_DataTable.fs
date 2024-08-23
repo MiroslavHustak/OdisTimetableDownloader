@@ -14,7 +14,7 @@ open Settings.SettingsGeneral
 open Logging.Logging
     
 open Helpers.CloseApp  
-open Helpers.FreeMonads
+open Helpers.CommandLineWorkflow 
 
 open SubmainFunctions
 open SubmainFunctions.KODIS_SubmainDataTable
@@ -22,6 +22,8 @@ open SubmainFunctions.KODIS_SubmainDataTable
 module WebScraping_KODISFMDataTable = 
     
     //FREE MONAD 
+    //Free monads are just a general way of turning functors into monads.
+    //A free monad is a sequence of actions where subsequent actions can depend on the result of previous ones.
 
     let internal webscraping_KODISFMDataTable pathToDir (variantList: Validity list) = 
             

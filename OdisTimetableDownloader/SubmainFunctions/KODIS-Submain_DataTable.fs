@@ -80,15 +80,9 @@ module KODIS_SubmainDataTable =
 
         let counterAndProgressBar =
             MailboxProcessor.Start <|
-                fun inbox 
-                    ->
-                     let rec loop n =
-                         async
-                             { 
-                                 match! inbox.Receive() with
-                                 | Inc i -> progressBarContinuous n l; return! loop (n + i)
-                             }
-                     loop 0
+                fun inbox ->
+                           let rec loop n = async { match! inbox.Receive() with Inc i -> progressBarContinuous n l; return! loop (n + i) }
+                           loop 0
 
         let result = 
             (jsonLinkList, pathToJsonList)
@@ -874,7 +868,7 @@ module KODIS_SubmainDataTable =
                                                           GET(uri) 
                                                       }    
                                               
-                                              use! response = get >> Request.sendAsync <| uri  
+                                              use! response = (>>) get Request.sendAsync <| uri  
                                                 
                                               match response.statusCode with
                                               | HttpStatusCode.OK 

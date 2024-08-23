@@ -20,10 +20,10 @@
     <Compile Include="Settings\SettingsMDPO.fs" />
     <Compile Include="Settings\SettingsDPO.fs" />
     <Compile Include="Settings\SettingsKODIS.fs" />
-    <Compile Include="Helpers\FreeMonads.fs" />
+    <Compile Include="Helpers\FreeMonadCmdLineWorkflows.fs" />
     <Compile Include="Helpers\CEBuilders.fs" />
     <Compile Include="Helpers\Parsing.fs" />
-    <Compile Include="Helpers\ErrorHandling.fs" />
+    <Compile Include="Helpers\ErrorHandlers.fs" />
     <Compile Include="Helpers\Helpers.fs" />
     <Compile Include="Helpers\MsgBoxClosing.fs" />
     <Compile Include="Helpers\ListParallel.fs" />
