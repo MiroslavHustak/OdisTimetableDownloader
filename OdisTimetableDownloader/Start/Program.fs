@@ -60,7 +60,7 @@ let rec private pathToFolder () =
 
 //[<EntryPoint>] 
 [<EntryPoint; STAThread>] // STAThread> musi byt quli openFolderBrowserDialog()
-let main argv = 
+let main argv =     
 
     (*
     <!-- Add this xml code into Directory.Build.props in the root (or create the file if missing) -->
@@ -71,7 +71,6 @@ let main argv =
         </PropertyGroup>
     </Project>
     *)
-
     
     //*****************************Console******************************  
     let updateDate = "07-08-2024"

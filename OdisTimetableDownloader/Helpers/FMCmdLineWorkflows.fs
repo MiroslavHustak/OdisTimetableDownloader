@@ -1,7 +1,6 @@
 ﻿namespace Helpers
 
 //Free monad command line workflows
-
         
 module CommandLineWorkflowCM =
 //***************************Copy/Move********************************
@@ -35,8 +34,7 @@ module CommandLineWorkflowCM =
         member this.Return x = Pure x
         member this.ReturnFrom p = p
 
-    let internal cmdBuilder = CommandLineProgramBuilder 
-   
+    let internal cmdBuilder = CommandLineProgramBuilder    
 
  module CommandLineWorkflow  =   
 

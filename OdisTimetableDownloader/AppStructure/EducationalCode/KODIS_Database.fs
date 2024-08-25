@@ -129,9 +129,9 @@ module WebScraping_KODISFM =
                                                                          list = list
                                                                      }   
                                                              
-                                                                  match variant with
-                                                                  | FutureValidity -> context List.map2 
-                                                                  | _              -> context List.Parallel.map2  
+                                                                  match list.Length >= 8 with //eqv of 8 threads
+                                                                  | true  -> context List.Parallel.map2
+                                                                  | false -> context List.map2 
 
                                                                   //IO operation (data filtering (link * path) -> http request -> saving pdf files on HD)
                                                                   |> KODIS_Submain.downloadAndSave 

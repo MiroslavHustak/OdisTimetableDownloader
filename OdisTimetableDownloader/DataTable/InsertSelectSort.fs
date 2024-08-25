@@ -202,5 +202,3 @@ module InsertSelectSort =
                          logInfoMsg <| sprintf "Err901B %s" err 
                          closeItBaby err
                          []
-
-          

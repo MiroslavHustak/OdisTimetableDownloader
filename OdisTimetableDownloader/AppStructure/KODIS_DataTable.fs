@@ -134,7 +134,7 @@ module WebScraping_KODISFMDataTable =
                                                                          list = list 
                                                                      }                                                                
                                                                
-                                                                 match list.Length >= 8 with
+                                                                 match list.Length >= 8 with //eqv of 8 threads
                                                                  | true  -> context List.Parallel.map2
                                                                  | false -> context List.map2  
 
