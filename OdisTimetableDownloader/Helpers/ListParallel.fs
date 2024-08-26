@@ -15,7 +15,7 @@ open FSharp.Quotations.Evaluator.QuotationEvaluationExtensions
 
 let private expr (param : 'a) = Expr.Value(param)  
   
-let private splitListIntoEqualParts (numParts : int) (originalList : 'a list) =   //well, almost equal parts :-)           
+let private splitListIntoEqualParts (numParts : int) (originalList : 'a list) totalLength =   //well, almost equal parts :-)           
 
     let rec splitAccumulator remainingList partsAccumulator acc =
     
@@ -27,7 +27,6 @@ let private splitListIntoEqualParts (numParts : int) (originalList : 'a list) = 
     
                   let partLength list n = 
 
-                      let totalLength = list |> List.length 
                       let partLength = totalLength / n    
                               
                       totalLength % n > 0
@@ -44,7 +43,7 @@ let private splitListIntoEqualParts (numParts : int) (originalList : 'a list) = 
               splitAccumulator rest (part :: partsAccumulator) (acc - 1)
                       
     splitAccumulator originalList [] numParts
-    
+        
 let private numberOfThreads l =  
         
     let numberOfThreads = Environment.ProcessorCount //all List.Parallel.iter/iter2/map/map2 are impure because of that :-(
@@ -70,7 +69,7 @@ let iter action list =
 
           let numberOfThreads = numberOfThreads l   
                            
-          let myList = splitListIntoEqualParts numberOfThreads list                             
+          let myList = splitListIntoEqualParts numberOfThreads list l                             
                   
           fun i -> <@ async { return listToParallel (%%expr myList |> List.item %%(expr i)) } @>
           |> List.init (List.length myList)
@@ -90,7 +89,7 @@ let iter2<'a, 'b> (mapping : 'a -> 'b -> unit) (xs1 : 'a list) (xs2 : 'b list) =
              let numberOfThreads = numberOfThreads l    
         
              let myList =       
-                 (splitListIntoEqualParts numberOfThreads xs1, splitListIntoEqualParts numberOfThreads xs2)  
+                 (splitListIntoEqualParts numberOfThreads xs1 l, splitListIntoEqualParts numberOfThreads xs2 l)  
                  ||> List.zip                 
                                                
              fun i -> <@ async { return listToParallel (%%expr myList |> List.item %%(expr i)) } @>
@@ -113,7 +112,7 @@ let map (action : 'a -> 'b) (list : 'a list) =
           let l = list |> List.length
           let numberOfThreads = numberOfThreads l   
                                    
-          let myList : 'a list list = splitListIntoEqualParts numberOfThreads list 
+          let myList : 'a list list = splitListIntoEqualParts numberOfThreads list l 
     
           fun i -> <@ async { return listToParallel (%%expr myList |> List.item %%(expr i)) } @>
           |> List.init (List.length myList)
@@ -134,7 +133,7 @@ let map2<'a, 'b, 'c> (mapping : 'a -> 'b -> 'c) (xs1 : 'a list) (xs2 : 'b list) 
              let numberOfThreads = numberOfThreads l  
 
              let myList =       
-                 (splitListIntoEqualParts numberOfThreads xs1, splitListIntoEqualParts numberOfThreads xs2)  
+                 (splitListIntoEqualParts numberOfThreads xs1 l, splitListIntoEqualParts numberOfThreads xs2 l)  
                  ||> List.zip                 
                                                
              fun i -> <@ async { return listToParallel (%%expr myList |> List.item %%(expr i)) } @>
