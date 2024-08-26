@@ -301,10 +301,10 @@ module KODIS_Submain =
                                     -> 
                                      let fn1 (value : JsonProvider1.Attachment seq) = 
                                          value
-                                         |> List.ofSeq
-                                         |> List.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace) //jj, funguje to :-)                                    
-                                         |> List.choose id //co neprojde, to beze slova ignoruju
-                                         |> List.toSeq
+                                         |> Array.ofSeq
+                                         |> Array.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace) //jj, funguje to :-)                                    
+                                         |> Array.choose id //co neprojde, to beze slova ignoruju
+                                         |> Array.toSeq
 
                                      let fn2 (item : JsonProvider1.Vyluky) =    
                                          item.Attachments 
@@ -645,9 +645,9 @@ module KODIS_Submain =
         //**********************Filtering and datatable data inserting********************************************************
         let dataToBeInserted = 
             
-            diggingResult     
-            |> List.ofSeq
-            |> List.Parallel.map 
+            diggingResult 
+            |> Array.ofSeq
+            |> Array.Parallel.map 
                 (fun item -> 
                            let item = extractSubstring item      //"https://kodis-files.s3.eu-central-1.amazonaws.com/timetables/2_2023_03_13_2023_12_09.pdf                 
                            
@@ -655,15 +655,15 @@ module KODIS_Submain =
                            | true  -> item.Replace("timetables/", String.Empty).Replace(".pdf", "_t.pdf")
                            | false -> item                                       
                 )  
-            |> List.sort //jen quli testovani
-            |> List.filter
+            |> Array.sort //jen quli testovani
+            |> Array.filter
                 (fun item -> 
                            let cond1 = (item |> Option.ofNullEmptySpace).IsSome
                            let cond2 = item |> Option.ofNullEmpty |> Option.toBool //for learning purposes - compare with (not String.IsNullOrEmpty(item))
                            cond1 && cond2 
                 )         
-            |> List.map 
-                (fun item -> splitKodisLink item) 
+            |> Array.map (fun item -> splitKodisLink item)
+            |> Array.toList
 
         insert connection dataToBeInserted  
         

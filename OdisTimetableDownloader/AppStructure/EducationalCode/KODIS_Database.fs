@@ -74,6 +74,7 @@ module WebScraping_KODISFM =
                                                          Console.Write("\r" + new string(' ', (-) Console.WindowWidth 1) + "\r")
                                                          Console.CursorLeft <- 0  
 
+                                                         //pro testovani ponechan aji puvodni seznam, cas od casu tra porovnat s datatable version
                                                          KODIS_Submain.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
                                                          
                                                          msg3 ()   
