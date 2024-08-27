@@ -74,6 +74,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DialogWindows\DialogWindows.fsproj" />
     <ProjectReference Include="..\EmbeddedTP\EmbeddedTP.fsproj" />
+    <ProjectReference Include="..\Puppeteer\Links.fsproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -20,7 +20,10 @@ open Types.Types
 
 open Logging.Logging
 
+open Puppeteer.Links
+
 open Settings.Messages
+open Settings.SettingsKODIS
 open Settings.SettingsGeneral
 
 open MainFunctions.WebScraping_DPO
@@ -183,7 +186,7 @@ let main argv =
         printfn "Esc pro ukončení aplikace, ENTER pro výběr adresáře, nebo cokoliv jiného pro návrat na hlavní stránku."
 
         let pressedKey = Console.ReadKey()
-
+        
         match pressedKey.Key with
         | ConsoleKey.Enter ->  
                             Console.Clear()           
@@ -214,8 +217,8 @@ let main argv =
                                             
                                          Console.Clear()
                                             
-                                         //webscraping_KODISFMDataTable path variant //datatable-based app
-                                         webscraping_KODISFM path variant //database-based app
+                                         webscraping_KODISFMDataTable path variant //datatable-based app
+                                         //webscraping_KODISFM path variant //database-based app
                                             
                                          printfn "%c" <| char(32)         
                                          printfn "Pokud se v údajích KODISu nacházel odkaz na JŘ, který obsahoval chybné či neúplné údaje,"
@@ -227,9 +230,9 @@ let main argv =
                                          printfn "%c" <| char(32)   
                                          printfn "No jéje. Vybraný adresář neexistuje."
                                          printfn "Stiskni Esc pro ukončení aplikace, nebo cokoliv jiného pro návrat na hlavní stránku."
-                                         Console.ReadKey()                                
+                                         Console.ReadKey()      
         | _                ->
-                            pressedKey              
+                            pressedKey                        
         
     //[<TailCall>] //kontrolovano jako module function, bez varovnych hlasek
     let rec variant () = 
@@ -295,7 +298,29 @@ let main argv =
             | "2" ->
                    myWebscraping_MDPO >> timetableVariant <| ()                      
             | "3" ->
-                   myWebscraping_KODIS >> timetableVariant <| ()                  
+                   myWebscraping_KODIS >> timetableVariant <| ()   
+            | "74764"
+                  -> 
+                   printfn "\nNo jo, trefil jsi zrovna kód pro přístup k testování shodnosti odkazů."
+                   printfn "Pokud nejsi in, pravděpodobně budeš muset za chvíli ukončit tento program... \n"
+
+                   let capturedLinks = capturedLinks ()                  
+
+                   printfn "**************************************************"
+                   
+                   match (fst capturedLinks) = (jsonLinkList3 |> List.sort) with
+                   | true  -> printfn "Odkazy jsou v pořádku."
+                   | false -> printfn "Chyba v odkazech, nutno ověření."
+
+                   printfn "**************************************************"
+
+                   match (snd capturedLinks) = (jsonLinkList2.Tail |> List.sort)  with
+                   | true  -> printfn "Odkazy jsou v pořádku."
+                   | false -> printfn "Chyba v odkazech, nutno ověření."
+                                              
+                   printfn "Stiskni cokoliv pro návrat na hlavní stránku."
+                   Console.ReadKey() |> ignore
+                   variant()
             | _   ->
                    printfn "Varianta nebyla vybrána. Prosím zadej znovu."
                    variant()
