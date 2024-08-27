@@ -290,6 +290,25 @@ let main argv =
                      (<<) checkConnect checkNetConnection <| 500 //timeout
         
         checkConnect checkNetConnF
+
+        let captureLinks executablePath = 
+
+            let capturedLinks = capturedLinks executablePath                  
+
+            printfn "**************************************************"
+        
+            match (fst capturedLinks) = (jsonLinkList3 |> List.sort) with
+            | true  -> printfn "Kontrola na odkazy v jsonLinkList3 proběhla v pořádku."
+            | false -> printfn "Chyba v odkazech v jsonLinkList3, nutno ověření."
+
+            printfn "**************************************************"
+
+            match (snd capturedLinks) = (jsonLinkList2 |> List.tail |> List.sort)  with
+            | true  -> printfn "Kontrola na odkazy v jsonLinkList2 proběhla v pořádku."
+            | false -> printfn "Chyba v odkazech v jsonLinkList2, nutno ověření."
+                                   
+            printfn "Stiskni cokoliv pro návrat na hlavní stránku."
+            Console.ReadKey() |> ignore
            
         Console.ReadLine()
         |> function 
@@ -301,25 +320,22 @@ let main argv =
                    myWebscraping_KODIS >> timetableVariant <| ()   
             | "74764"
                   -> 
-                   printfn "\nNo jo, trefil jsi zrovna kód pro přístup k testování shodnosti odkazů."
-                   printfn "Pokud nejsi in, pravděpodobně budeš muset za chvíli ukončit tento program... \n"
-
-                   let capturedLinks = capturedLinks ()                  
-
-                   printfn "**************************************************"
+                   printfn "\nNo jo, uhádl jsi zrovna kód pro přístup k testování shodnosti odkazů na JSON soubory."
+                   printfn "Pokud nevíš, co to obnáší, raději ukonči tento program ... \n"  
                    
-                   match (fst capturedLinks) = (jsonLinkList3 |> List.sort) with
-                   | true  -> printfn "Odkazy jsou v pořádku."
-                   | false -> printfn "Chyba v odkazech, nutno ověření."
+                   let executablePath = @"c:\Program Files\AVG\Browser\Application\AVGBrowser.exe" 
+                   captureLinks executablePath
 
-                   printfn "**************************************************"
+                   variant()
+            | "74283"
+                  -> 
+                   printfn "\nNo jo, uhádl jsi zrovna kód pro přístup k testování shodnosti odkazů na JSON soubory."
+                   printfn "Asi ti test bude fungovat, neb Google Chrome má instalovaný kdekdo," 
+                   printfn "ale pokud nevíš, co to obnáší, raději ukonči tento program ... \n"                   
+                   
+                   let executablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe" 
+                   captureLinks executablePath
 
-                   match (snd capturedLinks) = (jsonLinkList2.Tail |> List.sort)  with
-                   | true  -> printfn "Odkazy jsou v pořádku."
-                   | false -> printfn "Chyba v odkazech, nutno ověření."
-                                              
-                   printfn "Stiskni cokoliv pro návrat na hlavní stránku."
-                   Console.ReadKey() |> ignore
                    variant()
             | _   ->
                    printfn "Varianta nebyla vybrána. Prosím zadej znovu."

@@ -15,7 +15,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Test.Expecto", "Test.Expect
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Test.FsCheck", "Test.FsCheck\Test.FsCheck.fsproj", "{0DFB2E9E-CCC1-4A77-A24A-32C6E4D44D8A}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Links", "Puppeteer\Links.fsproj", "{209D7217-FA38-48F9-8F0E-2A58B2CB41DA}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "JsonLinkScraper", "Puppeteer\JsonLinkScraper.fsproj", "{209D7217-FA38-48F9-8F0E-2A58B2CB41DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

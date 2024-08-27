@@ -85,10 +85,9 @@ module KODIS_SubmainDataTable =
                            loop 0
 
         let result = 
-            (jsonLinkList |> List.toArray, pathToJsonList |> List.toArray)
-            ||> Array.zip
-            |> Array.Parallel.map //Na rozdil od DB verze budou vzdy asi jen tri items, tady ma Array.Parallel mensi overhead nez async workflows based List.Parallel 
-                (fun ((uri: string), path)
+            (jsonLinkList, pathToJsonList)            
+            ||> List.Parallel.map2 
+                (fun (uri: string) path
                     ->                       
                      async
                          {    
@@ -118,7 +117,7 @@ module KODIS_SubmainDataTable =
                     logInfoMsg <| sprintf "Err002 %s" (string err.Message)
                     closeItBaby msg5A
 
-                let! value = result |> List.ofArray |> Result.sequence, errorFn2 
+                let! value = result |> Result.sequence, errorFn2 
                 let! value = value |> Result.sequence, errorFn1
 
                 return value |> List.head
