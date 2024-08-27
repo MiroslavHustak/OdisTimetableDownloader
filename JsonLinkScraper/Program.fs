@@ -286,8 +286,7 @@ module Links =
                       System.Environment.Exit(1)  
 
                       return [] 
-            }    
-   
+            }       
 
     let internal capturedLinks executablePath =        
     
