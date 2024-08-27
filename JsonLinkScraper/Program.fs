@@ -43,8 +43,7 @@ module Links =
                                                 (
                                                     Headless = true,
                                                     ExecutablePath = executablePath
-                                                )    
-                   
+                                                )                       
                    
                     use! browser =
                         Puppeteer.LaunchAsync(launchOptions)       
@@ -97,8 +96,7 @@ module Links =
                                                       |> Async.Ignore
                                                   
                                                   // Evaluate the page's DOM to extract all anchor tags
-                                                  let! links =
-                                                                                                          
+                                                  let! links =                                                                                                          
                                                       page.EvaluateExpressionAsync<string list>("Array.from(document.querySelectorAll('a')).map(a => a.href)")      
                                                       |> Option.ofObj
                                                       |> function
@@ -293,7 +291,8 @@ module Links =
 
     let internal capturedLinks executablePath =        
     
-        let resultingLinks = scrapeLinks executablePath |> Async.RunSynchronously    
+        let resultingLinks = scrapeLinks executablePath |> Async.RunSynchronously 
+        
         resultingLinks |> List.iter (printfn "Found link: %s")
 
         let urlList = 
