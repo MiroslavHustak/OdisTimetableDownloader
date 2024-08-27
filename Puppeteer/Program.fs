@@ -179,9 +179,9 @@ module Links =
 
         let capturedLinks2 = 
             captureNetworkRequest resultingLinks
-                |> Async.RunSynchronously
-                |> List.distinct
-                |> List.sort
+            |> Async.RunSynchronously
+            |> List.distinct
+            |> List.sort
 
         capturedLinks2 |> List.iter (printfn "Captured link: %s")
         capturedLinks1, capturedLinks2
