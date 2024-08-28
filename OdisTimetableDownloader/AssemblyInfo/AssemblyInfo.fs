@@ -8,4 +8,3 @@ module AssemblyInfo =
     [<assembly : InternalsVisibleTo("Test.Expecto")>]
     [<assembly : InternalsVisibleTo("Test.FsCheck")>]
     do ()
-

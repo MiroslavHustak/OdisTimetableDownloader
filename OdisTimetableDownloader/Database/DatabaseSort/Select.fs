@@ -65,7 +65,7 @@ module Select =
                                  |> function
                                      | Some link, Some file 
                                          -> 
-                                          Ok (CompleteLink link, FileToBeSaved file) //TDD provedeno takto slozite pouze quli kompatbilite se zmenenym DataTable for testing purposes 
+                                          Ok (CompleteLink link, FileToBeSaved file) //TDD provedeno takto slozite pouze quli kompatabilite se zmenenym DataTable for testing purposes 
                                      | _                   
                                          ->
                                           //failwith msg18 

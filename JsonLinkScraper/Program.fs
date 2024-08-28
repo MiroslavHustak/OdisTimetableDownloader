@@ -295,11 +295,11 @@ module Links =
         resultingLinks |> List.iter (printfn "Found link: %s")
 
         let urlList = 
-               [
-                   "https://www.kodis.cz/lines/train"
-                   "https://www.kodis.cz/lines/region"
-                   "https://www.kodis.cz/lines/city"
-               ]
+            [
+                "https://www.kodis.cz/lines/train"
+                "https://www.kodis.cz/lines/region"
+                "https://www.kodis.cz/lines/city"
+            ]
                        
         let capturedLinks1 = 
             captureNetworkRequest urlList executablePath

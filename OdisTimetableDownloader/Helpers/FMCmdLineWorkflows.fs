@@ -3,6 +3,7 @@
 //Free monad command line workflows
         
 module CommandLineWorkflowCM =
+
 //***************************Copy/Move********************************
            
     type internal CommandLineInstruction<'a> =
