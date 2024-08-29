@@ -2,16 +2,18 @@
 
 open System
 open System.IO
+
 open Thoth.Json.Net
 open Newtonsoft.Json.Linq
 
-//**************************
+//*******************************
 
-open Helpers
-open Helpers.Builders
+open MyFsToolkit
+open MyFsToolkit.Builders
+
+//*******************************
 
 open Types.ErrorTypes
-
 open Settings.SettingsGeneral  
       
 module LogFileData =   

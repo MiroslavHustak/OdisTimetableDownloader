@@ -8,8 +8,13 @@ open System.Net.Http
 open FSharp.Data
 open FsToolkit.ErrorHandling
 
-open Helpers
-open Helpers.Builders
+//************************************************************
+
+open MyFsToolkit
+open MyFsToolkit.Builders
+
+//************************************************************
+
 open Helpers.CloseApp
 open Helpers.ProgressBarFSharp
 

@@ -7,6 +7,8 @@ open System.Windows.Forms
 
 //**************************
 
+open MyFsToolkit
+open Puppeteer.Links
 open BrowserDialogWindow
 
 //**************************
@@ -19,8 +21,6 @@ open Types
 open Types.Types
 
 open Logging.Logging
-
-open Puppeteer.Links
 
 open Settings.Messages
 open Settings.SettingsKODIS

@@ -40,34 +40,39 @@ module Test =
 
     open System
     open System.IO
+    
+    //***************************************
 
+    open MyFsToolkit
+    open MyFsToolkit.Builders  
+
+    //***************************************
+    
     open Settings
 
     let internal main () = //FileInfo(file) netestovano na pritomnost souboru, nestoji to za tu namahu
         
         try   
-            let totalFilesDT =
-                Directory.EnumerateFiles(pathDT, "*", SearchOption.AllDirectories)
-                |> Option.ofObj
+            let totalFileNumber path =
+                Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+                |> Option.ofNull
                 |> function Some value -> value |> Seq.length |> Ok | None -> Error String.Empty
 
-            let totalFilesDB = 
-                Directory.EnumerateFiles(pathDB, "*", SearchOption.AllDirectories)
-                |> Option.ofObj
-                |> function Some value -> value |> Seq.length |> Ok | None -> Error String.Empty
+            let totalFileNumberDT = totalFileNumber pathDT              
+            let totalFileNumberDB = totalFileNumber pathDB
 
             let resultTotal = 
-                match Result.isOk totalFilesDT && Result.isOk totalFilesDB with
+                match Result.isOk totalFileNumberDT && Result.isOk totalFileNumberDB with
                 | true  ->
-                         match (totalFilesDT |> Result.toList |> List.head) - (totalFilesDB |> Result.toList |> List.head) with
+                         match (totalFileNumberDT |> Result.toList |> List.head) - (totalFileNumberDB |> Result.toList |> List.head) with
                          | 0  -> "OK"
                          | _  -> "Error"  
                 | false -> 
                          "Error EnumerateFiles"     
 
             printfn "%s" resultTotal 
-            printfn "Total number of all DT files: %A" totalFilesDT
-            printfn "Total number of all DB files: %A\n" totalFilesDB  
+            printfn "Total number of all DT files: %A" totalFileNumberDT
+            printfn "Total number of all DB files: %A\n" totalFileNumberDB  
 
             //*****************************************************************************
             
@@ -77,30 +82,27 @@ module Test =
                     (fun subPathDT subPathDB 
                         ->
                          printfn "\n%s" subPathDT
-                         printfn "%s\n" subPathDB              
-
-                         let totalLengthDT =
-                             Directory.EnumerateFiles(subPathDT, "*", SearchOption.AllDirectories)
-                             |> Option.ofObj
+                         printfn "%s\n" subPathDB      
+                         
+                         let totalLength_Byte path =
+                             Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+                             |> Option.ofNull
                              |> function Some value -> value |> Seq.sumBy (fun file -> FileInfo(file).Length) |> Ok | None -> Error String.Empty
 
-                         let totalLengthDB = 
-                             Directory.EnumerateFiles(subPathDB, "*", SearchOption.AllDirectories)
-                             |> Option.ofObj
-                             |> function Some value -> value |> Seq.sumBy (fun file -> FileInfo(file).Length) |> Ok | None -> Error String.Empty
+                         let totalLengthDT_Byte = totalLength_Byte subPathDT
+                         let totalLengthDB_Byte = totalLength_Byte subPathDB                            
 
                          let resultTotal = 
-                             match Result.isOk totalLengthDT && Result.isOk totalLengthDB with
-                             | true  ->
-                                      match (totalLengthDT |> Result.toList |> List.head) - (totalLengthDB |> Result.toList |> List.head) with
-                                      | 0L  -> "OK"
-                                      | _   -> "Error"  
-                             | false -> 
-                                     "Error EnumerateFiles"                             
-                                              
-                         let totalLengthDT_DT = 
-                             Directory.EnumerateFiles(subPathDT, "*", SearchOption.AllDirectories)
-                             |> Option.ofObj
+                             pyramidOfHell
+                                 {
+                                     let! _ = Result.isOk totalLengthDT_Byte && Result.isOk totalLengthDB_Byte, "Error EnumerateFiles"
+                                     let! _ = (totalLengthDT_Byte |> Result.toList |> List.head) - (totalLengthDB_Byte |> Result.toList |> List.head) = 0L, "Error"
+                                     return "OK"
+                                 }
+                         
+                         let totalLength_MB path = 
+                             Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+                             |> Option.ofNull
                              |> function 
                                  | Some value -> 
                                                value
@@ -109,31 +111,21 @@ module Test =
                                                |> Ok
                                  | None       ->
                                                Error String.Empty    
-
-                         let totalLengthDB_MB = 
-                             Directory.EnumerateFiles(subPathDB, "*", SearchOption.AllDirectories)
-                             |> Option.ofObj
-                             |> function 
-                                 | Some value -> 
-                                               value
-                                               |> Seq.sumBy (fun file -> FileInfo(file).Length)
-                                               |> fun totalBytes -> float totalBytes / (1024.0 * 1024.0)
-                                               |> Ok
-                                 | None       ->
-                                               Error String.Empty                       
-
+                                              
+                         let totalLengthDT_MB = totalLength_MB subPathDT                            
+                         let totalLengthDB_MB = totalLength_MB subPathDB
+                                                                 
                          let resultTotal_MB = 
-                             match Result.isOk totalLengthDT_DT && Result.isOk totalLengthDB_MB with
-                             | true  ->
-                                      match (totalLengthDT_DT |> Result.toList |> List.head) - (totalLengthDB_MB |> Result.toList |> List.head) with
-                                      | 0.0 -> "OK"
-                                      | _   -> "Error"  
-                             | false -> 
-                                     "Error EnumerateFiles"        
+                             pyramidOfHell
+                                 {
+                                     let! _ = Result.isOk totalLengthDT_MB && Result.isOk totalLengthDB_MB, "Error EnumerateFiles"
+                                     let! _ = (totalLengthDT_MB |> Result.toList |> List.head) - (totalLengthDB_MB |> Result.toList |> List.head) = 0.0, "Error"
+                                     return "OK"
+                                 } 
                          
                          printfn "%s (%s)" resultTotal resultTotal_MB      
-                         printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT totalLengthDT_DT
-                         printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDB totalLengthDB_MB
+                         printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT_Byte totalLengthDT_MB
+                         printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDB_Byte totalLengthDB_MB
                     )
 
             printfn "************************************************************************" 

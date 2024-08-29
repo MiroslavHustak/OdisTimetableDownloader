@@ -1,4 +1,4 @@
-﻿namespace Helpers
+﻿namespace MyFsToolkit
 
 module TryParserInt = //Adapted third-party code
 

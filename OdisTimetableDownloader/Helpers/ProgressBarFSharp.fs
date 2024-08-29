@@ -4,6 +4,10 @@ open System
 
 //*********************
 
+open MyFsToolkit
+
+//*********************
+
 open Settings.Messages
 
 module ProgressBarFSharp =

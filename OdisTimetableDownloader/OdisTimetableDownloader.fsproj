@@ -20,13 +20,9 @@
     <Compile Include="Settings\SettingsMDPO.fs" />
     <Compile Include="Settings\SettingsDPO.fs" />
     <Compile Include="Settings\SettingsKODIS.fs" />
-    <Compile Include="Helpers\CEBuilders.fs" />
     <Compile Include="Helpers\FMCmdLineWorkflows.fs" />
-    <Compile Include="Helpers\Parsing.fs" />
-    <Compile Include="Helpers\ErrorHandlers.fs" />
     <Compile Include="Helpers\Helpers.fs" />
     <Compile Include="Helpers\MsgBoxClosing.fs" />
-    <Compile Include="Helpers\ListParallel.fs" />
     <Compile Include="Helpers\ProgressBarFSharp.fs" />
     <Compile Include="LogFile\Logging.fs" />
     <Compile Include="DataModelling\DataModels.fs" />
@@ -76,6 +72,7 @@
     <ProjectReference Include="..\DtDbVariantTest\DtDbVariantTest.fsproj" />
     <ProjectReference Include="..\EmbeddedTP\EmbeddedTP.fsproj" />
     <ProjectReference Include="..\JsonLinkScraper\JsonLinkScraper.fsproj" />
+    <ProjectReference Include="..\MyFsToolkit\MyFsToolkit.fsproj" />
   </ItemGroup>
 
   <ItemGroup>

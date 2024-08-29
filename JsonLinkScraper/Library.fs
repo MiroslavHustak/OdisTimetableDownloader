@@ -4,7 +4,12 @@ open System
 open System.Threading.Tasks
 open System.Collections.Generic
 
+//*****************************
+
+open MyFsToolkit
 open PuppeteerSharp
+
+//*****************************
 
 //Toto je pouze kod pro overeni odkazu na JSON, pri normalnim behu aplikace se nepouziva
 module Links = 
@@ -36,7 +41,7 @@ module Links =
                                 Headless = true,
                                 ExecutablePath = executablePath
                             )   
-                        |> Option.ofObj
+                        |> Option.ofNull
                         |> function
                             | Some value ->
                                           value
@@ -51,7 +56,7 @@ module Links =
                    
                     use! browser =
                         Puppeteer.LaunchAsync(launchOptions)       
-                        |> Option.ofObj
+                        |> Option.ofNull
                         |> function
                             | Some value ->
                                           value
@@ -63,7 +68,7 @@ module Links =
                    
                     use! page =
                         browser.NewPageAsync()       
-                        |> Option.ofObj
+                        |> Option.ofNull
                         |> function
                             | Some value ->
                                           value
@@ -82,7 +87,7 @@ module Links =
                                               try
                                                   // Navigate to the target URL                                                 
                                                   do! page.GoToAsync(url)      
-                                                      |> Option.ofObj
+                                                      |> Option.ofNull
                                                       |> function
                                                           | Some value ->
                                                                         value
@@ -96,7 +101,7 @@ module Links =
                                                   // Evaluate the page's DOM to extract all anchor tags
                                                   let! links =                                                                                                          
                                                       page.EvaluateExpressionAsync<string list>("Array.from(document.querySelectorAll('a')).map(a => a.href)")      
-                                                      |> Option.ofObj
+                                                      |> Option.ofNull
                                                       |> function
                                                           | Some value ->
                                                                         value
@@ -162,7 +167,7 @@ module Links =
                    
                     use! browser =
                         Puppeteer.LaunchAsync(launchOptions)       
-                        |> Option.ofObj
+                        |> Option.ofNull
                         |> function
                             | Some value ->
                                           value
@@ -174,7 +179,7 @@ module Links =
                    
                     use! page =
                         browser.NewPageAsync()       
-                        |> Option.ofObj
+                        |> Option.ofNull
                         |> function
                             | Some value ->
                                           value
@@ -186,7 +191,7 @@ module Links =
 
                     // Set up request interception to monitor all network requests                    
                     do! page.SetRequestInterceptionAsync(true)                                                    
-                        |> Option.ofObj
+                        |> Option.ofNull
                         |> function
                             | Some value ->
                                           value
@@ -198,7 +203,7 @@ module Links =
                                             
                     let capturedUrls = 
                         System.Collections.Concurrent.ConcurrentBag<string>()      
-                        |> Option.ofObj
+                        |> Option.ofNull
                         |> function
                             | Some value ->
                                           value
@@ -217,7 +222,7 @@ module Links =
                                           | false -> ()
 
                                           do! req.Request.ContinueAsync()                                                     
-                                              |> Option.ofObj
+                                              |> Option.ofNull
                                               |> function
                                                   | Some value ->
                                                                 value
@@ -238,7 +243,7 @@ module Links =
                                           try
                                               // Navigate to the target URL                                             
                                               do! page.GoToAsync(url)      
-                                                  |> Option.ofObj
+                                                  |> Option.ofNull
                                                   |> function
                                                       | Some value ->
                                                                     value

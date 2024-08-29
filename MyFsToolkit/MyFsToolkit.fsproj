@@ -7,15 +7,14 @@
 
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Library.fs" />
+    <Compile Include="CEBuilders.fs" />
+    <Compile Include="ErrorHandlers.fs" />
+    <Compile Include="Parsing.fs" />
+    <Compile Include="ListParallel.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PuppeteerSharp" Version="19.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MyFsToolkit\MyFsToolkit.fsproj" />
+    <PackageReference Include="FSharp.Quotations.Evaluator" Version="2.1.0" />
   </ItemGroup>
 
 </Project>

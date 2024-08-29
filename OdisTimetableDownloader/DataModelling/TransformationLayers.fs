@@ -2,13 +2,15 @@
 
 open System
 
-//**************************
+//******************************************
+
+open MyFsToolkit
+open MyFsToolkit.Builders
+open MyFsToolkit.TryParserDate
+
+//******************************************
 
 open Types
-
-open Helpers
-open Helpers.Builders
-open Helpers.TryParserDate
 
 open DataModelling.Dto
 open DataModelling.DataModel

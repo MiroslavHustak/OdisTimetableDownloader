@@ -5,13 +5,14 @@ open System.Data
 
 //******************************
 
+open MyFsToolkit
+
+//******************************
+
 open Types
 
-open Helpers
-open Helpers.CloseApp
-
 open Logging.Logging
-
+open Helpers.CloseApp
 open Settings.SettingsKODIS
 
 open DataModelling.Dto

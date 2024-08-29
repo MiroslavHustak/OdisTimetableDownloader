@@ -14,6 +14,8 @@ open FSharp.Quotations.Evaluator.QuotationEvaluationExtensions
 
 //************************************************************
 
+open MyFsToolkit
+open MyFsToolkit.Builders
 open EmbeddedTP.EmbeddedTP
 
 //************************************************************
@@ -27,16 +29,14 @@ open Settings.Messages
 open Settings.SettingsKODIS
 open Settings.SettingsGeneral
 
-open Helpers
 open Helpers.MyString
-open Helpers.Builders
+
 open Helpers.CloseApp   
 open Helpers.MsgBoxClosing
 open Helpers.ProgressBarFSharp  
 
 open DataModelling.DataModel
 open TransformationLayers.TransformationLayerSend
-
 
 module KODIS_SubmainDataTable =    
         

@@ -5,12 +5,14 @@ open Microsoft.Data.SqlClient
 
 //*****************************
 
+open MyFsToolkit
+
+//*****************************
+
 open Types
 
-open Helpers
-open Helpers.CloseApp
-
 open Logging.Logging
+open Helpers.CloseApp
 open Settings.Messages
 
 open DataModelling.Dto

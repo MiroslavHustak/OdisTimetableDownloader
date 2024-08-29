@@ -1,4 +1,4 @@
-﻿namespace Helpers
+﻿namespace MyFsToolkit
        
 open System       
 open System.Data

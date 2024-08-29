@@ -36,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MyFsToolkit\MyFsToolkit.fsproj" />
     <ProjectReference Include="..\OdisTimetableDownloader\OdisTimetableDownloader.fsproj" />
   </ItemGroup>
 

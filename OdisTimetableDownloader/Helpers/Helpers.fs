@@ -1,5 +1,15 @@
 ﻿namespace Helpers
 
+module CloseApp = 
+
+    open System
+    open Settings.Messages
+
+    let internal closeItBaby err = 
+        msgParam1 err      
+        Console.ReadKey() |> ignore 
+        System.Environment.Exit(1)  
+
 module ConsoleFixers =
 
     open System
@@ -94,7 +104,7 @@ module CheckNetConnection =
 
     open System.Net.NetworkInformation
    
-    open Helpers
+    open MyFsToolkit
       
     let internal checkNetConn (timeout : int) =                 
        
@@ -121,8 +131,8 @@ module CopyOrMoveFiles = //output -> Result type
 
     open System.IO
     
-    open Helpers
-    open Helpers.Builders
+    open MyFsToolkit
+    open MyFsToolkit.Builders
          
     let private processFile source destination action =
                          
@@ -169,8 +179,8 @@ module CopyOrMoveFilesFM =
 
     open System.IO
     
-    open Helpers
-    open Helpers.Builders
+    open MyFsToolkit
+    open MyFsToolkit.Builders
            
     type private CommandLineInstruction<'a> =
         | SourceFilepath of (Result<string, string> -> 'a)

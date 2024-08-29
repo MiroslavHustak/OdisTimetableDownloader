@@ -11,6 +11,10 @@ module MDPO_Submain =
     open FsToolkit.ErrorHandling
 
     //********************************
+       
+    open MyFsToolkit
+
+    //********************************
 
     open Logging.Logging
 
@@ -20,10 +24,8 @@ module MDPO_Submain =
     open Settings.SettingsMDPO
     open Settings.SettingsGeneral
 
-    open Helpers
     open Helpers.CloseApp
     open Helpers.ProgressBarFSharp
-
 
     //************************Submain functions************************************************************************
 

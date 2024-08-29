@@ -7,7 +7,11 @@ open NReco.Logging.File
 open Microsoft.Extensions.Logging
 
 //**********************************
-open Helpers
+
+open MyFsToolkit
+
+//**********************************
+
 open Settings.SettingsGeneral
 
 module Logging =     

@@ -1,16 +1,8 @@
-﻿namespace Helpers
+﻿namespace MyFsToolkit
 
 open System
-open System.Net.Http
 
-open FsToolkit.ErrorHandling
-
-//*******************************
-
-open Settings.Messages
-
-open Helpers
-open Helpers.Builders
+open Builders
 
 [<RequireQualifiedAccess>]            
 module Result = 
@@ -69,12 +61,6 @@ module Result =
                          )   
                  Ok okList 
 
-module CloseApp = 
-
-    let internal closeItBaby err = 
-        msgParam1 err      
-        Console.ReadKey() |> ignore 
-        System.Environment.Exit(1)  
 
 [<RequireQualifiedAccess>]
 module Option =
@@ -145,7 +131,7 @@ module Option =
 module Casting = 
     
     //normalne nepouzivat!!! zatim nutnost jen u deserializace xml - viz SAFE Stack app
-    let inline internal castAs<'a> (o : obj) : 'a option =    //the :? operator in F# is used for type testing     srtp pri teto strukture nefunguje
+    let internal castAs<'a> (o : obj) : 'a option =    //the :? operator in F# is used for type testing     srtp pri teto strukture nefunguje
         match Option.ofNull o with
         | Some (:? 'a as result) -> Some result
         | _                      -> None

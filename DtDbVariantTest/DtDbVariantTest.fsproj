@@ -14,4 +14,8 @@
     <PackageReference Include="FsToolkit.ErrorHandling" Version="4.16.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MyFsToolkit\MyFsToolkit.fsproj" />
+  </ItemGroup>
+
 </Project>

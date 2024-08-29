@@ -26,9 +26,11 @@ open Settings.Messages
 open Settings.SettingsKODIS
 open Settings.SettingsGeneral
 
+open MyFsToolkit
+
 open Helpers
 open Helpers.MyString
-open Helpers.Builders
+open MyFsToolkit.Builders
 open Helpers.CloseApp    
 open Helpers.MsgBoxClosing
 open Helpers.ProgressBarFSharp  
