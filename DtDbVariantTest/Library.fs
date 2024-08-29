@@ -50,10 +50,19 @@ module Test =
     
     open Settings
 
+    let inline private result (totalDT: Result< ^a, string>) (totalDB: Result< ^a, string>) (zero: ^a) =  //viz learning material ohledne generics a SRTPs
+
+        pyramidOfHell
+            {
+                let! _ = Result.isOk totalDT && Result.isOk totalDB, "Error EnumerateFiles"
+                let! _ = (totalDT |> Result.toList |> List.head) - (totalDB |> Result.toList |> List.head) = zero, "Error"
+                return "OK"
+            }
+
     let internal main () = //FileInfo(file) netestovano na pritomnost souboru, nestoji to za tu namahu
         
         try   
-            let totalFileNumber path =
+            let totalFileNumber path : Result<int, string> =
                 Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
                 |> Option.ofNull
                 |> function Some value -> value |> Seq.length |> Ok | None -> Error String.Empty
@@ -61,14 +70,8 @@ module Test =
             let totalFileNumberDT = totalFileNumber pathDT              
             let totalFileNumberDB = totalFileNumber pathDB
 
-            let resultTotal = 
-                pyramidOfHell
-                    {
-                        let! _ = Result.isOk totalFileNumberDT && Result.isOk totalFileNumberDB, "Error EnumerateFiles"
-                        let! _ = (totalFileNumberDT |> Result.toList |> List.head) - (totalFileNumberDB |> Result.toList |> List.head) = 0, "Error"
-                        return "OK"
-                    }
-
+            let resultTotal = result totalFileNumberDT totalFileNumberDB 0
+           
             printfn "%s" resultTotal 
             printfn "Total number of all DT files: %A" totalFileNumberDT
             printfn "Total number of all DB files: %A\n" totalFileNumberDB  
@@ -83,7 +86,7 @@ module Test =
                          printfn "\n%s" subPathDT
                          printfn "%s\n" subPathDB      
                          
-                         let totalLength_Byte path =
+                         let totalLength_Byte path : Result<int64, string> =
                              Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
                              |> Option.ofNull
                              |> function Some value -> value |> Seq.sumBy (fun file -> FileInfo(file).Length) |> Ok | None -> Error String.Empty
@@ -91,15 +94,9 @@ module Test =
                          let totalLengthDT_Byte = totalLength_Byte subPathDT
                          let totalLengthDB_Byte = totalLength_Byte subPathDB                            
 
-                         let resultTotal = 
-                             pyramidOfHell
-                                 {
-                                     let! _ = Result.isOk totalLengthDT_Byte && Result.isOk totalLengthDB_Byte, "Error EnumerateFiles"
-                                     let! _ = (totalLengthDT_Byte |> Result.toList |> List.head) - (totalLengthDB_Byte |> Result.toList |> List.head) = 0L, "Error"
-                                     return "OK"
-                                 }
-                         
-                         let totalLength_MB path = 
+                         let resultTotal = result totalLengthDT_Byte totalLengthDB_Byte 0L
+                                                    
+                         let totalLength_MB path : Result<float, string> = 
                              Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
                              |> Option.ofNull
                              |> function 
@@ -114,23 +111,17 @@ module Test =
                          let totalLengthDT_MB = totalLength_MB subPathDT                            
                          let totalLengthDB_MB = totalLength_MB subPathDB
                                                                  
-                         let resultTotal_MB = 
-                             pyramidOfHell
-                                 {
-                                     let! _ = Result.isOk totalLengthDT_MB && Result.isOk totalLengthDB_MB, "Error EnumerateFiles"
-                                     let! _ = (totalLengthDT_MB |> Result.toList |> List.head) - (totalLengthDB_MB |> Result.toList |> List.head) = 0.0, "Error"
-                                     return "OK"
-                                 } 
-                         
+                         let resultTotal_MB = result totalLengthDT_MB totalLengthDB_MB 0.0
+                                                    
                          printfn "%s (%s)" resultTotal resultTotal_MB      
                          printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT_Byte totalLengthDT_MB
                          printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDB_Byte totalLengthDB_MB
                     )
 
-            printfn "************************************************************************" 
+            printfn "%s" <| String.replicate 70 "*"
             fileLengthTest [pathDT] [pathDB]  
 
-            printfn "************************************************************************" 
+            printfn "%s" <| String.replicate 70 "*"
             fileLengthTest subPathsDT subPathsDB            
 
         with

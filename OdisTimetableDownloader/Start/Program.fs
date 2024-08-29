@@ -76,7 +76,7 @@ let main argv =
     *)
     
     //*****************************Console******************************  
-    let updateDate = "07-08-2024"
+    let updateDate = "29-08-2024"
 
     try
         consoleAppProblemFixer() 
@@ -99,7 +99,7 @@ let main argv =
         Console.Clear()
         printfn "Hromadné stahování aktuálních JŘ ODIS (včetně výluk) dopravce DP Ostrava z webu https://www.dpo.cz"
         printfn "Datum poslední aktualizace SW: %s" updateDate
-        printfn "********************************************************************"
+        printfn "%s" <| String.replicate 70 "*"
         printfn "Nyní je třeba vybrat si adresář pro uložení JŘ dopravce DP Ostrava."
         printfn "Pokud ve vybraném adresáři existuje následující podadresář, jeho obsah bude nahrazen nově staženými JŘ."
         printfn "[%s]" <| ODISDefault.OdisDir5
@@ -137,7 +137,7 @@ let main argv =
         printfn "Hromadné stahování aktuálních JŘ ODIS dopravce MDP Opava z webu https://www.mdpo.cz"         
         printfn "JŘ jsou pouze zastávkové - klasické JŘ stáhnete v \"celoODISové\" variantě (volba 3 na úvodní stránce)."   
         printfn "Datum poslední aktualizace SW: %s" updateDate
-        printfn "********************************************************************"
+        printfn "%s" <| String.replicate 70 "*"
         printfn "Nyní je třeba vybrat si adresář pro uložení JŘ dopravce MDP Opava."
         printfn "Pokud ve vybraném adresáři existuje následující podadresář, jeho obsah bude nahrazen nově staženými JŘ."
         printfn "[%s]" <| ODISDefault.OdisDir6       
@@ -174,7 +174,7 @@ let main argv =
         Console.Clear()
         printfn "Hromadné stahování JŘ ODIS všech dopravců v systému ODIS z webu https://www.kodis.cz"           
         printfn "Datum poslední aktualizace SW: %s" updateDate
-        printfn "********************************************************************"
+        printfn "%s" <| String.replicate 70 "*"
         printfn "Nyní je třeba vybrat si adresář pro uložení JŘ všech dopravců v systému ODIS."
         printfn "Pokud ve vybraném adresáři existují následující podadresáře, jejich obsah bude nahrazen nově staženými JŘ."
         printfn "%4c[%s]" <| char(32) <| ODISDefault.OdisDir1
@@ -295,13 +295,13 @@ let main argv =
 
             let capturedLinks = capturedLinks executablePath                  
 
-            printfn "**************************************************"
+            printfn "%s" <| String.replicate 70 "*"
         
             match (fst capturedLinks) = (jsonLinkList3 |> List.sort) with
             | true  -> printfn "Kontrola na odkazy v jsonLinkList3 proběhla v pořádku."
             | false -> printfn "Chyba v odkazech v jsonLinkList3, nutno ověření."
 
-            printfn "**************************************************"
+            printfn "%s" <| String.replicate 70 "*"
 
             match (snd capturedLinks) = (jsonLinkList2 |> List.tail |> List.sort)  with
             | true  -> printfn "Kontrola na odkazy v jsonLinkList2 proběhla v pořádku."

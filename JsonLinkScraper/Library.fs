@@ -293,7 +293,7 @@ module Links =
 
         capturedLinks1 |> List.iter (printfn "Captured link: %s")
 
-        printfn "************************************************************************"
+        printfn "%s" <| String.replicate 70 "*"
 
         let capturedLinks2 = 
             captureNetworkRequest resultingLinks executablePath
