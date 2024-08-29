@@ -45,26 +45,29 @@ module Test =
 
     let internal main () = //FileInfo(file) netestovano na pritomnost souboru, nestoji to za tu namahu
         
-        try 
-            let totalFilesDT = 
+        try   
+            let totalFilesDT =
                 Directory.EnumerateFiles(pathDT, "*", SearchOption.AllDirectories)
-                |> Option.ofObj   
-                |> function Some value -> value |> Seq.length | None -> -1
+                |> Option.ofObj
+                |> function Some value -> value |> Seq.length |> Ok | None -> Error String.Empty
 
             let totalFilesDB = 
-                Directory.EnumerateFiles(pathDB, "*", SearchOption.AllDirectories) 
+                Directory.EnumerateFiles(pathDB, "*", SearchOption.AllDirectories)
                 |> Option.ofObj
-                |> function | Some value -> value |> Seq.length | None -> 0
+                |> function Some value -> value |> Seq.length |> Ok | None -> Error String.Empty
 
-            let resultTotal =              
-                match totalFilesDT - totalFilesDB with
-                | 0  -> "OK"
-                | -1 -> "Error EnumerateFiles" 
-                | _  -> "Error"           
+            let resultTotal = 
+                match Result.isOk totalFilesDT && Result.isOk totalFilesDB with
+                | true  ->
+                         match (totalFilesDT |> Result.toList |> List.head) - (totalFilesDB |> Result.toList |> List.head) with
+                         | 0  -> "OK"
+                         | _  -> "Error"  
+                | false -> 
+                         "Error EnumerateFiles"     
 
             printfn "%s" resultTotal 
-            printfn "Total number of all DT files: %d" totalFilesDT
-            printfn "Total number of all DB files: %d\n" totalFilesDB  
+            printfn "Total number of all DT files: %A" totalFilesDT
+            printfn "Total number of all DB files: %A\n" totalFilesDB  
 
             //*****************************************************************************
             
