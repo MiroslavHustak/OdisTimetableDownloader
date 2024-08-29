@@ -56,20 +56,20 @@ module Test =
                 |> Option.ofObj
                 |> function | Some value -> value |> Seq.length | None -> 0
 
-            let resultTotal () =              
+            let resultTotal =              
                 match totalFilesDT - totalFilesDB with
-                | 0  -> printfn "OK"
-                | -1 -> printfn "Error EnumerateFiles" 
-                | _  -> printfn "Error"           
+                | 0  -> "OK"
+                | -1 -> "Error EnumerateFiles" 
+                | _  -> "Error"           
 
-            resultTotal () 
+            printfn "%s" resultTotal 
             printfn "Total number of all DT files: %d" totalFilesDT
             printfn "Total number of all DB files: %d\n" totalFilesDB  
 
             //*****************************************************************************
             
-            let fileLengthTest listDT listDP = 
-                (listDT, listDP) 
+            let fileLengthTest listDT listDB = 
+                (listDT, listDB) 
                 ||> List.iter2
                     (fun subPathDT subPathDB 
                         ->
@@ -95,7 +95,7 @@ module Test =
                              | false -> 
                                      "Error EnumerateFiles"                             
                                               
-                         let totalLengthDT_MB = 
+                         let totalLengthDT_DT = 
                              Directory.EnumerateFiles(subPathDT, "*", SearchOption.AllDirectories)
                              |> Option.ofObj
                              |> function 
@@ -120,17 +120,17 @@ module Test =
                                                Error String.Empty                       
 
                          let resultTotal_MB = 
-                             match Result.isOk totalLengthDT_MB && Result.isOk totalLengthDB_MB with
+                             match Result.isOk totalLengthDT_DT && Result.isOk totalLengthDB_MB with
                              | true  ->
-                                      match (totalLengthDT_MB |> Result.toList |> List.head) - (totalLengthDB_MB |> Result.toList |> List.head) with
+                                      match (totalLengthDT_DT |> Result.toList |> List.head) - (totalLengthDB_MB |> Result.toList |> List.head) with
                                       | 0.0 -> "OK"
                                       | _   -> "Error"  
                              | false -> 
                                      "Error EnumerateFiles"        
                          
                          printfn "%s (%s)" resultTotal resultTotal_MB      
-                         printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT totalLengthDT_MB
-                         printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDT totalLengthDB_MB
+                         printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT totalLengthDT_DT
+                         printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDB totalLengthDB_MB
                     )
 
             printfn "************************************************************************" 
@@ -140,4 +140,4 @@ module Test =
             fileLengthTest subPathsDT subPathsDB            
 
         with
-        | ex -> printfn "%s\n " (string ex.Message)    
+        | ex -> printfn "%s\n" (string ex.Message)    

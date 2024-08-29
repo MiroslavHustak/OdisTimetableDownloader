@@ -68,7 +68,6 @@ module WebScraping_KODISFMDataTable =
             | Free (DownloadAndSaveJsonFM next)     ->      
                                                      //Http request and IO operation (data from settings -> http request -> IO operation -> saving json files on HD)
                                                      try 
-
                                                          startNetChecking ()
                                                          
                                                          msg2 ()    
@@ -78,7 +77,8 @@ module WebScraping_KODISFMDataTable =
                                                          Console.CursorLeft <- 0  
 
                                                          //KODIS_SubmainDataTable.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
-                                                         KODIS_SubmainDataTable.downloadAndSaveJson jsonLinkList3 pathToJsonList3 
+                                                         //KODIS_SubmainDataTable.downloadAndSaveJson jsonLinkList3 pathToJsonList3 
+                                                         KODIS_SubmainDataTable.downloadAndSaveJson jsonLinkList2 pathToJsonList2 
                                                          
                                                          msg3 ()   
                                                          msg11 () 
