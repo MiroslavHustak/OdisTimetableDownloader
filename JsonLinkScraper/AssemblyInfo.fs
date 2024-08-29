@@ -6,4 +6,3 @@ module AssemblyInfo =
 
     [<assembly : InternalsVisibleTo("OdisTimetableDownloader")>]
     do ()
-

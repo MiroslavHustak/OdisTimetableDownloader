@@ -2,15 +2,15 @@
 
 module Settings = 
 
-    let pathDT = @"c:\Users\User\DataDT\"
+    let internal pathDT = @"c:\Users\User\DataDT\"
 
-    let pathDT_CurrentValidity = @"c:\Users\User\DataDT\JR_ODIS_aktualni_vcetne_vyluk\"
-    let pathDT_FutureValidity = @"c:\Users\User\DataDT\JR_ODIS_pouze_budouci_platnost\"
-    let pathDT_DPO = @"c:\Users\User\DataDT\JR_ODIS_pouze_linky_dopravce_DPO\"
-    let pathDT_MDPO = @"c:\Users\User\DataDT\JR_ODIS_pouze_linky_dopravce_MDPO\"
-    let pathDT_WithoutReplacementService = @"c:\Users\User\DataDT\JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk\"
+    let private pathDT_CurrentValidity = @"c:\Users\User\DataDT\JR_ODIS_aktualni_vcetne_vyluk\"
+    let private pathDT_FutureValidity = @"c:\Users\User\DataDT\JR_ODIS_pouze_budouci_platnost\"
+    let private pathDT_DPO = @"c:\Users\User\DataDT\JR_ODIS_pouze_linky_dopravce_DPO\"
+    let private pathDT_MDPO = @"c:\Users\User\DataDT\JR_ODIS_pouze_linky_dopravce_MDPO\"
+    let private pathDT_WithoutReplacementService = @"c:\Users\User\DataDT\JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk\"
 
-    let subPathsDT = 
+    let internal subPathsDT = 
         [
             pathDT_CurrentValidity
             pathDT_FutureValidity
@@ -19,15 +19,15 @@ module Settings =
             pathDT_MDPO          
         ]
 
-    let pathDB = @"c:\Users\User\DataDB\"
+    let internal pathDB = @"c:\Users\User\DataDB\"
         
-    let pathDB_CurrentValidity = @"c:\Users\User\DataDB\JR_ODIS_aktualni_vcetne_vyluk\"
-    let pathDB_FutureValidity = @"c:\Users\User\DataDB\JR_ODIS_pouze_budouci_platnost\"
-    let pathDB_DPO = @"c:\Users\User\DataDB\JR_ODIS_pouze_linky_dopravce_DPO\"
-    let pathDB_MDPO = @"c:\Users\User\DataDB\JR_ODIS_pouze_linky_dopravce_MDPO\"
-    let pathDB_WithoutReplacementService = @"c:\Users\User\DataDB\JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk\"  
+    let private pathDB_CurrentValidity = @"c:\Users\User\DataDB\JR_ODIS_aktualni_vcetne_vyluk\"
+    let private pathDB_FutureValidity = @"c:\Users\User\DataDB\JR_ODIS_pouze_budouci_platnost\"
+    let private pathDB_DPO = @"c:\Users\User\DataDB\JR_ODIS_pouze_linky_dopravce_DPO\"
+    let private pathDB_MDPO = @"c:\Users\User\DataDB\JR_ODIS_pouze_linky_dopravce_MDPO\"
+    let private pathDB_WithoutReplacementService = @"c:\Users\User\DataDB\JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk\"  
         
-    let subPathsDB = 
+    let internal subPathsDB = 
         [
             pathDB_CurrentValidity
             pathDB_FutureValidity
@@ -43,7 +43,7 @@ module Test =
 
     open Settings
 
-    let main () = //FileInfo(file) netestovano na pritomnost souboru, nestoji to za tu namahu
+    let internal main () = //FileInfo(file) netestovano na pritomnost souboru, nestoji to za tu namahu
         
         try 
             let totalFilesDT = 
