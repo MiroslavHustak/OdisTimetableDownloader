@@ -9,6 +9,12 @@ open PuppeteerSharp
 //Toto je pouze kod pro overeni odkazu na JSON, pri normalnim behu aplikace se nepouziva
 module Links = 
 
+    let private closeTest () = 
+
+        printfn "Press any key to close this app"
+        Console.ReadKey() |> ignore 
+        System.Environment.Exit(1)  
+
     let private scrapeLinks executablePath =
    
        async
@@ -36,9 +42,7 @@ module Links =
                                           value
                             | None       -> 
                                           printfn "Error in scrapeLinks: %s" "LaunchOptions -> null"
-                                          printfn "Press any key to close this app"
-                                          Console.ReadKey() |> ignore 
-                                          System.Environment.Exit(1)  
+                                          closeTest ()
                                           LaunchOptions
                                                 (
                                                     Headless = true,
@@ -53,9 +57,7 @@ module Links =
                                           value
                             | None       -> 
                                           printfn "Error in scrapeLinks: %s" "browser -> null"
-                                          printfn "Press any key to close this app"
-                                          Console.ReadKey() |> ignore 
-                                          System.Environment.Exit(1)  
+                                          closeTest () 
                                           Puppeteer.LaunchAsync(launchOptions)   
                         |> Async.AwaitTask   
                    
@@ -67,9 +69,7 @@ module Links =
                                           value
                             | None       -> 
                                           printfn "Error in scrapeLinks: %s" "page -> null"
-                                          printfn "Press any key to close this app"
-                                          Console.ReadKey() |> ignore 
-                                          System.Environment.Exit(1)  
+                                          closeTest ()  
                                           browser.NewPageAsync()   
                         |> Async.AwaitTask                      
 
@@ -88,9 +88,7 @@ module Links =
                                                                         value
                                                           | None       -> 
                                                                         printfn "Error in scrapeLinks: %s" "response -> null"
-                                                                        printfn "Press any key to close this app"
-                                                                        Console.ReadKey() |> ignore 
-                                                                        System.Environment.Exit(1)  
+                                                                        closeTest ()
                                                                         page.GoToAsync(url)
                                                       |> Async.AwaitTask      
                                                       |> Async.Ignore
@@ -104,9 +102,7 @@ module Links =
                                                                         value
                                                           | None       -> 
                                                                         printfn "Error in scrapeLinks: %s" "task -> null"
-                                                                        printfn "Press any key to close this app"
-                                                                        Console.ReadKey() |> ignore 
-                                                                        System.Environment.Exit(1)  
+                                                                        closeTest ()
                                                                         page.EvaluateExpressionAsync<string list>("Array.from(document.querySelectorAll('a')).map(a => a.href)")
                                                       |> Async.AwaitTask   
 
@@ -156,10 +152,8 @@ module Links =
                             | Some value ->
                                           value
                             | None       -> 
-                                          printfn "Error in scrapeLinks: %s" "LaunchOptions -> null"
-                                          printfn "Press any key to close this app"
-                                          Console.ReadKey() |> ignore 
-                                          System.Environment.Exit(1)  
+                                          printfn "Error in captureNetworkRequest: %s" "LaunchOptions -> null"
+                                          closeTest ()
                                           LaunchOptions
                                                 (
                                                     Headless = true,
@@ -173,10 +167,8 @@ module Links =
                             | Some value ->
                                           value
                             | None       -> 
-                                          printfn "Error in scrapeLinks: %s" "browser -> null"
-                                          printfn "Press any key to close this app"
-                                          Console.ReadKey() |> ignore 
-                                          System.Environment.Exit(1)  
+                                          printfn "Error in captureNetworkRequest: %s" "browser -> null"
+                                          closeTest ()
                                           Puppeteer.LaunchAsync(launchOptions)   
                         |> Async.AwaitTask   
                    
@@ -187,10 +179,8 @@ module Links =
                             | Some value ->
                                           value
                             | None       -> 
-                                          printfn "Error in scrapeLinks: %s" "page -> null"
-                                          printfn "Press any key to close this app"
-                                          Console.ReadKey() |> ignore 
-                                          System.Environment.Exit(1)  
+                                          printfn "Error in captureNetworkRequest: %s" "page -> null"
+                                          closeTest ()
                                           browser.NewPageAsync()   
                         |> Async.AwaitTask 
 
@@ -201,10 +191,8 @@ module Links =
                             | Some value ->
                                           value
                             | None       -> 
-                                          printfn "Error in scrapeLinks: %s" "task -> null"
-                                          printfn "Press any key to close this app"
-                                          Console.ReadKey() |> ignore 
-                                          System.Environment.Exit(1)  
+                                          printfn "Error in captureNetworkRequest: %s" "task -> null"
+                                          closeTest ()
                                           page.SetRequestInterceptionAsync(true)  
                         |> Async.AwaitTask
                                             
@@ -215,10 +203,8 @@ module Links =
                             | Some value ->
                                           value
                             | None       -> 
-                                          printfn "Error in scrapeLinks: %s" "capturedUrls -> null"
-                                          printfn "Press any key to close this app"
-                                          Console.ReadKey() |> ignore 
-                                          System.Environment.Exit(1)  
+                                          printfn "Error in captureNetworkRequest: %s" "capturedUrls -> null"
+                                          closeTest ()
                                           System.Collections.Concurrent.ConcurrentBag<string>()  
 
                     // Event handler to intercept and analyze requests
@@ -237,9 +223,7 @@ module Links =
                                                                 value
                                                   | None       -> 
                                                                 printfn "Error in scrapeLinks: %s" "task -> null"
-                                                                printfn "Press any key to close this app"
-                                                                Console.ReadKey() |> ignore 
-                                                                System.Environment.Exit(1)  
+                                                                closeTest ()
                                                                 req.Request.ContinueAsync()   
                                               |> Async.AwaitTask
                                       } 
@@ -260,9 +244,7 @@ module Links =
                                                                     value
                                                       | None       -> 
                                                                     printfn "Error in scrapeLinks: %s" "response -> null"
-                                                                    printfn "Press any key to close this app"
-                                                                    Console.ReadKey() |> ignore 
-                                                                    System.Environment.Exit(1)  
+                                                                    closeTest ()
                                                                     page.GoToAsync(url)  
                                                   |> Async.AwaitTask      
                                                   |> Async.Ignore
@@ -281,10 +263,7 @@ module Links =
                 with
                 | ex ->
                       printfn "Error in captureNetworkRequest: %s" (string ex.Message)
-                      printfn "Press any key to close this app"
-                      Console.ReadKey() |> ignore 
-                      System.Environment.Exit(1)  
-
+                      closeTest ()
                       return [] 
             }       
 
