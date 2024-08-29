@@ -73,6 +73,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DialogWindows\DialogWindows.fsproj" />
+    <ProjectReference Include="..\DtDbVariantTest\DtDbVariantTest.fsproj" />
     <ProjectReference Include="..\EmbeddedTP\EmbeddedTP.fsproj" />
     <ProjectReference Include="..\JsonLinkScraper\JsonLinkScraper.fsproj" />
   </ItemGroup>

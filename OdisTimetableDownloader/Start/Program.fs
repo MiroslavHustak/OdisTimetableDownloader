@@ -63,7 +63,7 @@ let rec private pathToFolder () =
 
 //[<EntryPoint>] 
 [<EntryPoint; STAThread>] // STAThread> musi byt quli openFolderBrowserDialog()
-let main argv =     
+let main argv =    
 
     (*
     <!-- Add this xml code into Directory.Build.props in the root (or create the file if missing) -->
@@ -312,34 +312,48 @@ let main argv =
            
         Console.ReadLine()
         |> function 
-            | "1" ->
-                   myWebscraping_DPO >> timetableVariant <| ()                     
-            | "2" ->
-                   myWebscraping_MDPO >> timetableVariant <| ()                      
-            | "3" ->
-                   myWebscraping_KODIS >> timetableVariant <| ()   
-            | "74764"
-                  -> 
-                   printfn "\nNo jo, uhádl jsi zrovna kód pro přístup k testování shodnosti odkazů na JSON soubory."
-                   printfn "Pokud nevíš, co to obnáší, raději ukonči tento program ... \n"  
+            | "1"     ->
+                       myWebscraping_DPO >> timetableVariant <| ()                     
+            | "2"     ->
+                       myWebscraping_MDPO >> timetableVariant <| ()                      
+            | "3"     ->
+                       myWebscraping_KODIS >> timetableVariant <| ()   
+            | "74764" -> 
+                       printfn "\nNo jo, uhádl jsi zrovna kód pro přístup k testování shodnosti odkazů na JSON soubory."
+                       printfn "Pokud nevíš, co test obnáší, raději ukonči tento program ... \n"  
                    
-                   let executablePath = @"c:\Program Files\AVG\Browser\Application\AVGBrowser.exe" 
-                   captureLinks executablePath
-
-                   variant()
-            | "74283"
-                  -> 
-                   printfn "\nNo jo, uhádl jsi zrovna kód pro přístup k testování shodnosti odkazů na JSON soubory."
-                   printfn "Asi ti test bude fungovat, neb Google Chrome má instalovaný kdekdo," 
-                   printfn "ale pokud nevíš, co to obnáší, raději ukonči tento program ... \n"                   
+                       let executablePath = @"c:\Program Files\AVG\Browser\Application\AVGBrowser.exe" 
+                       captureLinks executablePath
                    
-                   let executablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe" 
-                   captureLinks executablePath
+                       printfn "Stiskni cokoliv pro návrat na hlavní stránku."
+                       Console.ReadKey() |> ignore
 
-                   variant()
-            | _   ->
-                   printfn "Varianta nebyla vybrána. Prosím zadej znovu."
-                   variant()
+                       variant()
+            | "74283" -> 
+                       printfn "\nNo jo, uhádl jsi zrovna kód pro přístup k testování shodnosti odkazů na JSON soubory."
+                       printfn "Asi ti test bude fungovat, neb Google Chrome má instalovaný kdekdo," 
+                       printfn "ale pokud nevíš, co test obnáší, raději ukonči tento program ... \n"                   
+                   
+                       let executablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe" 
+                       captureLinks executablePath
+
+                       printfn "Stiskni cokoliv pro návrat na hlavní stránku."
+                       Console.ReadKey() |> ignore
+
+                       variant()
+            | "70800" -> 
+                       printfn "\nNo jo, uhádl jsi zrovna kód pro přístup k testování počtu a velikosti stažených souborů."
+                       printfn "Pokud nevíš, co test obnáší, raději ukonči tento program ... \n"                 
+                   
+                       DtDbVariantTest.Test.main () 
+
+                       printfn "Stiskni cokoliv pro návrat na hlavní stránku."
+                       Console.ReadKey() |> ignore
+
+                       variant()  
+            | _       ->
+                       printfn "Varianta nebyla vybrána. Prosím zadej znovu."
+                       variant()
                    
     variant()   
     0 // return an integer exit code
