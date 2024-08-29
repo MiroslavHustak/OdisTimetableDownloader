@@ -62,13 +62,12 @@ module Test =
             let totalFileNumberDB = totalFileNumber pathDB
 
             let resultTotal = 
-                match Result.isOk totalFileNumberDT && Result.isOk totalFileNumberDB with
-                | true  ->
-                         match (totalFileNumberDT |> Result.toList |> List.head) - (totalFileNumberDB |> Result.toList |> List.head) with
-                         | 0  -> "OK"
-                         | _  -> "Error"  
-                | false -> 
-                         "Error EnumerateFiles"     
+                pyramidOfHell
+                    {
+                        let! _ = Result.isOk totalFileNumberDT && Result.isOk totalFileNumberDB, "Error EnumerateFiles"
+                        let! _ = (totalFileNumberDT |> Result.toList |> List.head) - (totalFileNumberDB |> Result.toList |> List.head) = 0, "Error"
+                        return "OK"
+                    }
 
             printfn "%s" resultTotal 
             printfn "Total number of all DT files: %A" totalFileNumberDT
