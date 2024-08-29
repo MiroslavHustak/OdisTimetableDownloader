@@ -57,15 +57,58 @@ module Test =
                 let! _ = Result.isOk totalDT && Result.isOk totalDB, "Error EnumerateFiles"
                 let! _ = (totalDT |> Result.toList |> List.head) - (totalDB |> Result.toList |> List.head) = zero, "Error"
                 return "OK"
-            }
+            }   
+            
+    let private totalFileNumber path : Result<int, string> =
 
-    let internal main () = //FileInfo(file) netestovano na pritomnost souboru, nestoji to za tu namahu
+            Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+            |> Option.ofNull
+            |> function Some value -> value |> Seq.length |> Ok | None -> Error String.Empty
+
+    let private fileLengthTest listDT listDB = 
+
+        (listDT, listDB) 
+        ||> List.iter2
+            (fun subPathDT subPathDB 
+                ->
+                 printfn "\n%s" subPathDT
+                 printfn "%s\n" subPathDB      
+                         
+                 let totalLength_Byte path : Result<int64, string> =
+                     Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+                     |> Option.ofNull
+                     |> function Some value -> value |> Seq.sumBy (fun file -> FileInfo(file).Length) |> Ok | None -> Error String.Empty
+
+                 let totalLengthDT_Byte = totalLength_Byte subPathDT
+                 let totalLengthDB_Byte = totalLength_Byte subPathDB                            
+
+                 let resultTotal = result totalLengthDT_Byte totalLengthDB_Byte 0L
+                                                     
+                 let totalLength_MB path : Result<float, string> = 
+                     Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+                     |> Option.ofNull
+                     |> function 
+                         | Some value -> 
+                                       value
+                                       |> Seq.sumBy (fun file -> FileInfo(file).Length)
+                                       |> fun totalBytes -> float totalBytes / (1024.0 * 1024.0)
+                                       |> Ok
+                         | None       ->
+                                       Error String.Empty    
+                                              
+                 let totalLengthDT_MB = totalLength_MB subPathDT                            
+                 let totalLengthDB_MB = totalLength_MB subPathDB
+                                                                 
+                 let resultTotal_MB = result totalLengthDT_MB totalLengthDB_MB 0.0
+                                                    
+                 printfn "%s (%s)" resultTotal resultTotal_MB      
+                 printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT_Byte totalLengthDT_MB
+                 printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDB_Byte totalLengthDB_MB
+            )   
+
+    let internal main () = //FileInfo(file) netestovano na pritomnost souboru, nestoji to za tu namahu        
         
-        try   
-            let totalFileNumber path : Result<int, string> =
-                Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
-                |> Option.ofNull
-                |> function Some value -> value |> Seq.length |> Ok | None -> Error String.Empty
+        try               
 
             let totalFileNumberDT = totalFileNumber pathDT              
             let totalFileNumberDB = totalFileNumber pathDB
@@ -76,47 +119,7 @@ module Test =
             printfn "Total number of all DT files: %A" totalFileNumberDT
             printfn "Total number of all DB files: %A\n" totalFileNumberDB  
 
-            //*****************************************************************************
-            
-            let fileLengthTest listDT listDB = 
-                (listDT, listDB) 
-                ||> List.iter2
-                    (fun subPathDT subPathDB 
-                        ->
-                         printfn "\n%s" subPathDT
-                         printfn "%s\n" subPathDB      
-                         
-                         let totalLength_Byte path : Result<int64, string> =
-                             Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
-                             |> Option.ofNull
-                             |> function Some value -> value |> Seq.sumBy (fun file -> FileInfo(file).Length) |> Ok | None -> Error String.Empty
-
-                         let totalLengthDT_Byte = totalLength_Byte subPathDT
-                         let totalLengthDB_Byte = totalLength_Byte subPathDB                            
-
-                         let resultTotal = result totalLengthDT_Byte totalLengthDB_Byte 0L
-                                                    
-                         let totalLength_MB path : Result<float, string> = 
-                             Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
-                             |> Option.ofNull
-                             |> function 
-                                 | Some value -> 
-                                               value
-                                               |> Seq.sumBy (fun file -> FileInfo(file).Length)
-                                               |> fun totalBytes -> float totalBytes / (1024.0 * 1024.0)
-                                               |> Ok
-                                 | None       ->
-                                               Error String.Empty    
-                                              
-                         let totalLengthDT_MB = totalLength_MB subPathDT                            
-                         let totalLengthDB_MB = totalLength_MB subPathDB
-                                                                 
-                         let resultTotal_MB = result totalLengthDT_MB totalLengthDB_MB 0.0
-                                                    
-                         printfn "%s (%s)" resultTotal resultTotal_MB      
-                         printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT_Byte totalLengthDT_MB
-                         printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDB_Byte totalLengthDB_MB
-                    )
+            //*****************************************************************************            
 
             printfn "%s" <| String.replicate 70 "*"
             fileLengthTest [pathDT] [pathDB]  
