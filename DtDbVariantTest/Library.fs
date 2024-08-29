@@ -43,7 +43,7 @@ module Test =
 
     open Settings
 
-    let main () = 
+    let main () = //FileInfo(file) netestovano na pritomnost souboru, nestoji to za tu namahu
         
         try 
             let totalFilesDT = 
@@ -76,7 +76,7 @@ module Test =
                          printfn "\n%s" subPathDT
                          printfn "%s\n" subPathDB              
 
-                         let totalLengthDT = 
+                         let totalLengthDT =
                              Directory.EnumerateFiles(subPathDT, "*", SearchOption.AllDirectories)
                              |> Option.ofObj
                              |> function Some value -> value |> Seq.sumBy (fun file -> FileInfo(file).Length) |> Ok | None -> Error String.Empty
@@ -117,8 +117,7 @@ module Test =
                                                |> fun totalBytes -> float totalBytes / (1024.0 * 1024.0)
                                                |> Ok
                                  | None       ->
-                                               Error String.Empty
-                       
+                                               Error String.Empty                       
 
                          let resultTotal_MB = 
                              match Result.isOk totalLengthDT_MB && Result.isOk totalLengthDB_MB with
