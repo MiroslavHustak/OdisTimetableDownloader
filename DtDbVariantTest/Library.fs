@@ -86,27 +86,35 @@ module Test =
 
     let private fileLengthTest listDT listDB = 
 
-        (listDT, listDB) 
-        ||> List.iter2
-            (fun subPathDT subPathDB 
-                ->
-                 printfn "\n%s" subPathDT
-                 printfn "%s\n" subPathDB   
+        let numberOfDTFolders = listDT |> List.length
+        let numberOfDBFolders = listDB |> List.length
+               
+        match numberOfDTFolders = numberOfDBFolders with
+        | true -> 
+                (listDT, listDB) 
+                ||> List.iter2
+                    (fun subPathDT subPathDB 
+                        ->
+                         printfn "\n%s" subPathDT
+                         printfn "%s\n" subPathDB   
 
-                 let totalLengthDT_Byte = totalLength_Byte subPathDT
-                 let totalLengthDB_Byte = totalLength_Byte subPathDB                            
+                         let totalLengthDT_Byte = totalLength_Byte subPathDT
+                         let totalLengthDB_Byte = totalLength_Byte subPathDB                            
 
-                 let resultTotal_Byte = result totalLengthDT_Byte totalLengthDB_Byte 0L                     
+                         let resultTotal_Byte = result totalLengthDT_Byte totalLengthDB_Byte 0L                     
                                               
-                 let totalLengthDT_MB = totalLength_MB subPathDT                            
-                 let totalLengthDB_MB = totalLength_MB subPathDB
+                         let totalLengthDT_MB = totalLength_MB subPathDT                            
+                         let totalLengthDB_MB = totalLength_MB subPathDB
                                                                  
-                 let resultTotal_MB = result totalLengthDT_MB totalLengthDB_MB 0.0
+                         let resultTotal_MB = result totalLengthDT_MB totalLengthDB_MB 0.0
                                                     
-                 printfn "%s (%s)" resultTotal_Byte resultTotal_MB      
-                 printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT_Byte totalLengthDT_MB
-                 printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDB_Byte totalLengthDB_MB
-            )   
+                         printfn "%s (%s)" resultTotal_Byte resultTotal_MB      
+                         printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT_Byte totalLengthDT_MB
+                         printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDB_Byte totalLengthDB_MB
+                    )   
+        | false -> 
+                 printfn "\nUnbelievable Error"
+                 printfn "Something is wrong with the list \"subPathsDT\" or the list \"subPathsDB\""
 
     let internal main () = //FileInfo(file) netestovano na pritomnost souboru, nestoji to za tu namahu        
         

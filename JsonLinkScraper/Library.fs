@@ -11,8 +11,22 @@ open PuppeteerSharp
 
 //*****************************
 
+module Settings = 
+
+    let internal urlList = 
+        [
+            "https://www.kodis.cz/lines/train"
+            "https://www.kodis.cz/lines/region"
+            "https://www.kodis.cz/lines/city"
+        ]
+
+    let internal keyword1 = "tab"
+    let internal keyword2 = "linky-search"
+
 //Toto je pouze kod pro overeni odkazu na JSON, pri normalnim behu aplikace se nepouziva
 module Links = 
+
+    open Settings
 
     let private closeTest () = 
 
@@ -25,16 +39,7 @@ module Links =
        async
            {
                 try
-                    // Define the URL and the keyword to filter the network requests
-                    let urlList = 
-                        [
-                            "https://www.kodis.cz/lines/train"
-                            "https://www.kodis.cz/lines/region"
-                            "https://www.kodis.cz/lines/city"
-                        ]
-
-                    let keyword = "tab"
-
+                    // Define the URL and the keyword to filter the network requests   
                     let launchOptions =                       
                         LaunchOptions
                             (
@@ -111,7 +116,7 @@ module Links =
                                                                         page.EvaluateExpressionAsync<string list>("Array.from(document.querySelectorAll('a')).map(a => a.href)")
                                                       |> Async.AwaitTask   
 
-                                                  let filteredLinks = links |> List.filter (fun link -> link.Contains(keyword))
+                                                  let filteredLinks = links |> List.filter (fun link -> link.Contains(keyword1))
 
                                                   return filteredLinks
                                               with
@@ -143,9 +148,7 @@ module Links =
 
         async 
             {   
-                try              
-                    let keyword = "linky-search"
-
+                try
                     let launchOptions =                       
                         LaunchOptions
                             (
@@ -217,7 +220,7 @@ module Links =
                         (fun req ->                    
                                   async 
                                       {
-                                          match req.Request.Url.Contains(keyword) with                            
+                                          match req.Request.Url.Contains(keyword2) with                            
                                           | true  -> capturedUrls.Add(req.Request.Url) 
                                           | false -> ()
 
@@ -276,14 +279,7 @@ module Links =
     
         let resultingLinks = scrapeLinks executablePath |> Async.RunSynchronously 
         
-        resultingLinks |> List.iter (printfn "Found link: %s")
-
-        let urlList = 
-            [
-                "https://www.kodis.cz/lines/train"
-                "https://www.kodis.cz/lines/region"
-                "https://www.kodis.cz/lines/city"
-            ]
+        resultingLinks |> List.iter (printfn "Found link: %s")       
                        
         let capturedLinks1 = 
             captureNetworkRequest urlList executablePath
