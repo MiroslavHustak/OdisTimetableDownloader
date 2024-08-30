@@ -61,9 +61,28 @@ module Test =
             
     let private totalFileNumber path : Result<int, string> =
 
-            Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
-            |> Option.ofNull
-            |> function Some value -> value |> Seq.length |> Ok | None -> Error String.Empty
+        Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+        |> Option.ofNull
+        |> function Some value -> value |> Seq.length |> Ok | None -> Error String.Empty
+
+    let private totalLength_Byte path : Result<int64, string> =
+
+        Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+        |> Option.ofNull
+        |> function Some value -> value |> Seq.sumBy (fun file -> FileInfo(file).Length) |> Ok | None -> Error String.Empty
+
+    let private totalLength_MB path : Result<float, string> = 
+
+        Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+        |> Option.ofNull
+        |> function 
+            | Some value -> 
+                          value
+                          |> Seq.sumBy (fun file -> FileInfo(file).Length)
+                          |> fun totalBytes -> float totalBytes / (1024.0 * 1024.0)
+                          |> Ok
+            | None       ->
+                          Error String.Empty
 
     let private fileLengthTest listDT listDB = 
 
@@ -72,29 +91,12 @@ module Test =
             (fun subPathDT subPathDB 
                 ->
                  printfn "\n%s" subPathDT
-                 printfn "%s\n" subPathDB      
-                         
-                 let totalLength_Byte path : Result<int64, string> =
-                     Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
-                     |> Option.ofNull
-                     |> function Some value -> value |> Seq.sumBy (fun file -> FileInfo(file).Length) |> Ok | None -> Error String.Empty
+                 printfn "%s\n" subPathDB   
 
                  let totalLengthDT_Byte = totalLength_Byte subPathDT
                  let totalLengthDB_Byte = totalLength_Byte subPathDB                            
 
-                 let resultTotal = result totalLengthDT_Byte totalLengthDB_Byte 0L
-                                                     
-                 let totalLength_MB path : Result<float, string> = 
-                     Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
-                     |> Option.ofNull
-                     |> function 
-                         | Some value -> 
-                                       value
-                                       |> Seq.sumBy (fun file -> FileInfo(file).Length)
-                                       |> fun totalBytes -> float totalBytes / (1024.0 * 1024.0)
-                                       |> Ok
-                         | None       ->
-                                       Error String.Empty    
+                 let resultTotal = result totalLengthDT_Byte totalLengthDB_Byte 0L                     
                                               
                  let totalLengthDT_MB = totalLength_MB subPathDT                            
                  let totalLengthDB_MB = totalLength_MB subPathDB
@@ -129,3 +131,36 @@ module Test =
 
         with
         | ex -> printfn "%s\n" (string ex.Message)    
+
+(*
+// F#
+
+let inline private result (totalDT: Result< ^a, string>) (totalDB: Result< ^a, string>) (zero: ^a) =  
+
+    pyramidOfHell
+        {
+            let! _ = Result.isOk totalDT && Result.isOk totalDB, "Error EnumerateFiles"
+            let! _ = (totalDT |> Result.toList |> List.head) - (totalDB |> Result.toList |> List.head) = zero, "Error"
+            return "OK"
+        }  
+
+--Haskell
+
+import Data.Either (isRight)
+
+result :: (Eq a, Num a) => Either String a -> Either String a -> a -> String
+result totalDT totalDB zero
+    | isRight totalDT && isRight totalDB = 
+        let dt = either (const zero) id totalDT
+            db = either (const zero) id totalDB
+        in if (dt - db) == zero 
+           then "Error"
+           else "OK"
+    | otherwise = "Error EnumerateFiles"
+
+
+-- Haskell has predefined instances:
+-- Eq instances exist for types like Int, Char, Bool, String, and more.
+-- Num instances exist for numeric types like Int, Integer, Float, Double, etc.
+
+*)
