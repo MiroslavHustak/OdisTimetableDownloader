@@ -96,14 +96,14 @@ module Test =
                  let totalLengthDT_Byte = totalLength_Byte subPathDT
                  let totalLengthDB_Byte = totalLength_Byte subPathDB                            
 
-                 let resultTotal = result totalLengthDT_Byte totalLengthDB_Byte 0L                     
+                 let resultTotal_Byte = result totalLengthDT_Byte totalLengthDB_Byte 0L                     
                                               
                  let totalLengthDT_MB = totalLength_MB subPathDT                            
                  let totalLengthDB_MB = totalLength_MB subPathDB
                                                                  
                  let resultTotal_MB = result totalLengthDT_MB totalLengthDB_MB 0.0
                                                     
-                 printfn "%s (%s)" resultTotal resultTotal_MB      
+                 printfn "%s (%s)" resultTotal_Byte resultTotal_MB      
                  printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT_Byte totalLengthDT_MB
                  printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDB_Byte totalLengthDB_MB
             )   
