@@ -305,10 +305,7 @@ let main argv =
 
             match (snd capturedLinks) = (jsonLinkList2 |> List.tail |> List.sort)  with
             | true  -> printfn "Kontrola na odkazy v jsonLinkList2 proběhla v pořádku."
-            | false -> printfn "Chyba v odkazech v jsonLinkList2, nutno ověření."
-                                   
-            printfn "Stiskni cokoliv pro návrat na hlavní stránku."
-            Console.ReadKey() |> ignore
+            | false -> printfn "Chyba v odkazech v jsonLinkList2, nutno ověření."            
            
         Console.ReadLine()
         |> function 
@@ -319,8 +316,8 @@ let main argv =
             | "3"     ->
                        myWebscraping_KODIS >> timetableVariant <| ()   
             | "74764" -> 
-                       printfn "\nNo jo, uhádl jsi zrovna kód pro přístup k testování shodnosti odkazů na JSON soubory."
-                       printfn "Pokud nevíš, co test obnáší, raději ukonči tento program ... \n"  
+                       printfn "\nTrefil jsi zrovna kód pro přístup k testování shodnosti odkazů na JSON soubory."
+                       printfn "Gratuluji, ale pokud nevíš, co test obnáší, raději ukonči tento program ... \n"  
                    
                        let executablePath = @"c:\Program Files\AVG\Browser\Application\AVGBrowser.exe" 
                        captureLinks executablePath
@@ -329,10 +326,10 @@ let main argv =
                        Console.ReadKey() |> ignore
 
                        variant()
-            | "74283" -> 
-                       printfn "\nNo jo, uhádl jsi zrovna kód pro přístup k testování shodnosti odkazů na JSON soubory."
+            | "74283" ->                       
+                       printfn "\nTrefil jsi zrovna kód pro přístup k testování shodnosti odkazů na JSON soubory."
                        printfn "Asi ti test bude fungovat, neb Google Chrome má instalovaný kdekdo," 
-                       printfn "ale pokud nevíš, co test obnáší, raději ukonči tento program ... \n"                   
+                       printfn "ale pokud nevíš, co test obnáší, raději ukonči tento program ... \n"  
                    
                        let executablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe" 
                        captureLinks executablePath
@@ -342,8 +339,8 @@ let main argv =
 
                        variant()
             | "70800" -> 
-                       printfn "\nNo jo, uhádl jsi zrovna kód pro přístup k testování počtu a velikosti stažených souborů."
-                       printfn "Pokud nevíš, co test obnáší, raději ukonči tento program ... \n"                 
+                       printfn "\nTrefil jsi zrovna kód pro přístup k testování počtu a velikosti stažených souborů."
+                       printfn "Gratuluji, ale pokud nevíš, co test obnáší, raději ukonči tento program ... \n"  
                    
                        DtDbVariantTest.Test.main () 
 

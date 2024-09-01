@@ -279,23 +279,21 @@ module Links =
     
         let resultingLinks = scrapeLinks executablePath |> Async.RunSynchronously 
         
-        resultingLinks |> List.iter (printfn "Found link: %s")       
-                       
-        let capturedLinks1 = 
+        resultingLinks |> List.iter (printfn "Found link: %s")      
+        
+        let capturedLinks links executablePath = 
             captureNetworkRequest urlList executablePath
             |> Async.RunSynchronously
             |> List.distinct
             |> List.sort
-
+                       
+        let capturedLinks1 = capturedLinks urlList executablePath
+          
         capturedLinks1 |> List.iter (printfn "Captured link: %s")
 
         printfn "%s" <| String.replicate 70 "*"
 
-        let capturedLinks2 = 
-            captureNetworkRequest resultingLinks executablePath
-            |> Async.RunSynchronously
-            |> List.distinct
-            |> List.sort
-
+        let capturedLinks2 = capturedLinks resultingLinks executablePath
+          
         capturedLinks2 |> List.iter (printfn "Captured link: %s")
         capturedLinks1, capturedLinks2

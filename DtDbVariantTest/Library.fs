@@ -50,12 +50,22 @@ module Test =
     
     open Settings
 
+    //SRTPs
     let inline private result (totalDT: Result< ^a, string>) (totalDB: Result< ^a, string>) (zero: ^a) =  //viz learning material ohledne generics a SRTPs
 
         pyramidOfHell
             {
                 let! _ = Result.isOk totalDT && Result.isOk totalDB, "Error EnumerateFiles"
                 let! _ = (totalDT |> Result.toList |> List.head) - (totalDB |> Result.toList |> List.head) = zero, "Error"
+                return "OK"
+            }   
+
+    //Generics 
+    let inline private resultGenericsTest (totalDT: Result< 'a, string>) (totalDB: Result< 'a, string>) (zero: 'a) =  
+
+        pyramidOfHell
+            {
+                let! _ = Result.isOk totalDT && Result.isOk totalDB, "Error EnumerateFiles" //neni operace na generics -> funguje 
                 return "OK"
             }   
             
@@ -111,6 +121,10 @@ module Test =
                          printfn "%s (%s)" resultTotal_Byte resultTotal_MB      
                          printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT_Byte totalLengthDT_MB
                          printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDB_Byte totalLengthDB_MB
+
+                         
+                         printfn "Test chování generics 1: %s" <| resultGenericsTest totalLengthDT_Byte totalLengthDB_Byte 0L
+                         printfn "Test chování generics 2: %s" <| resultGenericsTest totalLengthDT_MB totalLengthDB_MB 0.0
                     )   
         | false -> 
                  printfn "\nUnbelievable Error"
@@ -128,6 +142,8 @@ module Test =
             printfn "%s" resultTotal 
             printfn "Total number of all DT files: %A" totalFileNumberDT
             printfn "Total number of all DB files: %A\n" totalFileNumberDB  
+
+            printfn "Test chování generics 3: %s" <| resultGenericsTest totalFileNumberDT totalFileNumberDB 0
 
             //*****************************************************************************            
 
