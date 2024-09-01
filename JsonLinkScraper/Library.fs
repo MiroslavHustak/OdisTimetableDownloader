@@ -41,7 +41,7 @@ module Links =
                 try
                     // Define the URL and the keyword to filter the network requests   
                     let launchOptions =                       
-                        LaunchOptions
+                        new LaunchOptions
                             (
                                 Headless = true,
                                 ExecutablePath = executablePath
@@ -53,7 +53,7 @@ module Links =
                             | None       -> 
                                           printfn "Error in scrapeLinks: %s" "LaunchOptions -> null"
                                           closeTest ()
-                                          LaunchOptions
+                                          new LaunchOptions
                                                 (
                                                     Headless = true,
                                                     ExecutablePath = executablePath
@@ -150,7 +150,7 @@ module Links =
             {   
                 try
                     let launchOptions =                       
-                        LaunchOptions
+                        new LaunchOptions
                             (
                                 Headless = true,
                                 ExecutablePath = executablePath 
@@ -162,7 +162,7 @@ module Links =
                             | None       -> 
                                           printfn "Error in captureNetworkRequest: %s" "LaunchOptions -> null"
                                           closeTest ()
-                                          LaunchOptions
+                                          new LaunchOptions
                                                 (
                                                     Headless = true,
                                                     ExecutablePath = executablePath
@@ -236,7 +236,7 @@ module Links =
                                               |> Async.AwaitTask
                                       } 
                                       |> Async.Start
-                        )          
+                        )    
 
                     urlList
                     |> List.iter
@@ -282,7 +282,7 @@ module Links =
         resultingLinks |> List.iter (printfn "Found link: %s")      
         
         let capturedLinks links executablePath = 
-            captureNetworkRequest urlList executablePath
+            captureNetworkRequest links executablePath
             |> Async.RunSynchronously
             |> List.distinct
             |> List.sort
