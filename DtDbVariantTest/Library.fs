@@ -121,7 +121,6 @@ module Test =
                          printfn "%s (%s)" resultTotal_Byte resultTotal_MB      
                          printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT_Byte totalLengthDT_MB
                          printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDB_Byte totalLengthDB_MB
-
                          
                          printfn "Test chování generics 1: %s" <| resultGenericsTest totalLengthDT_Byte totalLengthDB_Byte 0L
                          printfn "Test chování generics 2: %s" <| resultGenericsTest totalLengthDT_MB totalLengthDB_MB 0.0
