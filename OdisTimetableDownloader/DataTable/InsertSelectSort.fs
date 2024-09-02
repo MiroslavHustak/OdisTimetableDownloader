@@ -75,9 +75,11 @@ module InsertSelectSort =
                                                  dateValidityEnd = currentTime))
                                                  &&
                                                  (
-                                                     match currentTime >= DateTime(2024, 9, 2) with  
-                                                     | true  -> true
-                                                     | false -> not <| fileToBeSaved.Contains("046_2024_01_02_2024_12_14")
+                                                    not <| fileToBeSaved.Contains("046_2024_01_02_2024_12_14")
+                                                 )
+                                                 &&
+                                                 (
+                                                    not <| fileToBeSaved.Contains("020_2024_01_02_2024_12_14")
                                                  )
 
                     | FutureValidity            ->
@@ -112,6 +114,10 @@ module InsertSelectSort =
                                                  (dateValidityEnd <> summerHolidayEnd1
                                                  && 
                                                  dateValidityEnd <> summerHolidayEnd2)
+                                                 &&
+                                                 (
+                                                    not <| fileToBeSaved.Contains("020_2024_01_02_2024_12_14")
+                                                 )
                                         
                 let currentTime = DateTime.Now.Date
 

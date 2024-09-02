@@ -49,10 +49,12 @@ RETURN
             )
             AND rn = 1
             AND 
-            (
-                GETDATE() >= '2024-09-02'
-                OR
+            (               
                 FileToBeSaved NOT LIKE '%046_2024_01_02_2024_12_14%'
+            )
+            AND 
+            (               
+                FileToBeSaved NOT LIKE '%020_2024_01_02_2024_12_14%'
             )
     ) AS myDerivedTable
     WHERE MaxRow = 1     
@@ -214,6 +216,10 @@ RETURN
             AND rn = 1
             AND EndDate <> '2024-08-31'
             AND EndDate <> '2024-09-01'
+            AND 
+            (               
+                FileToBeSaved NOT LIKE '%020_2024_01_02_2024_12_14%'
+            )
         )
     ) AS myDerivedTable
     WHERE MaxRow = 1     

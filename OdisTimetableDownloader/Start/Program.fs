@@ -76,7 +76,7 @@ let main argv =
     *)
     
     //*****************************Console******************************  
-    let updateDate = "29-08-2024"
+    let updateDate = "02-09-2024"
 
     try
         consoleAppProblemFixer() 
