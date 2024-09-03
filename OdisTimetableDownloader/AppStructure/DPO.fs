@@ -40,14 +40,14 @@ module WebScraping_DPO =
 
     type private Environment = 
         {
-            filterTimetables : unit -> string -> (string * string) list
-            downloadAndSaveTimetables : string -> (string * string) list -> unit
+            FilterTimetables : unit -> string -> (string * string) list
+            DownloadAndSaveTimetables : string -> (string * string) list -> unit
         }
 
     let private environment : Environment =
         { 
-            filterTimetables = filterTimetables
-            downloadAndSaveTimetables = downloadAndSaveTimetables
+            FilterTimetables = filterTimetables
+            DownloadAndSaveTimetables = downloadAndSaveTimetables
         }    
 
     let internal webscraping_DPO pathToDir =  
@@ -123,8 +123,8 @@ module WebScraping_DPO =
                                                    msg1 ()      
                                                    Error String.Empty
                                           | true  -> 
-                                                   environment.filterTimetables () pathToSubdir 
-                                                   |> environment.downloadAndSaveTimetables pathToSubdir   
+                                                   environment.FilterTimetables () pathToSubdir 
+                                                   |> environment.DownloadAndSaveTimetables pathToSubdir   
                                                    |> Ok
                                                    
                                       with
