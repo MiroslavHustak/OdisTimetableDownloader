@@ -6,8 +6,7 @@ Proof of concept pro mobilní aplikaci: https://github.com/MiroslavHustak/OdisTi
 
 Bulk downloading of timetables from the ODIS public transport system in Northern Moravia and (a part of) Silesia (these lands are located 
 in the north-eastern part of the Czech Republic, in case you happen not to know it :-) ).
-Console app.
-Proof of concept a mobile app: https://github.com/MiroslavHustak/OdisTimetableDownloaderMAUI
+This is a console app and it serves as a proof of concept for a mobile app: https://github.com/MiroslavHustak/OdisTimetableDownloaderMAUI
 
 ****************************************************************************************
 
