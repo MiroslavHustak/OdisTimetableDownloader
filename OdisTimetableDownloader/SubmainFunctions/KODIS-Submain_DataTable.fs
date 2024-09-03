@@ -371,9 +371,10 @@ module KODIS_SubmainDataTable =
                 @"https://kodis-files.s3.eu-central-1.amazonaws.com/46_A_2024_07_01_2024_09_01_faa5f15c1b.pdf"
                 @"https://kodis-files.s3.eu-central-1.amazonaws.com/46_B_2024_07_01_2024_09_01_b5f542c755.pdf"
             ]
-            |> List.toSeq         
-      
-        let task = 
+            |> List.toSeq      
+
+        let taskAllJsonLists () = //TODO nekdy overit rychlost
+
             [
                 async { return kodisAttachments pathToJsonList }
                 async { return kodisTimetables pathToJsonList }
@@ -389,9 +390,22 @@ module KODIS_SubmainDataTable =
                 | Error err ->
                              logInfoMsg <| sprintf "Err214 %s" (string err.Message)
                              msg5 ()
-                             Seq.empty    
+                             Seq.empty       
 
-        (Seq.append <| task <| addOn()) |> Seq.distinct
+        let taskJsonList2 () = 
+
+             try 
+                let task = kodisTimetables2 pathToJsonList2 
+                (Seq.append <| task <| addOn()) |> Seq.distinct    
+
+             with
+             | ex ->  
+                   logInfoMsg <| sprintf "Err214 %s" (string ex.Message)
+                   msg5 ()
+                   Seq.empty         
+
+        //taskAllJsonLists ()
+        taskJsonList2 ()  
     
     //input from seq -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
     let private filterTimetables () dt param (pathToDir : string) diggingResult = 
