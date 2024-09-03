@@ -386,7 +386,8 @@ module KODIS_SubmainDataTable =
             |> Result.ofChoice                      
             |> function
                 | Ok value  ->
-                             value |> Seq.ofArray |> Seq.concat  
+                             let task = value |> Seq.ofArray |> Seq.concat 
+                             (Seq.append <| task <| addOn()) |> Seq.distinct
                 | Error err ->
                              logInfoMsg <| sprintf "Err214 %s" (string err.Message)
                              msg5 ()
@@ -404,8 +405,8 @@ module KODIS_SubmainDataTable =
                    msg5 ()
                    Seq.empty         
 
-        //taskAllJsonLists ()
-        taskJsonList2 ()  
+        taskAllJsonLists ()
+        //taskJsonList2 ()  
     
     //input from seq -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
     let private filterTimetables () dt param (pathToDir : string) diggingResult = 
