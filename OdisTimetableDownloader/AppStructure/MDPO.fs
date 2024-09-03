@@ -70,8 +70,7 @@ module WebScraping_MDPO =
                                                        logInfoMsg <| sprintf "Err051 %s" err
                                                        closeItBaby msg16                        
 
-            | DeleteOneODISDirectory ->                                     
-                                                                          
+            | DeleteOneODISDirectory ->                                   
                                       try
                                           let dirName = ODISDefault.OdisDir6
                                           //rozdil mezi Directory a DirectoryInfo viz Unique_Identifier_And_Metadata_File_Creator.sln -> MainLogicDG.fs
