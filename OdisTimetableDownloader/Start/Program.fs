@@ -5,6 +5,9 @@ open System.Windows
 open FSharp.Control
 open System.Windows.Forms
 
+open BenchmarkDotNet.Running
+open BenchmarkDotNet.Attributes
+
 //**************************
 
 open MyFsToolkit
@@ -30,6 +33,21 @@ open MainFunctions.WebScraping_DPO
 open MainFunctions.WebScraping_MDPO
 open MainFunctions.WebScraping_KODISFM
 open MainFunctions.WebScraping_KODISFMDataTable
+
+type MyBenchmark() = 
+
+    [<Benchmark>]
+    member _.Test1 () = 
+        let dt = DataTable.CreateDt.dt()                           
+        let variant = CurrentValidity            
+        SubmainFunctions.KODIS_SubmainDataTable.operationOnDataFromJson () dt variant String.Empty 
+
+    [<Benchmark>]
+    member _.Test2 () = 
+        ()
+
+    //dotnet run -c Release
+    //let summary = BenchmarkRunner.Run<MyBenchmark>()
 
 [<TailCall>] 
 let rec private pathToFolder () =
@@ -76,7 +94,7 @@ let main argv =
     *)
     
     //*****************************Console******************************  
-    let updateDate = "02-09-2024"
+    let updateDate = "04-09-2024"
 
     try
         consoleAppProblemFixer() 

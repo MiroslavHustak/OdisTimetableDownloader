@@ -4,6 +4,7 @@ open System
 open System.IO
 open System.Net
 open System.Threading
+open System.Threading.Tasks
 open System.Net.NetworkInformation
 open System.Text.RegularExpressions
 
@@ -388,9 +389,30 @@ module KODIS_Submain =
                 @"https://kodis-files.s3.eu-central-1.amazonaws.com/46_A_2024_07_01_2024_09_01_faa5f15c1b.pdf"
                 @"https://kodis-files.s3.eu-central-1.amazonaws.com/46_B_2024_07_01_2024_09_01_b5f542c755.pdf"
             ]
-            |> List.toSeq         
-      
-        let task = 
+            |> List.toSeq       
+
+        let taskAllJsonLists () = //TODO nekdy overit rychlost
+            try 
+                let task1 = kodisAttachments pathToJsonList 
+                let task2 = kodisTimetables pathToJsonList 
+                let task3 = kodisTimetables2 pathToJsonList2 
+                   
+                let task = Seq.append <| task1 <| task2
+                let task = Seq.append <| task <| task3                         
+               
+                (Seq.append <| task <| addOn()) |> Seq.distinct |> Ok                   
+            with
+            | ex -> Error <| sprintf "Err214 %s" (string ex.Message)                   
+
+            |> function
+                | Ok value  ->
+                             value   
+                | Error err ->
+                             logInfoMsg err
+                             msg5 ()
+                             Seq.empty    
+                  
+        let taskAllJsonListsParallel () = //TODO nekdy overit rychlost             
             [
                 async { return kodisAttachments pathToJsonList }
                 async { return kodisTimetables pathToJsonList }
@@ -399,16 +421,18 @@ module KODIS_Submain =
             |> Async.Parallel 
             |> Async.Catch
             |> Async.RunSynchronously
-            |> Result.ofChoice                      
+            |> Result.ofChoice
             |> function
-                | Ok value  ->
-                             value |> Seq.ofArray |> Seq.concat  
-                | Error err ->
-                             logInfoMsg <| sprintf "Err214 %s" (string err.Message)
-                             msg5 ()
-                             Seq.empty    
+                | Ok value ->
+                            let task = value |> Seq.ofArray |> Seq.concat
+                            (Seq.append <| task <| addOn()) |> Seq.distinct 
+                | Error ex ->
+                            logInfoMsg <| sprintf "Err214 %s" (string ex.Message)
+                            msg5 ()
+                            Seq.empty         
 
-        (Seq.append <| task <| addOn()) |> Seq.distinct
+        //taskAllJsonLists ()
+        taskAllJsonListsParallel ()
     
     //input from seq -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
     let private filterTimetables () connection param (pathToDir : string) diggingResult = 

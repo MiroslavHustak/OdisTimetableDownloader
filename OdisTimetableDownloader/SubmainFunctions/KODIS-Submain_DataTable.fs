@@ -376,8 +376,7 @@ module KODIS_SubmainDataTable =
             ]
             |> List.toSeq      
 
-        let taskAllJsonLists () = //TODO nekdy overit rychlost
-
+        let taskAllJsonListsParallel () = 
             [
                 async { return kodisAttachments pathToJsonList }
                 async { return kodisTimetables pathToJsonList }
@@ -395,21 +394,30 @@ module KODIS_SubmainDataTable =
                              logInfoMsg <| sprintf "Err214 %s" (string err.Message)
                              msg5 ()
                              Seq.empty       
-
-        let taskJsonList2 () = 
-
-             try 
-                let task = kodisTimetables2 pathToJsonList2 
-                (Seq.append <| task <| addOn()) |> Seq.distinct    
-
-             with
-             | ex ->  
-                   logInfoMsg <| sprintf "Err214 %s" (string ex.Message)
-                   msg5 ()
-                   Seq.empty         
-
-        taskAllJsonLists ()
-        //taskJsonList2 ()  
+        
+        let taskAllJsonLists () = 
+            try 
+                let task1 = kodisAttachments pathToJsonList 
+                let task2 = kodisTimetables pathToJsonList 
+                let task3 = kodisTimetables2 pathToJsonList2 
+                   
+                let task = Seq.append <| task1 <| task2
+                let task = Seq.append <| task <| task3                         
+               
+                (Seq.append <| task <| addOn()) |> Seq.distinct |> Ok                     
+            with
+            | ex -> Error (string ex.Message)
+                                  
+            |> function
+                | Ok value  ->                             
+                             value
+                | Error err ->
+                             logInfoMsg <| sprintf "Err214 %s" err
+                             msg5 ()
+                             Seq.empty      
+       
+        //taskAllJsonLists () //je to jen 1-2 vteriny, rychlost stejna
+        taskAllJsonListsParallel ()  
     
     //input from seq -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
     let private filterTimetables () dt param (pathToDir : string) diggingResult = 
@@ -499,7 +507,7 @@ module KODIS_SubmainDataTable =
              let result = 
                  match input.Equals(String.Empty) with
                  | true  -> String.Empty
-                 | _     -> input.[0..min 9 (input.Length - 1)] 
+                 | _     -> input.[ 0..min 9 (input.Length - 1) ] 
              result.Replace("_", "-")
          
         let extractEndDate (input : string) =
@@ -507,14 +515,14 @@ module KODIS_SubmainDataTable =
             let result = 
                 match input.Equals(String.Empty) with
                 | true  -> String.Empty
-                | _     -> input.[max 0 (input.Length - 10)..]
+                | _     -> input.[ max 0 (input.Length - 10).. ]
             result.Replace("_", "-")
 
         let splitString (input : string) =   
 
             match input.StartsWith(pathKodisAmazonLink) with
-            | true  -> [pathKodisAmazonLink; input.Substring(pathKodisAmazonLink.Length)]
-            | false -> [pathKodisAmazonLink; input]
+            | true  -> [ pathKodisAmazonLink; input.Substring(pathKodisAmazonLink.Length) ]
+            | false -> [ pathKodisAmazonLink; input ]
 
         //*************************************Splitting Kodis links into DataTable columns********************************************
         let splitKodisLink input =
@@ -645,14 +653,13 @@ module KODIS_SubmainDataTable =
                     PartialLink <| Regex.Replace(input, pattern, String.Empty)
             }
             |> dtDataTransformLayerSend  
-
      
         //**********************Filtering and datatable data inserting********************************************************
         let dataToBeInserted = 
-            
+            //stejna doba procesu pro vsechny varianty (List, Array, parallel)
             diggingResult    
-            |> Array.ofSeq
-            |> Array.Parallel.map 
+            |> List.ofSeq
+            |> List.Parallel.map 
                 (fun item -> 
                            let item = extractSubstring item      //"https://kodis-files.s3.eu-central-1.amazonaws.com/timetables/2_2023_03_13_2023_12_09.pdf                 
                            
@@ -660,15 +667,14 @@ module KODIS_SubmainDataTable =
                            | true  -> item.Replace("timetables/", String.Empty).Replace(".pdf", "_t.pdf")
                            | false -> item                                       
                 )  
-            |> Array.sort //jen quli testovani
-            |> Array.filter
+            |> List.sort //jen quli testovani
+            |> List.filter
                 (fun item -> 
                            let cond1 = (item |> Option.ofNullEmptySpace).IsSome
                            let cond2 = item |> Option.ofNullEmpty |> Option.toBool //for learning purposes - compare with (not String.IsNullOrEmpty(item))
                            cond1 && cond2 
                 )         
-            |> Array.map (fun item -> splitKodisLink item) 
-            |> Array.toList
+            |> List.Parallel.map (fun item -> splitKodisLink item) 
 
         
         //**********************Cesty pro soubory pro aktualni a dlouhodobe platne a pro ostatni********************************************************
@@ -718,12 +724,12 @@ module KODIS_SubmainDataTable =
                                  pathToDir                               
                      link, path 
                 )   
-
+       
         match param with 
         | CurrentValidity           -> DataTable.InsertSelectSort.sortLinksOut dt dataToBeInserted CurrentValidity |> createPathsForDownloadedFiles
         | FutureValidity            -> DataTable.InsertSelectSort.sortLinksOut dt dataToBeInserted FutureValidity |> createPathsForDownloadedFiles
         // | ReplacementService     -> DataTable.InsertSelectSort.sortLinksOut dt dataToBeInserted ReplacementService |> createPathsForDownloadedFiles 
-        | WithoutReplacementService -> DataTable.InsertSelectSort.sortLinksOut dt dataToBeInserted WithoutReplacementService |> createPathsForDownloadedFiles          
+        | WithoutReplacementService -> DataTable.InsertSelectSort.sortLinksOut dt dataToBeInserted WithoutReplacementService |> createPathsForDownloadedFiles   
      
     //IO operations made separate in order to have some structure in the free-monad-based design (for educational purposes)   
     let internal deleteAllODISDirectories pathToDir = 
