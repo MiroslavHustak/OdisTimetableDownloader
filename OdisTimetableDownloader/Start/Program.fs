@@ -69,7 +69,8 @@ let rec private pathToFolder () =
                      printfn "\nNebyl vybrán adresář. Tak znovu... Anebo klikni na křížek pro ukončení aplikace. \n"                                                                     
                      Ok <| pathToFolder ()   
    
-    with ex -> Error <| string ex.Message
+    with 
+    | ex -> Error <| string ex.Message
                     
     |> function
         | Ok value  -> 
