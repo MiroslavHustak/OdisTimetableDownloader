@@ -261,7 +261,8 @@ module KODIS_SubmainDataTable =
                                 | EmptySeq -> Error msg16                                        
                                 | _        -> Ok value
 
-                        with ex -> Error <| string ex.Message  
+                        with 
+                        | ex -> Error <| string ex.Message  
 
                         |> function
                             | Ok value  -> 
