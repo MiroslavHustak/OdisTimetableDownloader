@@ -172,7 +172,8 @@ module KODIS_SubmainDataTable =
                                | EmptySeq -> Error msg16                                        
                                | _        -> Ok value
 
-                        with ex -> Error <| string ex.Message  
+                        with 
+                        | ex -> Error <| string ex.Message  
 
                         |> function
                             | Ok value  -> 
@@ -352,7 +353,8 @@ module KODIS_SubmainDataTable =
                                     | EmptySeq -> Error msg16                                        
                                     | _        -> Ok value
 
-                            with ex -> Error <| string ex.Message  
+                            with 
+                            | ex -> Error <| string ex.Message  
 
                             |> function
                                 | Ok value  ->
@@ -423,7 +425,8 @@ module KODIS_SubmainDataTable =
                 match matchResult.Success with
                 | true  -> Ok input 
                 | false -> Ok String.Empty 
-            with ex -> Error <| string ex.Message                  
+            with
+            | ex -> Error <| string ex.Message                  
                   
             |> function
                 | Ok value  -> 
@@ -443,7 +446,8 @@ module KODIS_SubmainDataTable =
                 match matchResult.Success with
                 | true  -> Ok matchResult.Value
                 | false -> Ok String.Empty
-            with ex -> Error <| string ex.Message                 
+            with 
+            | ex -> Error <| string ex.Message                 
 
             |> function
                 | Ok value  -> 
@@ -522,7 +526,8 @@ module KODIS_SubmainDataTable =
                     |> splitString
                     |> List.item 1
                     |> Ok
-                with ex -> Error <| string ex.Message
+                with 
+                | ex -> Error <| string ex.Message
                      
                 |> function
                     | Ok value  -> 
@@ -540,7 +545,8 @@ module KODIS_SubmainDataTable =
                     |> List.ofArray
                     |> List.item 1 
                     |> Ok
-                with ex -> Error <| string ex.Message
+                with
+                | ex -> Error <| string ex.Message
                          
                 |> function
                     | Ok value  -> 
@@ -794,7 +800,8 @@ module KODIS_SubmainDataTable =
                                 |> Seq.filter (fun item -> item.Name = createDirName variant getDefaultRecordValues) 
                                 |> Seq.iter _.Delete(true) //trochu je to hack, ale nemusim se zabyvat tryHead, bo moze byt empty kolekce  
                                 |> Ok                                             
-                        with ex -> Error <| string ex.Message
+                        with
+                        | ex -> Error <| string ex.Message
                         
                         |> function
                             | Ok value  -> 
@@ -827,8 +834,10 @@ module KODIS_SubmainDataTable =
                                  )           
                      | _    -> 
                              Directory.CreateDirectory(sprintf "%s" dir) |> ignore           
-                ) |> Ok
-        with ex -> Error <| string ex.Message
+                )
+                |> Ok
+        with 
+        | ex -> Error <| string ex.Message
         
         |> function
             | Ok value  -> 
@@ -902,8 +911,7 @@ module KODIS_SubmainDataTable =
                                                                            
                                                    match pathToFileExist with
                                                    | Some _ -> return! (>>) response.SaveFileAsync Async.AwaitTask <| pathToFile      //Original FsHttp library function    
-                                                   | None   -> return ()  //nechame chybu tise projit  
-                                                                                                                                                                
+                                                   | None   -> return ()  //nechame chybu tise projit                                                                                                                                                                  
                                               | _                
                                                   -> 
                                                    return ()      //nechame chybu tise projit                                                                                                                                         
@@ -918,11 +926,9 @@ module KODIS_SubmainDataTable =
                                               logInfoMsg <| sprintf "Err014 %s" (string err.Message)
                                               msgParam2 uri  //nechame chybu projit v loop => nebude Result.sequence
                         )  
-                    |> List.head  
-                    
+                    |> List.head                      
             } 
-        
-     
+             
     let internal operationOnDataFromJson () dt variant dir =   
 
         //operation on data
