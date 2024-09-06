@@ -37,7 +37,7 @@ open Helpers.ProgressBarFSharp
 
 open DataModelling.DataModel
 
-module KODIS_SubmainRecords =    
+module KODIS_SubmainRecord =    
         
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     
     // DO NOT DIVIDE this module into parts in line with the main design yet - KODIS keeps making unpredictable changes or amendments

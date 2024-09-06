@@ -17,15 +17,15 @@ open Helpers.CloseApp
 open Helpers.CommandLineWorkflow 
 
 open SubmainFunctions
-open SubmainFunctions.KODIS_SubmainRecords
+open SubmainFunctions.KODIS_SubmainRecord
 
-module WebScraping_KODISFMRecords = 
+module WebScraping_KODISFMRecord = 
     
     //FREE MONAD 
     //Free monads are just a general way of turning functors into monads.
     //A free monad is a sequence of actions where subsequent actions can depend on the result of previous ones.
 
-    let internal webscraping_KODISFMRecords pathToDir (variantList: Validity list) = 
+    let internal webscraping_KODISFMRecord pathToDir (variantList: Validity list) = 
             
         let rec interpret clp  = 
 
@@ -76,8 +76,8 @@ module WebScraping_KODISFMRecords =
                                                          Console.Write("\r" + new string(' ', (-) Console.WindowWidth 1) + "\r")
                                                          Console.CursorLeft <- 0  
 
-                                                         KODIS_SubmainRecords.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
-                                                         ////KODIS_SubmainRecords.downloadAndSaveJson jsonLinkList2 pathToJsonList2 
+                                                         KODIS_SubmainRecord.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
+                                                         ////KODIS_SubmainRecord.downloadAndSaveJson jsonLinkList2 pathToJsonList2 
                                                          
                                                          msg3 ()   
                                                          msg11 () 
@@ -108,16 +108,16 @@ module WebScraping_KODISFMRecords =
                                                                  let variant = variantList |> List.head
 
                                                                  //IO operation
-                                                                 KODIS_SubmainRecords.deleteOneODISDirectory variant pathToDir 
+                                                                 KODIS_SubmainRecord.deleteOneODISDirectory variant pathToDir 
                                                                                                                            
                                                                  //operation on data 
                                                                  let dirList =                                                                    
-                                                                     KODIS_SubmainRecords.createOneNewDirectoryPath  //list -> aby bylo mozno pouzit funkci createFolders bez uprav  
+                                                                     KODIS_SubmainRecord.createOneNewDirectoryPath  //list -> aby bylo mozno pouzit funkci createFolders bez uprav  
                                                                      <| pathToDir 
-                                                                     <| KODIS_SubmainRecords.createDirName variant listODISDefault4 
+                                                                     <| KODIS_SubmainRecord.createDirName variant listODISDefault4 
 
                                                                  //IO operation 
-                                                                 KODIS_SubmainRecords.createFolders dirList
+                                                                 KODIS_SubmainRecord.createFolders dirList
 
                                                                  msg10 () 
 
@@ -125,7 +125,7 @@ module WebScraping_KODISFMRecords =
 
                                                                  //operation on data 
                                                                  //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into datatable -> data filtering (link*path)  
-                                                                 let list = KODIS_SubmainRecords.operationOnDataFromJson () variant dir 
+                                                                 let list = KODIS_SubmainRecord.operationOnDataFromJson () variant dir 
 
                                                                  let context listMappingFunction = 
                                                                      {
@@ -139,18 +139,18 @@ module WebScraping_KODISFMRecords =
                                                                  | false -> context List.map2  
 
                                                                  //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
-                                                                 |> KODIS_SubmainRecords.downloadAndSave 
+                                                                 |> KODIS_SubmainRecord.downloadAndSave 
 
                                                              //BulkVariantDownload       
                                                             | _ ->
                                                                  //IO operation
-                                                                 KODIS_SubmainRecords.deleteAllODISDirectories pathToDir                                                              
+                                                                 KODIS_SubmainRecord.deleteAllODISDirectories pathToDir                                                              
                                                               
                                                                  //operation on data 
-                                                                 let dirList = KODIS_SubmainRecords.createNewDirectoryPaths pathToDir listODISDefault4
+                                                                 let dirList = KODIS_SubmainRecord.createNewDirectoryPaths pathToDir listODISDefault4
                                                               
                                                                  //IO operation 
-                                                                 KODIS_SubmainRecords.createFolders dirList 
+                                                                 KODIS_SubmainRecord.createFolders dirList 
 
                                                                  msg10 ()
                                                                 
@@ -160,7 +160,7 @@ module WebScraping_KODISFMRecords =
                                                                          -> 
                                                                           //operation on data 
                                                                           //input from saved json files -> change of input data -> output into seq -> input from seq -> seq of input data -> output into datatable -> data filtering (link*path)  
-                                                                          let list = KODIS_SubmainRecords.operationOnDataFromJson () variant dir 
+                                                                          let list = KODIS_SubmainRecord.operationOnDataFromJson () variant dir 
 
                                                                           let context listMappingFunction = 
                                                                               {
@@ -174,7 +174,7 @@ module WebScraping_KODISFMRecords =
                                                                           | _              -> context List.Parallel.map2 
 
                                                                           //IO operation (data filtering (link*path) -> http request -> saving pdf files on HD)
-                                                                          |> KODIS_SubmainRecords.downloadAndSave 
+                                                                          |> KODIS_SubmainRecord.downloadAndSave 
                                                                      )  
                                                             Ok ()       
                                                         finally

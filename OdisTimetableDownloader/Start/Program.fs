@@ -32,7 +32,7 @@ open Settings.SettingsGeneral
 open MainFunctions.WebScraping_DPO
 open MainFunctions.WebScraping_MDPO
 open MainFunctions.WebScraping_KODISFM
-open MainFunctions.WebScraping_KODISFMRecords
+open MainFunctions.WebScraping_KODISFMRecord
 open MainFunctions.WebScraping_KODISFMDataTable
 
 type MyBenchmark() = 
@@ -237,7 +237,7 @@ let main argv =
                                             
                                          Console.Clear()
                                             
-                                         webscraping_KODISFMRecords path variant //records-based app 
+                                         webscraping_KODISFMRecord path variant //record-based app 
                                          //webscraping_KODISFMDataTable path variant //datatable-based app
                                          //webscraping_KODISFM path variant //database-based app
                                             
