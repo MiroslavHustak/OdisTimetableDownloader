@@ -116,7 +116,7 @@ module Links =
                                                                         page.EvaluateExpressionAsync<string list>("Array.from(document.querySelectorAll('a')).map(a => a.href)")
                                                       |> Async.AwaitTask   
 
-                                                  let filteredLinks = links |> List.filter (fun link -> link.Contains(keyword1))
+                                                  let filteredLinks = links |> List.filter _.Contains(keyword1)
 
                                                   return filteredLinks
                                               with
@@ -282,6 +282,7 @@ module Links =
         resultingLinks |> List.iter (printfn "Found link: %s")      
         
         let capturedLinks links executablePath = 
+
             captureNetworkRequest links executablePath
             |> Async.RunSynchronously
             |> List.distinct
