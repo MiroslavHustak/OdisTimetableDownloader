@@ -125,7 +125,7 @@ module WebScraping_KODISFMRecords =
 
                                                                  //operation on data 
                                                                  //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into datatable -> data filtering (link*path)  
-                                                                 let list = KODIS_SubmainRecords.operationOnDataFromJson () dt variant dir 
+                                                                 let list = KODIS_SubmainRecords.operationOnDataFromJson () variant dir 
 
                                                                  let context listMappingFunction = 
                                                                      {
@@ -160,7 +160,7 @@ module WebScraping_KODISFMRecords =
                                                                          -> 
                                                                           //operation on data 
                                                                           //input from saved json files -> change of input data -> output into seq -> input from seq -> seq of input data -> output into datatable -> data filtering (link*path)  
-                                                                          let list = KODIS_SubmainRecords.operationOnDataFromJson () dt variant dir 
+                                                                          let list = KODIS_SubmainRecords.operationOnDataFromJson () variant dir 
 
                                                                           let context listMappingFunction = 
                                                                               {

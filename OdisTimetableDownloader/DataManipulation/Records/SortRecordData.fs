@@ -17,15 +17,13 @@ open Settings.SettingsKODIS
 
 open DataModelling.DataModel
 
-
 //chyby vezme tryWith Err18
 module SortRecordData =  
        
     let internal sortLinksOut (dataToBeInserted : RcData list) validity = 
                
         try            
-            try                
-
+            try          
                 let condition dateValidityStart dateValidityEnd currentTime (fileToBeSaved : string) = 
 
                     match validity with 
