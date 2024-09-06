@@ -20,3 +20,7 @@ type [<Struct>] internal StartDateDt = StartDateDt of DateTime
 type [<Struct>] internal EndDateDt = EndDateDt of DateTime
 type [<Struct>] internal StartDateDtOpt = StartDateDtOpt of DateTime option
 type [<Struct>] internal EndDateDtOpt = EndDateDtOpt of DateTime option
+type [<Struct>] internal StartDateRc = StartDateRc of DateTime
+type [<Struct>] internal EndDateRc = EndDateRc of DateTime
+type [<Struct>] internal StartDateRcOpt = StartDateRcOpt of DateTime option
+type [<Struct>] internal EndDateRcOpt = EndDateRcOpt of DateTime option
