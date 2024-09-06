@@ -2,9 +2,7 @@
 
 Hromadné stahování JŘ ODIS.
 
-Konzolová aplikace.
-
-Proof of concept pro mobilní aplikaci: https://github.com/MiroslavHustak/OdisTimetableDownloaderMAUI
+Konzolová aplikace (proof of concept pro mobilní aplikaci: https://github.com/MiroslavHustak/OdisTimetableDownloaderMAUI).
 
 
 Bulk downloading of timetables from the ODIS public transport system in Northern Moravia and (a part of) Silesia (these lands are located 
