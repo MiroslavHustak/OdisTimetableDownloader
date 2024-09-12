@@ -6,6 +6,7 @@ module CloseApp =
     open Settings.Messages
 
     let internal closeItBaby err = 
+
         msgParam1 err      
         Console.ReadKey() |> ignore 
         System.Environment.Exit(1)  
@@ -64,7 +65,7 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
     open System
     
     [<CompiledName "CreateStringAcc">]      
-    let internal createStringAcc (strSeqNum : int, stringToAdd: string): string = 
+    let internal createStringAcc (strSeqNum : int, stringToAdd : string) : string = 
         
         let initialString = String.Empty   //initial value of the string
         let listRange = [ 1 .. strSeqNum ] 
@@ -81,7 +82,7 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
         loop listRange initialString
     
     [<CompiledName "CreateStringCps">]
-    let internal createStringCps (strSeqNum : int, stringToAdd: string): string =
+    let internal createStringCps (strSeqNum : int, stringToAdd : string): string =
 
         let listRange = [ 1 .. strSeqNum ]
         
@@ -95,7 +96,7 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
                   
     //List.reduce nelze, tam musi byt stejny typ acc a range      
     [<CompiledName "CreateStringSeqFold">] 
-    let internal createStringSeqFold (strSeqNum: int, stringToAdd: string): string =
+    let internal createStringSeqFold (strSeqNum : int, stringToAdd : string) : string =
 
         [1 .. strSeqNum]
         |> List.fold (fun acc i -> (+) acc stringToAdd) String.Empty
@@ -118,10 +119,11 @@ module CheckNetConnection =
      
             myPing.Send(host, timeout, buffer, pingOptions)
             |> (Option.ofNull >> Option.bind 
-                    (fun pingReply -> 
-                                    Option.fromBool
-                                        (pingReply |> ignore) 
-                                        ((=) pingReply.Status IPStatus.Success)                                           
+                    (fun pingReply 
+                        -> 
+                         Option.fromBool
+                         <| (pingReply |> ignore) 
+                         <| (=) pingReply.Status IPStatus.Success                                           
                     )
                ) 
         with
