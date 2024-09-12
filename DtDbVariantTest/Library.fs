@@ -164,13 +164,13 @@ module Test =
             let totalFileNumberDT = totalFileNumber pathDT              
             let totalFileNumberDB = totalFileNumber pathDB
 
-            let resultTotal = result totalFileNumberDT totalFileNumberDB 0
+            let resultTotal = result2 totalFileNumberDT totalFileNumberDB 0
            
             printfn "%s" resultTotal 
             printfn "Total number of all DT files: %A" totalFileNumberDT
             printfn "Total number of all DB files: %A\n" totalFileNumberDB  
 
-            printfn "Test chování generics 3: %s" <| resultGenericsTest totalFileNumberDT totalFileNumberDB 0
+            printfn "Test chování generics 3: %s" <| resultGenericsTest2 totalFileNumberDT totalFileNumberDB 0
 
             //*****************************************************************************            
 
