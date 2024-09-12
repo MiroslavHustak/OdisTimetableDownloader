@@ -54,7 +54,7 @@ module Test =
     open Settings
 
     //SRTPs
-    let inline private result (totalDT: Result< ^a, string>) (totalDB: Result< ^a, string>) (zero: ^a) =  //viz learning material ohledne generics a SRTPs
+    let inline private result (totalDT : Result< ^a, string>) (totalDB : Result< ^a, string>) (zero : ^a) =  //viz learning material ohledne generics a SRTPs
 
         pyramidOfHell
             {
@@ -63,7 +63,7 @@ module Test =
                 return "OK"
             }   
 
-    let inline private result2 (totalDT: Result< ^a, string>) (totalDB: Result< ^a, string>) (zero: ^a) =
+    let inline private result2 (totalDT : Result< ^a, string>) (totalDB : Result< ^a, string>) (zero : ^a) =
         totalDT
         |> Result.bind 
             (fun dt ->
@@ -79,7 +79,7 @@ module Test =
         |> function Ok result -> result | Error _ -> "Error EnumerateFiles"     
 
     //Generics 
-    let inline private resultGenericsTest (totalDT: Result< 'a, string>) (totalDB: Result< 'a, string>) (zero: 'a) =  
+    let inline private resultGenericsTest (totalDT : Result< 'a, string>) (totalDB : Result< 'a, string>) (zero : 'a) =  
 
         pyramidOfHell
             {
@@ -87,7 +87,7 @@ module Test =
                 return "OK"
             }   
 
-    let inline private resultGenericsTest2 (totalDT: Result<'a, string>) (totalDB: Result<'a, string>) (zero: 'a) =
+    let inline private resultGenericsTest2 (totalDT : Result<'a, string>) (totalDB : Result<'a, string>) (zero : 'a) =
 
         totalDT
         |> Result.bind 
