@@ -64,6 +64,7 @@ module Test =
             }   
 
     let inline private result2 (totalDT : Result< ^a, string>) (totalDB : Result< ^a, string>) (zero : ^a) =
+
         totalDT
         |> Result.bind 
             (fun dt ->
@@ -95,7 +96,7 @@ module Test =
                     totalDB
                     |> Result.map (fun _ -> "OK")
         )
-        |> function Ok result -> result | Error _   -> "Error EnumerateFiles"
+        |> function Ok result -> result | Error _ -> "Error EnumerateFiles"
             
     let private totalFileNumber path : Result<int, string> =
 
@@ -139,19 +140,19 @@ module Test =
                          let totalLengthDT_Byte = totalLength_Byte subPathDT
                          let totalLengthDB_Byte = totalLength_Byte subPathDB                            
 
-                         let resultTotal_Byte = result2 totalLengthDT_Byte totalLengthDB_Byte 0L                     
+                         let resultTotal_Byte = result totalLengthDT_Byte totalLengthDB_Byte 0L                     
                                               
                          let totalLengthDT_MB = totalLength_MB subPathDT                            
                          let totalLengthDB_MB = totalLength_MB subPathDB
                                                                  
-                         let resultTotal_MB = result2 totalLengthDT_MB totalLengthDB_MB 0.0
+                         let resultTotal_MB = result totalLengthDT_MB totalLengthDB_MB 0.0
                                                     
                          printfn "%s (%s)" resultTotal_Byte resultTotal_MB      
                          printfn "Total length of DT files: %A bytes (%A MB)" totalLengthDT_Byte totalLengthDT_MB
                          printfn "Total length of DB files: %A bytes (%A MB)\n" totalLengthDB_Byte totalLengthDB_MB
                          
-                         printfn "Test chování generics 1: %s" <| resultGenericsTest2 totalLengthDT_Byte totalLengthDB_Byte 0L
-                         printfn "Test chování generics 2: %s" <| resultGenericsTest2 totalLengthDT_MB totalLengthDB_MB 0.0
+                         printfn "Test chování generics 1: %s" <| resultGenericsTest totalLengthDT_Byte totalLengthDB_Byte 0L
+                         printfn "Test chování generics 2: %s" <| resultGenericsTest totalLengthDT_MB totalLengthDB_MB 0.0
                     )   
         | false -> 
                  printfn "\nUnbelievable Error"
@@ -164,13 +165,13 @@ module Test =
             let totalFileNumberDT = totalFileNumber pathDT              
             let totalFileNumberDB = totalFileNumber pathDB
 
-            let resultTotal = result2 totalFileNumberDT totalFileNumberDB 0
+            let resultTotal = result totalFileNumberDT totalFileNumberDB 0
            
             printfn "%s" resultTotal 
             printfn "Total number of all DT files: %A" totalFileNumberDT
             printfn "Total number of all DB files: %A\n" totalFileNumberDB  
 
-            printfn "Test chování generics 3: %s" <| resultGenericsTest2 totalFileNumberDT totalFileNumberDB 0
+            printfn "Test chování generics 3: %s" <| resultGenericsTest totalFileNumberDT totalFileNumberDB 0
 
             //*****************************************************************************            
 
