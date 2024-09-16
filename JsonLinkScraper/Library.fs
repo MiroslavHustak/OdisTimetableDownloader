@@ -17,7 +17,7 @@ module Settings =
         [
             "https://www.kodis.cz/lines/train"
             "https://www.kodis.cz/lines/region"
-            "https://www.kodis.cz/lines/city"
+            "https://www.kodis.cz/lines/city"           
         ]
 
     let internal keyword1 = "tab"
@@ -277,9 +277,10 @@ module Links =
 
     let internal capturedLinks executablePath =        
     
-        let resultingLinks = scrapeLinks executablePath |> Async.RunSynchronously 
+        let resultingLinks = scrapeLinks executablePath |> Async.RunSynchronously |> List.distinct
         
-        resultingLinks |> List.iter (printfn "Found link: %s")      
+        resultingLinks |> List.iter (printfn "Found link: %s")    
+        printfn "%s" <| String.replicate 70 "*"
         
         let capturedLinks links executablePath = 
 
@@ -290,11 +291,12 @@ module Links =
                        
         let capturedLinks1 = capturedLinks urlList executablePath
           
-        capturedLinks1 |> List.iter (printfn "Captured link: %s")
-
+        capturedLinks1 |> List.iter (printfn "Captured link 1 : %s")
         printfn "%s" <| String.replicate 70 "*"
+
+        let resultingLinks = List.append capturedLinks1 resultingLinks |> List.distinct
 
         let capturedLinks2 = capturedLinks resultingLinks executablePath
           
-        capturedLinks2 |> List.iter (printfn "Captured link: %s")
-        capturedLinks1, capturedLinks2
+        capturedLinks2 |> List.iter (printfn "Captured link 2 : %s")
+        capturedLinks2

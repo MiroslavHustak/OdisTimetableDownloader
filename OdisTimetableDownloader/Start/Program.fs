@@ -96,7 +96,7 @@ let main argv =
     *)
     
     //*****************************Console******************************  
-    let updateDate = "06-09-2024"
+    let updateDate = "16-09-2024"
 
     try
         consoleAppProblemFixer() 
@@ -318,13 +318,7 @@ let main argv =
 
             printfn "%s" <| String.replicate 70 "*"
         
-            match (fst capturedLinks) = (jsonLinkList3 |> List.sort) with
-            | true  -> printfn "Kontrola na odkazy v jsonLinkList3 proběhla v pořádku."
-            | false -> printfn "Chyba v odkazech v jsonLinkList3, nutno ověření."
-
-            printfn "%s" <| String.replicate 70 "*"
-
-            match (snd capturedLinks) = (jsonLinkList2 |> List.tail |> List.sort)  with
+            match capturedLinks = (jsonLinkList2 |> List.sort) with 
             | true  -> printfn "Kontrola na odkazy v jsonLinkList2 proběhla v pořádku."
             | false -> printfn "Chyba v odkazech v jsonLinkList2, nutno ověření."            
            

@@ -37,6 +37,7 @@ module SettingsKODIS =
     //Captured links to JSON files
     //Zatim neobsahuje kompletni JR !!!
     //Ponechat pro kontrolu
+    (*
     let internal jsonLinkList3 =
         [
             sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Brunt%C3%A1l&groups%5B1%5D=MHD%20%C4%8Cesk%C3%BD%20T%C4%9B%C5%A1%C3%ADn&groups%5B2%5D=MHD%20Fr%C3%BDdek-M%C3%ADstek&groups%5B3%5D=MHD%20Hav%C3%AD%C5%99ov&groups%5B4%5D=MHD%20Karvin%C3%A1&groups%5B5%5D=MHD%20Krnov&groups%5B6%5D=MHD%20Nov%C3%BD%20Ji%C4%8D%C3%ADn&groups%5B7%5D=MHD%20Opava&groups%5B8%5D=MHD%20Orlov%C3%A1&groups%5B9%5D=MHD%20Ostrava&groups%5B10%5D=MHD%20Stud%C3%A9nka&groups%5B11%5D=MHD%20T%C5%99inec&groups%5B12%5D=NAD%20MHD&start=0&limit=12"          
@@ -50,7 +51,8 @@ module SettingsKODIS =
             sprintf "%s%s" partialPathJson @"kodisRegionTotal2_0.json"            
             sprintf "%s%s" partialPathJson @"kodisTrainTotal2_0.json"
         ]  
-    
+    *)
+
     //*************************************** legacy code *********************************
 
     //Ponechat pro kontrolu (provadenou u DB verze)
@@ -135,6 +137,7 @@ module SettingsKODIS =
       
     let internal jsonLinkList2 =
         [
+            sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=232-293&start=24&limit=12"
             sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=613-699&start=48&limit=12"
             sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Brunt%C3%A1l&groups%5B1%5D=MHD%20%C4%8Cesk%C3%BD%20T%C4%9B%C5%A1%C3%ADn&groups%5B2%5D=MHD%20Fr%C3%BDdek-M%C3%ADstek&groups%5B3%5D=MHD%20Hav%C3%AD%C5%99ov&groups%5B4%5D=MHD%20Karvin%C3%A1&groups%5B5%5D=MHD%20Krnov&groups%5B6%5D=MHD%20Nov%C3%BD%20Ji%C4%8D%C3%ADn&groups%5B7%5D=MHD%20Opava&groups%5B8%5D=MHD%20Orlov%C3%A1&groups%5B9%5D=MHD%20Ostrava&groups%5B10%5D=MHD%20Stud%C3%A9nka&groups%5B11%5D=MHD%20T%C5%99inec&groups%5B12%5D=NAD%20MHD&start=0&limit=12"
             sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Brunt%C3%A1l&start=0&limit=12"
@@ -168,6 +171,7 @@ module SettingsKODIS =
   
     let internal pathToJsonList2 =     
         [
+            sprintf "%s%s" partialPathJson @"kodisRegion2002_1.json"
             sprintf "%s%s" partialPathJson @"kodisRegion6002_1.json"
             sprintf "%s%s" partialPathJson @"kodisMHDTotal2_0.json"
             sprintf "%s%s" partialPathJson @"kodisMHDBruntal2_0.json"
@@ -198,3 +202,67 @@ module SettingsKODIS =
             sprintf "%s%s" partialPathJson @"kodisTrainRychliky2_0.json"
             sprintf "%s%s" partialPathJson @"kodisNAD2_0.json"
         ] 
+    
+    let private codes = [ "0"; "12"; "24"; "48" ]
+
+    let private jsonLinkListPartial code =
+        [           
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Brunt%C3%A1l&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20%C4%8Cesk%C3%BD%20T%C4%9B%C5%A1%C3%ADn&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Fr%C3%BDdek-M%C3%ADstek&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Hav%C3%AD%C5%99ov&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Karvin%C3%A1&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Krnov&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Nov%C3%BD%20Ji%C4%8D%C3%ADn&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Opava&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Orlov%C3%A1&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Ostrava&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20Stud%C3%A9nka&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=MHD%20T%C5%99inec&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=NAD%20MHD&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=75&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=232-293&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=331-392&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=440-465&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=531-583&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=613-699&start=" code "&limit=12"          
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=731-788&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=811-885&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=901-990&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=S1-S34&start=" code "&limit=12"
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=R8-R62&start=" code "&limit=12"            
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=NAD&start=" code "&limit=12"            
+        ]
+
+    let internal jsonLinkList3 = codes |> List.collect (fun code -> jsonLinkListPartial code)
+          
+    let private pathToJsonListPartial code =     
+        [                     
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDBruntal2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDCT2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDFM2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDHavirov2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDKarvina2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDBKrnov2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDNJ2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDOpava2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDOrlova2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDOstrava2_" code ".json"           
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDStudenka2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDTrinec2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisMHDNAD2_" code ".json"            
+            sprintf "%s%s%s%s" partialPathJson @"kodisRegion752_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisRegion2002_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisRegion3002_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisRegion4002_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisRegion5002_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisRegion6002_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisRegion7002_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisRegion8002_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisRegion9002_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisTrainPomaliky2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisTrainRychliky2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisNAD2_" code ".json"
+        ] 
+
+    let internal pathToJsonList3 = codes |> List.collect (fun code -> pathToJsonListPartial code) 
