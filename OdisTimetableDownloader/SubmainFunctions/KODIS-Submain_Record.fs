@@ -939,8 +939,10 @@ module KODIS_SubmainRecord =
         //operation on data
         //input from saved json files -> change of input data -> output into seq >> input from seq -> change of input data -> output into datatable -> data filtering (links*paths)  
         
-        try digThroughJsonStructure >> filterTimetables () variant dir <| () |> Ok
-        with ex -> Error <| string ex.Message
+        try 
+            digThroughJsonStructure >> filterTimetables () variant dir <| () |> Ok
+        with
+        | ex -> Error <| string ex.Message
         
         |> function
             | Ok value  -> 
