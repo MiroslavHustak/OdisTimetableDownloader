@@ -57,6 +57,7 @@ module MDPO_Submain =
                                             let linkToPdf = sprintf"%s%s" pathMdpoWeb item2  //https://www.mdpo.cz // /qr/201.pdf
                                             let lineName (item2: string) = item2.Replace(@"/qr/", String.Empty)  
                                             let pathToFile lineName = sprintf "%s/%s" pathToDir lineName
+
                                             linkToPdf, (pathToFile << lineName) item2
                           )                          
                       |> Seq.distinct                 

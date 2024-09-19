@@ -1,4 +1,4 @@
-﻿namespace Database2
+﻿namespace Logging
 
 open Microsoft.Data.SqlClient
 

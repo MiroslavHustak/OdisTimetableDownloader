@@ -1,4 +1,4 @@
-﻿namespace Database2
+﻿namespace Logging
 
 open System
 open System.Data
@@ -15,7 +15,7 @@ module InsertInto =
 
     let internal insertLogEntries (connection : SqlConnection) =
 
-        let dataToBeInserted = Database2.LogFileData.extractLogEntriesThoth2 () 
+        let dataToBeInserted = Logging.LogFileData.extractLogEntriesThoth2 () 
 
         match dataToBeInserted.Length with
         | 0 -> 

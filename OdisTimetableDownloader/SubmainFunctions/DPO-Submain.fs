@@ -72,6 +72,7 @@ module DPO_Submain =
                       |> Seq.map 
                           (fun (_ , item2) ->  
                                             let linkToPdf = sprintf"%s%s" pathDpoWeb item2  //https://www.dpo.cz // /jr/2023-04-01/024.pdf 
+
                                             let adaptedLineName =
                                                 let s (item2: string) = item2.Replace(@"/jr/", String.Empty).Replace(@"/", "?").Replace(".pdf", String.Empty) 
                                                 let rec x s =                                                                            

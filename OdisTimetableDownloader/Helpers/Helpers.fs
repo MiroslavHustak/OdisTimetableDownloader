@@ -17,8 +17,10 @@ module ConsoleFixers =
 
     let internal consoleAppProblemFixer () = 
 
-        try Ok <| System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance)         
-        with ex -> Error (string ex.Message) 
+        try 
+            Ok <| System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance)         
+        with
+        | ex -> Error (string ex.Message) 
         
         |> function
             | Ok value  -> value
@@ -76,8 +78,8 @@ module MyString = //priklad pouziti: createStringSeq(8, "0")//tuple a compiled n
             | []        ->
                          acc
             | _ :: tail -> 
-                         let finalString = (+) acc stringToAdd  
-                         loop tail finalString  //Tail-recursive function calls that have their parameters passed by the pipe operator are not optimized as loops #6984
+                         let finalString = (+) 
+                         loop tail (finalString acc stringToAdd)       //Tail-recursive function calls that have their parameters passed by the pipe operator are not optimized as loops #6984
     
         loop listRange initialString
     

@@ -16,8 +16,8 @@ open Logging.Logging
 open Helpers.CloseApp  
 open Helpers.CommandLineWorkflow   
         
-open Database2.InsertInto
-open Database2.Connection
+open Logging.InsertInto
+open Logging.Connection
 
 open SubmainFunctions
 open SubmainFunctions.KODIS_Submain
@@ -218,7 +218,7 @@ module WebScraping_KODISFM =
         let endProcess = DateTime.Now
 
         try
-            let connection = Database2.Connection.getConnection2 ()
+            let connection = Logging.Connection.getConnection2 ()
 
             try
                 insertLogEntries connection
