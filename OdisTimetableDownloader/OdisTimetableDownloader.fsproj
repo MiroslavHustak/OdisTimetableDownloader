@@ -44,16 +44,18 @@
     <Compile Include="DataManipulation\DataTable\CreateDt.fs" />
     <Compile Include="DataManipulation\DataTable\InsertSelectSort.fs" />
     <Compile Include="SubmainFunctions\VariantCode\CollectionSplitting.fs" />
+    <Compile Include="SubmainFunctions\VariantCode\KODIS-Submain_Record.fs" />
     <Compile Include="SubmainFunctions\VariantCode\KODIS-Submain_Database.fs" />
     <Compile Include="SubmainFunctions\VariantCode\KODIS-Submain_DataTable.fs" />
     <Compile Include="SubmainFunctions\DPO-Submain.fs" />
-    <Compile Include="SubmainFunctions\KODIS-Submain_Record.fs" />
     <Compile Include="SubmainFunctions\MDPO-Submain.fs" />
+    <Compile Include="SubmainFunctions\KODIS-Submain_Record3.fs" />
+    <Compile Include="AppStructure\VariantCode\KODIS_Record.fs" />
     <Compile Include="AppStructure\VariantCode\KODIS_DataTable.fs" />
     <Compile Include="AppStructure\VariantCode\KODIS_Database.fs" />
     <Compile Include="AppStructure\DPO.fs" />
-    <Compile Include="AppStructure\KODIS_Record.fs" />
     <Compile Include="AppStructure\MDPO.fs" />
+    <Compile Include="AppStructure\KODIS_Record3.fs" />
     <Compile Include="Start\Program.fs" />
   </ItemGroup>
 
@@ -73,7 +75,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DialogWindows\DialogWindows.fsproj" />
-    <ProjectReference Include="..\DtDbVariantTest\DtDbVariantTest.fsproj" />
+    <ProjectReference Include="..\DtDbMVariantTest\DtDbMVariantTest.fsproj" />
     <ProjectReference Include="..\EmbeddedTP\EmbeddedTP.fsproj" />
     <ProjectReference Include="..\JsonLinkScraper\JsonLinkScraper.fsproj" />
     <ProjectReference Include="..\MyFsToolkit\MyFsToolkit.fsproj" />

@@ -5,6 +5,6 @@ module AssemblyInfo =
     open System.Runtime.CompilerServices
 
     [<assembly : InternalsVisibleTo("OdisTimetableDownloader")>]
-    [<assembly : InternalsVisibleTo("DtDbVariantTest")>]
+    [<assembly : InternalsVisibleTo("DtDbMVariantTest")>]
     [<assembly : InternalsVisibleTo("JsonLinkScraper")>]
     do ()

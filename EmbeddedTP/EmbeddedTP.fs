@@ -1,5 +1,6 @@
 ﻿namespace EmbeddedTP
 
+open System
 open FSharp.Data
 
 module EmbeddedTP =
@@ -11,8 +12,19 @@ module EmbeddedTP =
 
     type JsonProvider2 =
         JsonProvider<"KODISJson/kodisMHDTotal2_0.json", EmbeddedResource = "EmbeddedTP, EmbeddedTP.KODISJson.kodisMHDTotal2_0.json", ResolutionFolder = ResolutionFolder>
+        
+    let pathkodisMHDTotal = 
+        try
+            System.IO.Path.Combine(ResolutionFolder, @"KODISJson/kodisMHDTotal.json")
+        with
+        |_ -> String.Empty
 
-   
+    let pathkodisMHDTotal2_0 = 
+        try
+            System.IO.Path.Combine(ResolutionFolder, @"KODISJson/kodisMHDTotal2_0.json")
+        with
+        |_ -> String.Empty
+                   
     (*
     //pripominka, co je treba dat navic do fsproj nebo nastavit v properties (EmbeddedResource)
     <Project Sdk="Microsoft.NET.Sdk">

@@ -237,7 +237,9 @@ let main argv =
                                             
                                          Console.Clear()
                                             
-                                         webscraping_KODISFMRecord path variant //record-based app 
+                                         MainFunctions3.WebScraping_KODISFMRecord3.webscraping_KODISFMRecord3 path variant
+                                         //webscraping_KODISFMRecord path variant //record-based app 
+                                         
                                          //webscraping_KODISFMDataTable path variant //datatable-based app
                                          //webscraping_KODISFM path variant //database-based app
                                             
@@ -353,16 +355,27 @@ let main argv =
                        Console.ReadKey() |> ignore
 
                        variant()
-            | "70800" -> 
+            | "70900" -> 
                        printfn "\nTrefil jsi zrovna kód pro přístup k testování počtu a velikosti stažených souborů."
                        printfn "Gratuluji, ale pokud nevíš, co test obnáší, raději ukonči tento program ... \n"  
                    
-                       DtDbVariantTest.Test.main () 
+                       DtDbMVariantTest.Test.main () 
 
                        printfn "Stiskni cokoliv pro návrat na hlavní stránku."
                        Console.ReadKey() |> ignore
 
                        variant()  
+            | "70800" -> 
+                       printfn "\nTrefil jsi zrovna kód pro přístup k testování počtu a velikosti stažených souborů."
+                       printfn "Gratuluji, ale pokud nevíš, co test obnáší, raději ukonči tento program ... \n"  
+            
+                       DtDbMVariantTest.Test2.main () 
+
+                       printfn "Stiskni cokoliv pro návrat na hlavní stránku."
+                       Console.ReadKey() |> ignore
+
+                       variant()  
+                
             | _       ->
                        printfn "Varianta nebyla vybrána. Prosím zadej znovu."
                        variant()
