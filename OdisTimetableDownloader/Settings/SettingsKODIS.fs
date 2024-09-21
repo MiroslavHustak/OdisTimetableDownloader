@@ -55,7 +55,7 @@ module SettingsKODIS =
 
     //*************************************** legacy code *********************************
 
-    //Json Provider 1. Bohuzel stale neco v tom je, aji kdyz je to stare. Zkontrolovat cas od casu, jestli uz v KODISu dostali rozum. 
+    //Json Provider 1 
     let internal jsonLinkList = //pri zmene jsonu na strankach KODISu zmenit aji nazev souboru, napr. kodisRegion3001.json
         [
             sprintf "%s%s" pathKodisWeb @"linky?_limit=12&_start=12&group_in%5B0%5D=MHD%20Bruntál&group_in%5B1%5D=MHD%20Český%20Těšín&group_in%5B2%5D=MHD%20Frýdek-Místek&group_in%5B3%5D=MHD%20Havířov&group_in%5B4%5D=MHD%20Karviná&group_in%5B5%5D=MHD%20Krnov&group_in%5B6%5D=MHD%20Nový%20Jičín&group_in%5B7%5D=MHD%20Opava&group_in%5B8%5D=MHD%20Orlová&group_in%5B9%5D=MHD%20Ostrava&group_in%5B10%5D=MHD%20Studénka&group_in%5B11%5D=MHD%20Třinec&group_in%5B12%5D=NAD%20MHD&_sort=numeric_label"
@@ -95,7 +95,7 @@ module SettingsKODIS =
             sprintf "%s%s" pathKodisWeb @"linky?_limit=12&_start=0&group_in%5B0%5D=NAD&_sort=numeric_label" 
         ]  
         
-    //Json Provider 1. Bohuzel stale neco v tom je, aji kdyz je to stare. Zkontrolovat cas od casu, jestli uz v KODISu dostali rozum. 
+    //Json Provider 1 
     let internal pathToJsonList =     
         [
             sprintf "%s%s" partialPathJson @"kodisMHDTotal1.json"
@@ -205,7 +205,7 @@ module SettingsKODIS =
             sprintf "%s%s" partialPathJson @"kodisNAD2_0.json"
         ] 
         
-    let private codes = [ "0"; "12"; "24"; "48" ] //let s = "{\"data\":[],\"meta\""
+    let private codes = [ "0"; "12"; "24"; "48"; "60"; "72" ] //let s = "{\"data\":[],\"meta\""
         
     //Json Provider 2 
     let private jsonLinkListPartial code =
