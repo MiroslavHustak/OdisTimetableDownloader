@@ -945,26 +945,26 @@ module KODIS_SubmainRecord3 =
     let internal downloadAndSave = 
 
          reader
-            {    
-                let! context = fun env -> env
+             {    
+                 let! context = fun env -> env
                 
-                return
-                    match context.dir |> Directory.Exists with 
-                    | false ->
-                             msgParam5 context.dir 
-                             msg13 ()    
-                             logInfoMsg <| sprintf "Err019A, directory %s does not exist" context.dir
-                    | true  ->
-                             try
-                                 //input from data filtering (links * paths) -> http request -> saving pdf files on HD
-                                 match context.list with
-                                 | [] ->
-                                       msgParam13 context.dir       
-                                 | _  ->
-                                       downloadAndSaveTimetables context  
-                                       msgParam4 context.dir  
-                             with
-                             | ex -> 
-                                   logInfoMsg <| sprintf "Err019 %s" (string ex.Message)
-                                   closeItBaby msg16   
-            }               
+                 return
+                     match context.dir |> Directory.Exists with 
+                     | false ->
+                              msgParam5 context.dir 
+                              msg13 ()    
+                              logInfoMsg <| sprintf "Err019A, directory %s does not exist" context.dir
+                     | true  ->
+                              try
+                                  //input from data filtering (links * paths) -> http request -> saving pdf files on HD
+                                  match context.list with
+                                  | [] ->
+                                        msgParam13 context.dir       
+                                  | _  ->
+                                        downloadAndSaveTimetables context  
+                                        msgParam4 context.dir  
+                              with
+                              | ex -> 
+                                    logInfoMsg <| sprintf "Err019 %s" (string ex.Message)
+                                    closeItBaby msg16   
+             }               
