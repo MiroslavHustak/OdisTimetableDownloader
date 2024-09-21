@@ -120,7 +120,7 @@ module WebScraping_KODISFMRecord3 =
 
                                                                  msg10 () 
 
-                                                                 let dir = (dirList |> List.head)
+                                                                 let dir = dirList |> List.head
 
                                                                  //operation on data 
                                                                  //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into datatable -> data filtering (link*path)  

@@ -105,6 +105,7 @@ module MsgBoxClosing =
                                               | DialogResult.OK -> System.Environment.Exit(1)                                                                               
                                               | _               -> ()   
                                           return! loop (n + i)
+
                             | Fetch replyChannel
                                 ->
                                  replyChannel.Reply n 
@@ -117,41 +118,42 @@ module MsgBoxClosing =
 
         MailboxProcessor.Start
             (fun inbox 
-                  ->
-                   let rec loop isFirst =
-                       async
-                           {                               
-                               match! inbox.Receive() with
-                               | First x when isFirst //flag momentalne nepotrebny, ale ponechavam pro mozne vyuziti pri zmene
-                                   ->                 //parametr x ve flag momentalne nepotrebny, ale ponechavam pro mozne vyuziti pri zmene
-                                    let result () =
-                                        let result = 
-                                            MessageBox.Show
-                                                (
-                                                    msg18, 
-                                                    boxJsonTitle, 
-                                                    MessageBoxButtons.OK
-                                                ) 
+                ->
+                 let rec loop isFirst =
+                     async
+                         {                               
+                             match! inbox.Receive() with
+                             | First x when isFirst //flag momentalne nepotrebny, ale ponechavam pro mozne vyuziti pri zmene
+                                 ->                 //parametr x ve flag momentalne nepotrebny, ale ponechavam pro mozne vyuziti pri zmene
+                                  let result () =
+                                      let result = 
+                                          MessageBox.Show
+                                              (
+                                                  msg18, 
+                                                  boxJsonTitle, 
+                                                  MessageBoxButtons.OK
+                                              ) 
 
-                                        AsyncSeq.initInfinite (fun _ -> result <> DialogResult.OK)
-                                        |> AsyncSeq.takeWhile ((<>) true) 
-                                        |> AsyncSeq.iterAsync (fun _ -> async { do! Async.Sleep(waitingTime) }) 
-                                        |> Async.StartImmediate 
+                                      AsyncSeq.initInfinite (fun _ -> result <> DialogResult.OK)
+                                      |> AsyncSeq.takeWhile ((<>) true) 
+                                      |> AsyncSeq.iterAsync (fun _ -> async { do! Async.Sleep(waitingTime) }) 
+                                      |> Async.StartImmediate 
                                             
-                                    let rec keepOneMsgBox () = 
-                                        match findMsgBox boxJsonTitle with
-                                        | true  -> 
-                                                 clickOnOKButton boxJsonTitle
-                                                 keepOneMsgBox ()
-                                        | false ->                                                                
-                                                 result ()   
+                                  let rec keepOneMsgBox () = 
+                                      match findMsgBox boxJsonTitle with
+                                      | true  -> 
+                                               clickOnOKButton boxJsonTitle
+                                               keepOneMsgBox ()
+                                      | false ->                                                                
+                                               result ()   
                                                  
-                                    keepOneMsgBox ()  
+                                  keepOneMsgBox ()  
                                      
-                                    return! loop false // Set isFirst to false to ignore subsequent messages
-                               | _ ->                      
-                                    return! loop isFirst
-                           }
+                                  return! loop false // Set isFirst to false to ignore subsequent messages
 
-                   loop true // Start with isFirst set to true
+                             | _ ->                      
+                                  return! loop isFirst
+                         }
+
+                 loop true // Start with isFirst set to true
             )     
