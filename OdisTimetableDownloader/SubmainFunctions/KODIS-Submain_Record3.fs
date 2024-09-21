@@ -927,8 +927,7 @@ module KODIS_SubmainRecord3 =
     let internal operationOnDataFromJson () variant dir =   
 
         //operation on data
-        //input from saved json files -> change of input data -> output into seq >> input from seq -> change of input data -> output into datatable -> data filtering (links*paths)  
-        
+        //input from saved json files -> change of input data -> output into seq >> input from seq -> change of input data -> output into datatable -> data filtering (links*paths)          
         try 
             digThroughJsonStructure >> filterTimetables () variant dir <| () |> Ok
         with
