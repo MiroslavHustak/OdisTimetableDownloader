@@ -17,13 +17,13 @@ module EmbeddedTP =
         try
             System.IO.Path.Combine(ResolutionFolder, @"KODISJson/kodisMHDTotal.json")
         with
-        |_ -> String.Empty
+        | _ -> String.Empty
 
     let pathkodisMHDTotal2_0 = 
         try
             System.IO.Path.Combine(ResolutionFolder, @"KODISJson/kodisMHDTotal2_0.json")
         with
-        |_ -> String.Empty
+        | _ -> String.Empty
                    
     (*
     //pripominka, co je treba dat navic do fsproj nebo nastavit v properties (EmbeddedResource)
