@@ -295,8 +295,8 @@ module Links =
         printfn "%s" <| String.replicate 70 "*"
 
         let resultingLinks = List.append capturedLinks1 resultingLinks |> List.distinct
-
         let capturedLinks2 = capturedLinks resultingLinks executablePath
           
         capturedLinks2 |> List.iter (printfn "Captured link 2 : %s")
+
         capturedLinks2

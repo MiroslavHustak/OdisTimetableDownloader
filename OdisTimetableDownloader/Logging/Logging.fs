@@ -19,39 +19,33 @@ module Logging =
     // Function to format log entry as JSON array
     let private formatLogEntry (msg : LogMessage) =
 
-        try
-            let sb = System.Text.StringBuilder()
-            
-            use sw = new System.IO.StringWriter(sb) 
-            use jsonWriter = new JsonTextWriter(sw) 
+        let sb = System.Text.StringBuilder()
+       
+        let result = (>>) Option.ofNullEmpty Result.fromOption <| sb
 
-            try     
-                jsonWriter.WriteStartArray()
-                jsonWriter.WriteValue(string DateTime.Now)
-                //jsonWriter.WriteValue(string msg.LogLevel)
+        match result with
+        | Ok result ->            
+                     use sw = new System.IO.StringWriter(sb) //neni treba try-with, sb nebude null
+                     use jsonWriter = new JsonTextWriter(sw) 
+          
+                     jsonWriter.WriteStartArray()
+                     jsonWriter.WriteValue(string DateTime.Now)
+                     //jsonWriter.WriteValue(string msg.LogLevel)
 
-                jsonWriter.WriteValue(msg.LogName)
-                //jsonWriter.WriteValue(msg.EventId.Id)
+                     jsonWriter.WriteValue(msg.LogName)
+                     //jsonWriter.WriteValue(msg.EventId.Id)
 
-                jsonWriter.WriteValue(msg.Message)
-                jsonWriter.WriteEndArray()
+                     jsonWriter.WriteValue(msg.Message)
+                     jsonWriter.WriteEndArray()
 
-                (>>) Option.ofNullEmpty Result.fromOption <| sb             
+                     result
 
-            finally
-                ()
-                //sw.Dispose()
-                //jsonWriter.Close()
+        | Error err -> 
+                     printfn "%s" "Err2001"
+                     printfn "%s" err //proste s tim nic nezrobime, kdyz to nebude fungovat...
 
-        with ex -> Error <| string ex.Message
-                                   
-        |> function
-            | Ok value  -> 
-                         value  
-            | Error err ->
-                         printfn "%s" "Err2001"
-                         printfn "%s" err //proste s tim nic nezrobime, kdyz to nebude fungovat...
-                         String.Empty  
+                     String.Empty      
+  
 
     //***************************Log files******************************       
     
