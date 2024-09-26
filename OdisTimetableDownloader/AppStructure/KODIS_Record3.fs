@@ -104,7 +104,7 @@ module WebScraping_KODISFMRecord3 =
                                                             match variantList |> List.length with
                                                             //SingleVariantDownload
                                                             | 1 -> 
-                                                                 let variant = variantList |> List.head
+                                                                 let variant = variantList |> List.head //neni treba tryHead
 
                                                                  //IO operation
                                                                  KODIS_SubmainRecord3.deleteOneODISDirectory variant pathToDir 
@@ -120,7 +120,7 @@ module WebScraping_KODISFMRecord3 =
 
                                                                  msg10 () 
 
-                                                                 let dir = dirList |> List.head
+                                                                 let dir = dirList |> List.tryHead |> function Some value -> value | None -> String.Empty    
 
                                                                  //operation on data 
                                                                  //input from saved json files -> change of input data -> output into seq -> input from seq -> change of input data -> output into datatable -> data filtering (link*path)  

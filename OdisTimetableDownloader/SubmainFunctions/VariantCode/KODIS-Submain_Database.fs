@@ -138,7 +138,10 @@ module KODIS_Submain =
                 let! value = result |> Result.sequence, errorFn2 
                 let! value = value |> Result.sequence, errorFn1
 
-                return value |> List.head
+                return 
+                    value 
+                    |> List.tryHead 
+                    |> function Some value -> value | None -> ()
             }           
     
     //input from saved json files -> change of input data -> output into seq
@@ -949,7 +952,9 @@ module KODIS_Submain =
                                               logInfoMsg <| sprintf "Err014 %s" (string err.Message)
                                               msgParam2 uri  //nechame chybu projit v loop => nebude Result.sequence
                         )  
-                    |> List.head 
+                    |> List.tryHead 
+                    |> function Some value -> value | None -> ()
+
             } 
      
     let internal operationOnDataFromJson () dt variant dir =   

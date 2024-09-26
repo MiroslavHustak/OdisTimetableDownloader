@@ -132,8 +132,10 @@ module InsertSelectSort =
                     } 
 
                 let dataTransformation row =                                 
-                    try Ok (dtDataDtoGetDataTable >> dtDataTransformLayerGet <| row)                  
-                    with ex -> Error <| string ex.Message
+                    try 
+                        Ok (dtDataDtoGetDataTable >> dtDataTransformLayerGet <| row)                  
+                    with
+                    | ex -> Error <| string ex.Message
                                        
                     |> function
                         | Ok value  -> 
@@ -150,7 +152,8 @@ module InsertSelectSort =
                     | FutureValidity ->                             
                                       seqFromDataTable    
                                       |> Seq.groupBy (fun row -> (row |> dataTransformation).PartialLink)
-                                      |> Seq.map (fun (partialLink, group) -> group |> Seq.head)
+                                      |> Seq.map (fun (partialLink, group) -> group |> Seq.tryHead)
+                                      |> Seq.choose id
                                       |> Seq.filter
                                           (fun row ->
                                                     let startDate = (row |> dataTransformation).StartDate |> function StartDateDt value -> value
@@ -171,7 +174,8 @@ module InsertSelectSort =
                     | _              -> 
                                       seqFromDataTable
                                       |> Seq.groupBy (fun row -> (row |> dataTransformation).PartialLink)
-                                      |> Seq.map (fun (partialLink, group) -> group |> Seq.head)
+                                      |> Seq.map (fun (partialLink, group) -> group |> Seq.tryHead)
+                                      |> Seq.choose id
                                       |> Seq.filter
                                           (fun row ->
                                                     let startDate = (row |> dataTransformation).StartDate |> function StartDateDt value -> value
@@ -186,7 +190,7 @@ module InsertSelectSort =
                                           (fun (newPrefix, group)
                                               ->
                                                newPrefix, 
-                                               group |> Seq.head
+                                               group |> Seq.head //nelze tryHead quli tuple
                                           )
                                       |> Seq.map
                                           (fun (newPrefix, row) 
@@ -200,7 +204,8 @@ module InsertSelectSort =
             finally
                 dt.Clear()               
     
-        with ex -> Error <| string ex.Message
+        with 
+        | ex -> Error <| string ex.Message
         
         |> function
             | Ok value  -> 

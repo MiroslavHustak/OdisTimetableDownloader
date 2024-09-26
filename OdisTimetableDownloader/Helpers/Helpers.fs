@@ -15,7 +15,7 @@ module ConsoleFixers =
 
     open System
 
-    let internal consoleAppProblemFixer () = 
+    let internal consoleAppProblemFixer () = //tady je jistejsi try-with, neni mi jasne, ktery provider moze byt null
 
         try 
             Ok <| System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance)         
@@ -291,7 +291,7 @@ module CopyOrMoveFilesFM =
                                            | Error e, _ -> Error e
                                            | _, Error e -> Error e      
 
-    let internal copyOrMoveFiles config io =
+    let internal copyOrMoveFiles config io =  //v pripade pouziti hodit do try-with bloku
 
         cmdBuilder
             {
@@ -301,4 +301,4 @@ module CopyOrMoveFilesFM =
                 return! Free (CopyOrMove (sourceFilepath, destinFilepath))
             }
 
-        |> interpret config io
+        |> interpret config io  

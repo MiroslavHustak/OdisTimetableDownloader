@@ -48,7 +48,10 @@ module Result =
                                     | Ok _      -> String.Empty
                                     | Error err -> err
                          )
-                         |> List.head //One exception or None is enough for the calculation to fail
+                         |> List.tryHead //One exception or None is enough for the calculation to fail
+                         |> function
+                             | Some value -> value
+                             | None       -> String.Empty
                  Error err
             | _ ->
                  let okList = 

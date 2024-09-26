@@ -18,7 +18,8 @@ module Connection =
             let connection = new SqlConnection(connString2)
             connection.Open()
             Ok connection   
-        with ex -> Error <| string ex.Message
+        with 
+        | ex -> Error <| string ex.Message
                         
         |> function
             | Ok value  -> 
@@ -31,9 +32,12 @@ module Connection =
     let internal closeConnection (connection: SqlConnection) =  
         
         try
-            try Ok <| connection.Close()                
-            finally connection.Dispose()
-        with ex -> Error <| string ex.Message
+            try 
+                Ok <| connection.Close()                
+            finally
+                connection.Dispose()
+        with 
+        | ex -> Error <| string ex.Message
                         
         |> function
             | Ok value  -> 

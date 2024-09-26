@@ -38,6 +38,7 @@ module Links =
    
        async
            {
+                //try with quli Async.AwaitTask, coz "snad" moze vyhodit exn
                 try
                     // Define the URL and the keyword to filter the network requests   
                     let launchOptions =                       

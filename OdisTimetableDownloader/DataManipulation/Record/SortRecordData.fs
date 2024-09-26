@@ -17,12 +17,11 @@ open Settings.SettingsKODIS
 
 open DataModelling.DataModel
 
-//chyby vezme tryWith Err18
 module SortRecordData =  
        
     let internal sortLinksOut (dataToBeInserted : RcData list) validity = 
                
-        try            
+        try //musi byt quli Seq.head        
             try          
                 let condition dateValidityStart dateValidityEnd currentTime (fileToBeSaved : string) = 
 
@@ -76,7 +75,8 @@ module SortRecordData =
                     | FutureValidity ->  
                                       dataToBeInserted                                                                           
                                       |> Seq.groupBy (fun row -> row.PartialLinkRc)
-                                      |> Seq.map (fun (partialLink, group) -> group |> Seq.head)
+                                      |> Seq.map (fun (partialLink, group) -> group |> Seq.tryHead)
+                                      |> Seq.choose id
                                       |> Seq.filter
                                           (fun row ->
                                                     let startDate = 
@@ -103,7 +103,8 @@ module SortRecordData =
                     | _              -> 
                                       dataToBeInserted  
                                       |> Seq.groupBy (fun row -> row.PartialLinkRc)
-                                      |> Seq.map (fun (partialLink, group) -> group |> Seq.head)
+                                      |> Seq.map (fun (partialLink, group) -> group |> Seq.tryHead)
+                                      |> Seq.choose id
                                       |> Seq.filter
                                           (fun row ->
                                                     let startDate = 
@@ -124,7 +125,7 @@ module SortRecordData =
                                           (fun (newPrefix, group)
                                               ->
                                                newPrefix, 
-                                               group |> Seq.head
+                                               group |> Seq.head //nelze tryHead quli tuple
                                           )
                                       |> Seq.map
                                           (fun (newPrefix, row) 
@@ -138,7 +139,8 @@ module SortRecordData =
             finally
                ()               
     
-        with ex -> Error <| string ex.Message
+        with 
+        | ex -> Error <| string ex.Message
         
         |> function
             | Ok value  -> 

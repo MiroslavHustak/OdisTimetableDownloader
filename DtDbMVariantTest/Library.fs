@@ -73,7 +73,7 @@ module Test =
     //SRTPs
     let inline private result (totalDT : Result< ^a, string>) (totalDB : Result< ^a, string>) (zero : ^a) =  //viz learning material ohledne generics a SRTPs
 
-        pyramidOfHell
+        pyramidOfHell  //List.tryHead nestoji za tu namahu
             {
                 let! _ = Result.isOk totalDT && Result.isOk totalDB, "Error EnumerateFiles"
                 let! _ = (totalDT |> Result.toList |> List.head) - (totalDB |> Result.toList |> List.head) = zero, "Error"
@@ -219,7 +219,7 @@ module Test2 =
     //SRTPs
     let inline private result (totalDT : Result< ^a, string>) (totalM : Result< ^a, string>) (zero : ^a) =  //viz learning material ohledne generics a SRTPs
 
-        pyramidOfHell
+        pyramidOfHell  //List.tryHead nestoji za tu namahu
             {
                 let! _ = Result.isOk totalDT && Result.isOk totalM, "Error EnumerateFiles"
                 let! _ = (totalDT |> Result.toList |> List.head) - (totalM |> Result.toList |> List.head) = zero, "Error"
@@ -352,7 +352,7 @@ module Test2 =
 
 let inline private result (totalDT: Result< ^a, string>) (totalDB: Result< ^a, string>) (zero: ^a) =  
 
-    pyramidOfHell
+    pyramidOfHell   //List.tryHead nestoji za tu namahu
         {
             let! _ = Result.isOk totalDT && Result.isOk totalDB, "Error EnumerateFiles"
             let! _ = (totalDT |> Result.toList |> List.head) - (totalDB |> Result.toList |> List.head) = zero, "Error"
