@@ -145,10 +145,10 @@ module CopyOrMoveFiles = //output -> Result type
                 let! sourceFilepath = Path.GetFullPath(source) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" source
                 let! destinFilepath = Path.GetFullPath(destination) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" destination
 
-                let fInfodat : FileInfo = new FileInfo(sourceFilepath)  
+                let fInfodat : FileInfo = FileInfo sourceFilepath  
                 let! _ = fInfodat.Exists |> Option.ofBool, Error <| sprintf "Zdrojový soubor %s neexistuje" sourceFilepath 
 
-                let dInfodat : DirectoryInfo = new DirectoryInfo(destinFilepath) //Overit vhodnost pred pouzitim
+                let dInfodat : DirectoryInfo = DirectoryInfo destinFilepath //Overit vhodnost pred pouzitim
                 let! _ = dInfodat.Exists |> Option.ofBool, Error <| sprintf "Destinační adresář %s neexistuje" destinFilepath  //Overit vhodnost pred pouzitim
                                     
                 return Ok <| action sourceFilepath destinFilepath
@@ -256,7 +256,7 @@ module CopyOrMoveFilesFM =
                                                   let! value = Path.GetFullPath(source) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" source   
                                                   let! value = 
                                                       (
-                                                          let fInfodat: FileInfo = new FileInfo(value)   
+                                                          let fInfodat: FileInfo = FileInfo value   
                                                           Option.fromBool value fInfodat.Exists
                                                       ), Error <| sprintf "Zdrojový soubor %s neexistuje" value
                                                   return Ok value
@@ -272,7 +272,7 @@ module CopyOrMoveFilesFM =
                                                   (*
                                                       let! value = 
                                                           (
-                                                              let dInfodat: DirectoryInfo = new DirectoryInfo(value)   
+                                                              let dInfodat: DirectoryInfo = DirectoryInfo value   
                                                               Option.fromBool value dInfodat.Exists
                                                           ), Error <| sprintf "Chyba při čtení cesty k %s" value
                                                   *) 

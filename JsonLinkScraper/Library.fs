@@ -42,7 +42,7 @@ module Links =
                 try
                     // Define the URL and the keyword to filter the network requests   
                     let launchOptions =                       
-                        new LaunchOptions
+                        LaunchOptions
                             (
                                 Headless = true,
                                 ExecutablePath = executablePath
@@ -54,11 +54,11 @@ module Links =
                             | None       -> 
                                           printfn "Error in scrapeLinks: %s" "LaunchOptions -> null"
                                           closeTest ()
-                                          new LaunchOptions
-                                                (
-                                                    Headless = true,
-                                                    ExecutablePath = executablePath
-                                                )                       
+                                          LaunchOptions
+                                              (
+                                                  Headless = true,
+                                                  ExecutablePath = executablePath
+                                              )                       
                    
                     use! browser =
                         Puppeteer.LaunchAsync(launchOptions)       
@@ -151,7 +151,7 @@ module Links =
             {   
                 try
                     let launchOptions =                       
-                        new LaunchOptions
+                        LaunchOptions
                             (
                                 Headless = true,
                                 ExecutablePath = executablePath 
@@ -163,11 +163,11 @@ module Links =
                             | None       -> 
                                           printfn "Error in captureNetworkRequest: %s" "LaunchOptions -> null"
                                           closeTest ()
-                                          new LaunchOptions
-                                                (
-                                                    Headless = true,
-                                                    ExecutablePath = executablePath
-                                                )  
+                                          LaunchOptions
+                                              (
+                                                  Headless = true,
+                                                  ExecutablePath = executablePath
+                                              )  
                    
                     use! browser =
                         Puppeteer.LaunchAsync(launchOptions)       

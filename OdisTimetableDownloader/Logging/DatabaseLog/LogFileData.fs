@@ -40,7 +40,7 @@ module LogFileData =
                         let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
                         let! filepath = filepath, Error (sprintf "%s%s" "Chyba při čtení cesty k souboru " logFileName)
             
-                        let fInfodat: FileInfo = new FileInfo(logFileName)
+                        let fInfodat: FileInfo = FileInfo logFileName
                         let! _ = fInfodat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName) 
         
                         //toto je fakticky custom-made deserializace s pouzitim Thoth pro decoding Json
@@ -122,7 +122,7 @@ module LogFileData =
                         let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
                         let! filepath = filepath, Error (sprintf "Chyba při čtení cesty k souboru %s" logFileName)
     
-                        let fInfoDat = new FileInfo(logFileName)
+                        let fInfoDat = FileInfo logFileName
                         let! _ = fInfoDat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName)
                         
                         //For small to medium files, File.ReadAllLines is usually faster
@@ -194,7 +194,7 @@ module LogFileData =
                 let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
                 let! filepath = filepath, Error (sprintf "%s%s" "Chyba při čtení cesty k souboru " logFileName)
     
-                let fInfodat: FileInfo = new FileInfo(logFileName)
+                let fInfodat: FileInfo = FileInfo logFileName
                 let! _ =  fInfodat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName) 
                                            
                 return 

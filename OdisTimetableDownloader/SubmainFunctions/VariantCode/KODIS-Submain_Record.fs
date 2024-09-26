@@ -145,7 +145,7 @@ module KODIS_SubmainRecord =
                                          {
                                              let filepath = Path.GetFullPath(pathToJson) //pathToJson pod kontrolou, filepath nebude null
                                                 
-                                             let fInfoDat = new FileInfo(pathToJson)
+                                             let fInfoDat = FileInfo pathToJson
                                              let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty                                             
                                             
                                              return File.ReadAllText(pathToJson) //pathToJson pod kontrolou, fs nebude null                                            
@@ -202,7 +202,7 @@ module KODIS_SubmainRecord =
                                          {
                                              let filepath = Path.GetFullPath(pathToJson) //pathToJson pod kontrolou, filepath nebude null
                                              
-                                             let fInfoDat = new FileInfo(pathToJson)
+                                             let fInfoDat = FileInfo pathToJson
                                              let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
                                                                                  
                                              return File.ReadAllText(pathToJson) //pathToJson pod kontrolou, fs nebude null                
@@ -318,7 +318,7 @@ module KODIS_SubmainRecord =
                                              {
                                                  let filepath = Path.GetFullPath(pathToJson) //pathToJson pod kontrolou, filepath nebude null
                                                  
-                                                 let fInfoDat = new FileInfo(pathToJson)
+                                                 let fInfoDat = FileInfo pathToJson
                                                  let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty                                             
                                             
                                                  return File.ReadAllText(pathToJson) //pathToJson pod kontrolou, fs nebude null                
@@ -424,7 +424,7 @@ module KODIS_SubmainRecord =
             
             try
                 let pattern = @"202[3-9]_[0-1][0-9]_[0-3][0-9]_202[4-9]_[0-1][0-9]_[0-3][0-9]"
-                let regex = new Regex(pattern) 
+                let regex = Regex pattern 
                 let matchResult = regex.Match(input)
         
                 match matchResult.Success with
@@ -445,7 +445,7 @@ module KODIS_SubmainRecord =
 
             try
                 let pattern = @"202[3-9]_[0-1][0-9]_[0-3][0-9]_202[4-9]_[0-1][0-9]_[0-3][0-9]"
-                let regex = new Regex(pattern) 
+                let regex = Regex pattern 
                 let matchResult = regex.Match(input)
         
                 match matchResult.Success with
@@ -738,7 +738,7 @@ module KODIS_SubmainRecord =
                     return 
                         try
                             //rozdil mezi Directory a DirectoryInfo viz Unique_Identifier_And_Metadata_File_Creator.sln -> MainLogicDG.fs
-                            let dirInfo = new DirectoryInfo(pathToDir)                                                   
+                            let dirInfo = DirectoryInfo pathToDir                                                   
                                 in
                                 dirInfo.EnumerateDirectories() 
                                 |> Seq.filter (fun item -> getDefaultRecordValues |> List.contains item.Name) //prunik dvou kolekci (plus jeste Seq.distinct pro unique items)
@@ -796,7 +796,7 @@ module KODIS_SubmainRecord =
                     return 
                         try
                             //rozdil mezi Directory a DirectoryInfo viz Unique_Identifier_And_Metadata_File_Creator.sln -> MainLogicDG.fs
-                            let dirInfo = new DirectoryInfo(pathToDir)        
+                            let dirInfo = DirectoryInfo pathToDir        
                                 in
                                 dirInfo.EnumerateDirectories()
                                 |> Seq.filter (fun item -> item.Name = createDirName variant getDefaultRecordValues) 
@@ -905,7 +905,7 @@ module KODIS_SubmainRecord =
                                                                let filepath = Path.GetFullPath(pathToFile) |> Option.ofNullEmpty 
                                                                let! filepath = filepath, None
 
-                                                               let fInfodat: FileInfo = new FileInfo(filepath)
+                                                               let fInfodat: FileInfo = FileInfo filepath
                                                                let! _ = not fInfodat.Exists |> Option.ofBool, None   
                                                                                
                                                                return Some ()

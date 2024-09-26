@@ -74,7 +74,7 @@ module WebScraping_MDPO =
                                       try
                                           let dirName = ODISDefault.OdisDir6
                                           //rozdil mezi Directory a DirectoryInfo viz Unique_Identifier_And_Metadata_File_Creator.sln -> MainLogicDG.fs
-                                          let dirInfo = new DirectoryInfo(pathToDir)    
+                                          let dirInfo = DirectoryInfo pathToDir    
                                               in 
                                               dirInfo.EnumerateDirectories()
                                               |> Seq.filter (fun item -> item.Name = dirName) 

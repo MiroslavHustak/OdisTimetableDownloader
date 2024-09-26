@@ -125,7 +125,7 @@ module Test =
 
         Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
         |> Option.ofNull
-        |> function Some value -> value |> Seq.sumBy (fun file -> FileInfo(file).Length) |> Ok | None -> Error String.Empty
+        |> function Some value -> value |> Seq.sumBy (fun file -> (FileInfo file).Length) |> Ok | None -> Error String.Empty
 
     let private totalLength_MB path : Result<float, string> = 
 
@@ -134,7 +134,7 @@ module Test =
         |> function 
             | Some value -> 
                           value
-                          |> Seq.sumBy (fun file -> FileInfo(file).Length)
+                          |> Seq.sumBy (fun file -> (FileInfo file).Length)
                           |> fun totalBytes -> float totalBytes / (1024.0 * 1024.0)
                           |> Ok
             | None       ->
@@ -175,7 +175,7 @@ module Test =
                  printfn "\nUnbelievable Error"
                  printfn "Something is wrong with the list \"subPathsDT\" or the list \"subPathsDB\""
 
-    let internal main () = //FileInfo(file) netestovano na pritomnost souboru, nestoji to za tu namahu        
+    let internal main () = //FileInfo file netestovano na pritomnost souboru, nestoji to za tu namahu        
         
         try               
 
@@ -271,7 +271,7 @@ module Test2 =
 
         Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
         |> Option.ofNull
-        |> function Some value -> value |> Seq.sumBy (fun file -> FileInfo(file).Length) |> Ok | None -> Error String.Empty
+        |> function Some value -> value |> Seq.sumBy (fun file -> (FileInfo file).Length) |> Ok | None -> Error String.Empty
 
     let private totalLength_MB path : Result<float, string> = 
 
@@ -280,7 +280,7 @@ module Test2 =
         |> function 
             | Some value -> 
                           value
-                          |> Seq.sumBy (fun file -> FileInfo(file).Length)
+                          |> Seq.sumBy (fun file -> (FileInfo file).Length)
                           |> fun totalBytes -> float totalBytes / (1024.0 * 1024.0)
                           |> Ok
             | None       ->
@@ -321,7 +321,7 @@ module Test2 =
                  printfn "\nUnbelievable Error"
                  printfn "Something is wrong with the list \"subPathsDT\" or the list \"subPathsM\""
 
-    let internal main () = //FileInfo(file) netestovano na pritomnost souboru, nestoji to za tu namahu        
+    let internal main () = //FileInfo file netestovano na pritomnost souboru, nestoji to za tu namahu        
         
         try               
 
