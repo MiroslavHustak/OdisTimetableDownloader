@@ -27,6 +27,10 @@ module MDPO_Submain =
     open Helpers.CloseApp
     open Helpers.ProgressBarFSharp
 
+    //DO NOT DIVIDE THIS MODULE YET !!!
+
+    type HtmlTypeProvider = HtmlProvider<pathMdpoWebTimetables>
+
     //************************Submain functions************************************************************************
 
     let internal filterTimetables () pathToDir = 
@@ -54,8 +58,8 @@ module MDPO_Submain =
                           )
                       |> Seq.map 
                           (fun (_ , item2) ->                                                                 
-                                            let linkToPdf = sprintf"%s%s" pathMdpoWeb item2  //https://www.mdpo.cz // /qr/201.pdf
-                                            let lineName (item2: string) = item2.Replace(@"/qr/", String.Empty)  
+                                            let linkToPdf = sprintf "%s%s" pathMdpoWeb item2  //https://www.mdpo.cz // /qr/201.pdf
+                                            let lineName (item2 : string) = item2.Replace(@"/qr/", String.Empty)  
                                             let pathToFile lineName = sprintf "%s/%s" pathToDir lineName
 
                                             linkToPdf, (pathToFile << lineName) item2
@@ -63,6 +67,34 @@ module MDPO_Submain =
                       |> Seq.distinct                 
             )  
         |> Seq.fold (fun acc (key, value) -> Map.add key value acc) Map.empty //vyzkousime si tvorbu Map
+           
+
+    //Html Type Provider - for educational purposes
+
+    let internal filterTimetables2 () pathToDir = 
+               
+        let htmlNodeSeq = HtmlTypeProvider.Load(pathMdpoWebTimetables).Lists.Html.Descendants "a" 
+                                                                                    
+        htmlNodeSeq              
+        |> Seq.choose 
+            (fun htmlNode    ->
+                              htmlNode.TryGetAttribute("href") //inner text zatim nepotrebuji, cisla linek mam resena jinak 
+                              |> Option.map (fun a -> string <| htmlNode.InnerText(), string <| a.Value()) //priste to uz tak nerobit, u string zrob Option.ofStringObj, atd.                                            
+            )      
+        |> Seq.filter 
+            (fun (_ , item2) -> 
+                              item2.Contains @"/qr/" && item2.Contains ".pdf"
+            )
+        |> Seq.map 
+            (fun (_ , item2) ->                                                                 
+                              let linkToPdf = sprintf "%s%s" pathMdpoWeb item2  //https://www.mdpo.cz // /qr/201.pdf
+                              let lineName (item2 : string) = item2.Replace(@"/qr/", String.Empty)  
+                              let pathToFile lineName = sprintf "%s/%s" pathToDir lineName
+
+                              linkToPdf, (pathToFile << lineName) item2
+            )                          
+        |> Seq.distinct     
+        |> Seq.fold (fun acc (key, value) -> Map.add key value acc) Map.empty
 
     //FsHttp
     let internal downloadAndSaveTimetables (pathToDir : string) (filterTimetables : Map<string, string>) =  
