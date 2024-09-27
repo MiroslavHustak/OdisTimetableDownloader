@@ -53,7 +53,7 @@ module InsertInto =
                  try 
                      use cmdInsert = new SqlCommand(queryInsert, connection, transaction)
 
-                     let parameterTimeStamp = new SqlParameter()                 
+                     let parameterTimeStamp = SqlParameter ()                 
                      parameterTimeStamp.ParameterName <- "@Timestamp"  
                      parameterTimeStamp.SqlDbType <- SqlDbType.DateTime  
                     
@@ -126,11 +126,11 @@ module InsertInto =
                     try   
                         use cmdInsert = new SqlCommand(queryInsert, connection, transaction) 
     
-                        let parameterStart = new SqlParameter()                 
+                        let parameterStart = SqlParameter ()                 
                         parameterStart.ParameterName <- "@Start"  
                         parameterStart.SqlDbType <- SqlDbType.DateTime  
     
-                        let parameterEnd = new SqlParameter()                 
+                        let parameterEnd = SqlParameter ()                 
                         parameterEnd.ParameterName <- "@End"  
                         parameterEnd.SqlDbType <- SqlDbType.DateTime  
                                              
@@ -206,7 +206,7 @@ module InsertInto =
                  try 
                      use cmdInsert = new SqlCommand(queryInsert, connection, transaction)
 
-                     let parameterTimeStamp = new SqlParameter()                 
+                     let parameterTimeStamp = SqlParameter ()                 
                      parameterTimeStamp.ParameterName <- "@Timestamp"  
                      parameterTimeStamp.SqlDbType <- SqlDbType.DateTime  
                     
@@ -276,11 +276,11 @@ module InsertInto =
                      try   
                          use cmdInsert = new SqlCommand(queryInsert, connection, transaction) 
 
-                         let parameterStart = new SqlParameter()                 
+                         let parameterStart = SqlParameter ()                 
                          parameterStart.ParameterName <- "@Start"  
                          parameterStart.SqlDbType <- SqlDbType.DateTime  
 
-                         let parameterEnd = new SqlParameter()                 
+                         let parameterEnd = SqlParameter ()                 
                          parameterEnd.ParameterName <- "@End"  
                          parameterEnd.SqlDbType <- SqlDbType.DateTime  
                                          

@@ -742,7 +742,8 @@ module KODIS_SubmainRecord3 =
                                 |> Seq.iter _.Delete(true)  
                                 |> Ok
                                 //smazeme pouze adresare obsahujici stare JR, ostatni ponechame              
-                        with ex -> Error <| string ex.Message
+                        with 
+                        | ex -> Error <| string ex.Message
                         
                         |> function
                             | Ok value  -> 

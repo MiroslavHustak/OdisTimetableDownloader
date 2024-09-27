@@ -2,6 +2,7 @@
 
 open System
 open FSharp.Control
+open FsToolkit.ErrorHandling
 open Microsoft.Data.SqlClient
 
 //*****************************
@@ -23,10 +24,14 @@ open TransformationLayers.TransformationLayerGet
 module Select =
 
     let internal selectAsync (connection : SqlConnection) pathToDir itvfCall =
+
         async
             {
                 try
-                    let query = sprintf "SELECT * FROM %s" itvfCall
+                    //In SQL Server, table names (including inline table-valued function calls like dbo.ITVF_GetLinksCurrentValidity()) cannot be parameterized.
+                    //To prevent SQL injection, itvfCall shall be a trusted, hard-coded string (not user input or data that can be manipulated by an attacker).
+                    
+                    let query = sprintf "SELECT * FROM %s" itvfCall  
                     use cmdCallITVFunction = new SqlCommand(query, connection)
     
                     let! reader = cmdCallITVFunction.ExecuteReaderAsync() |> Async.AwaitTask
@@ -34,8 +39,8 @@ module Select =
                     try
                         let records = 
                             ()
-                            |> AsyncSeq.unfoldAsync
-                                (fun () ->
+                            |> AsyncSeq.unfoldAsync //The generator is repeatedly called to build the list until it returns None.
+                                (fun () -> 
                                          async 
                                              {
                                                  let! successfullyRead = reader.ReadAsync() |> Async.AwaitTask
@@ -54,7 +59,7 @@ module Select =
                                                  | false ->
                                                           return None
                                              }
-                                    ) 
+                                ) 
     
                         let! results = 
                             records
@@ -80,18 +85,28 @@ module Select =
     
                 with
                 | ex -> return Error <| string ex.Message
-            }    
+            }
+            |> Async.Catch
             |> Async.RunSynchronously
+            |> Result.ofChoice  
             |> function
-                | Ok value  -> 
-                             value  
-                | Error err ->
-                             logInfoMsg <| sprintf "Err020A %s" err
-                             closeItBaby msg18             
-                             []       
+                | Ok value -> 
+                            value
+                            |> function
+                                | Ok value  -> 
+                                             value  
+                                | Error err ->
+                                             logInfoMsg <| sprintf "Err020A %s" err
+                                             closeItBaby msg18             
+                                             []        
+                | Error ex ->
+                            logInfoMsg <| sprintf "Err020B %s" (string ex.Message)
+                            closeItBaby msg18             
+                            []       
 
     let internal select (connection : SqlConnection) pathToDir itvfCall =
         
+        //jeste jeden try-with blok je treba quli connection (viz moje SAFE STACK app), ale tady to nestoji za tu namahu
         try  
             //query je tady volani ITVF
             let query = sprintf "SELECT * FROM %s" itvfCall

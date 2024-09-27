@@ -60,11 +60,11 @@ module InsertInto =
                                 
                 let rowCount = castAs<int> <| cmdCount.ExecuteScalar() 
                                                    
-                let parameterStart = new SqlParameter()                 
+                let parameterStart = SqlParameter ()                 
                 parameterStart.ParameterName <- "@StartDate"  
                 parameterStart.SqlDbType <- SqlDbType.Date  
     
-                let parameterEnd = new SqlParameter() 
+                let parameterEnd = SqlParameter () 
                 parameterEnd.ParameterName <- "@EndDate"  
                 parameterEnd.SqlDbType <- SqlDbType.Date  
     

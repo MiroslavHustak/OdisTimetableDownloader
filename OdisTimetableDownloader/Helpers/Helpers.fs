@@ -117,7 +117,7 @@ module CheckNetConnection =
             let host : string = "8.8.4.4" //IP google.com
             let buffer : byte[] = Array.zeroCreate <| 32
             
-            let pingOptions: PingOptions = new PingOptions()                
+            let pingOptions: PingOptions = PingOptions ()                
      
             myPing.Send(host, timeout, buffer, pingOptions)
             |> (Option.ofNull >> Option.bind 
