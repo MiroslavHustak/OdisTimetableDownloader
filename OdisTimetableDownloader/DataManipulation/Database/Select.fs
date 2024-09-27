@@ -20,7 +20,6 @@ open DataModelling.Dto
 open DataModelling.DataModel
 open TransformationLayers.TransformationLayerGet
 
-
 module Select =
 
     let internal selectAsync (connection : SqlConnection) pathToDir itvfCall =
@@ -67,8 +66,10 @@ module Select =
     
                                              match link, file with
                                              | Some link, Some file
-                                                  -> Ok (CompleteLink link, FileToBeSaved file) //TDD provedeno takto slozite pouze quli kompatabilite se zmenenym DataTable for testing purposes 
-                                             | _  -> Error msg18
+                                                  -> 
+                                                   Ok (CompleteLink link, FileToBeSaved file) //TDD provedeno takto slozite pouze quli kompatabilite se zmenenym DataTable for testing purposes 
+                                             | _  -> 
+                                                   Error msg18
                                 )
                             |> AsyncSeq.toListAsync // Accumulate results asynchronously
     
