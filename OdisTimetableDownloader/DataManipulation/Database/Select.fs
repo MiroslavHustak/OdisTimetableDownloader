@@ -1,6 +1,7 @@
 ﻿namespace Database
 
 open System
+open FSharp.Control
 open Microsoft.Data.SqlClient
 
 //*****************************
@@ -19,7 +20,74 @@ open DataModelling.Dto
 open DataModelling.DataModel
 open TransformationLayers.TransformationLayerGet
 
+
 module Select =
+
+    let internal selectAsync (connection : SqlConnection) pathToDir itvfCall =
+        async
+            {
+                try
+                    let query = sprintf "SELECT * FROM %s" itvfCall
+                    use cmdCallITVFunction = new SqlCommand(query, connection)
+    
+                    let! reader = cmdCallITVFunction.ExecuteReaderAsync() |> Async.AwaitTask
+    
+                    try
+                        let records = 
+                            ()
+                            |> AsyncSeq.unfoldAsync
+                                (fun () ->
+                                         async 
+                                             {
+                                                 let! successfullyRead = reader.ReadAsync() |> Async.AwaitTask
+
+                                                 match successfullyRead with
+                                                 | true  ->
+                                                          let indexCompleteLink = reader.GetOrdinal("CompleteLink")
+                                                          let indexFileToBeSaved = reader.GetOrdinal("FileToBeSaved")
+                                    
+                                                          let record : DbDtoGet = 
+                                                              {
+                                                                  CompleteLink = reader.GetString(indexCompleteLink) |> Option.ofNullEmpty
+                                                                  FileToBeSaved = reader.GetString(indexFileToBeSaved) |> Option.ofNullEmpty
+                                                              }
+                                                          return Some (record, ())
+                                                 | false ->
+                                                          return None
+                                             }
+                                    ) 
+    
+                        let! results = 
+                            records
+                            |> AsyncSeq.map 
+                                (fun record -> 
+                                             let result = dbDataTransformLayerGet record
+                                             let link = result.CompleteLink |> function CompleteLinkOpt value -> value
+                                             let file = result.FileToBeSaved |> function FileToBeSavedOpt value -> value
+    
+                                             match link, file with
+                                             | Some link, Some file
+                                                  -> Ok (CompleteLink link, FileToBeSaved file) //TDD provedeno takto slozite pouze quli kompatabilite se zmenenym DataTable for testing purposes 
+                                             | _  -> Error msg18
+                                )
+                            |> AsyncSeq.toListAsync // Accumulate results asynchronously
+    
+                        return results |> Result.sequence
+    
+                    finally
+                        reader.Dispose() 
+    
+                with
+                | ex -> return Error <| string ex.Message
+            }    
+            |> Async.RunSynchronously
+            |> function
+                | Ok value  -> 
+                             value  
+                | Error err ->
+                             logInfoMsg <| sprintf "Err020A %s" err
+                             closeItBaby msg18             
+                             []       
 
     let internal select (connection : SqlConnection) pathToDir itvfCall =
         
@@ -79,7 +147,8 @@ module Select =
                 ()
                 // reader.Dispose()
 
-        with ex -> Error <| string ex.Message
+        with
+        | ex -> Error <| string ex.Message
                             
         |> function
             | Ok value  -> 
@@ -87,4 +156,4 @@ module Select =
             | Error err ->
                          logInfoMsg <| sprintf "Err020 %s" err
                          closeItBaby msg18             
-                         []  
+                         []       

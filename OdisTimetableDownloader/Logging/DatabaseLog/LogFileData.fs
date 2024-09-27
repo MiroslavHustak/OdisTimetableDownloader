@@ -109,7 +109,7 @@ module LogFileData =
         attemptExtractLogEntries 0 
    
     //Thoth + System.IO (File.ReadAllLines) + JsonArray
-    let internal extractLogEntriesThoth2 () = 
+    let internal extractLogEntriesThoth2 () = //zatim nepouzivat
        
         //[<TailCall>]  Ok
         let rec attemptExtractLogEntries counter = 
@@ -132,7 +132,7 @@ module LogFileData =
                         return 
                             fs
                             |> List.ofSeq
-                            |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) 
+                            |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) //TODO vyhazuje to tady chybu (Array-> null), File.ReadAllLines je mozna na vine
                             |> List.distinct
                             |> Result.sequence 
                     }

@@ -9,7 +9,53 @@ open Helpers.CloseApp
 open Settings.Messages
 
 module Connection =    
-              
+
+    let getConnectionAsync2 () =
+
+        let connString2 = @"Data Source=Misa\SQLEXPRESS;Initial Catalog=Logging;Integrated Security=True;Encrypt=False"
+
+        async
+            {
+                try          
+                    let connection = new SqlConnection(connString2)
+                    do! connection.OpenAsync() |> Async.AwaitTask
+                    return Ok connection   
+                with 
+                | ex -> return Error <| string ex.Message
+            }
+            |> Async.RunSynchronously
+            |> function
+                | Ok value  -> 
+                             value  
+                | Error err ->
+                             logInfoMsg <| sprintf "Err131B %s" err
+                             closeItBaby msg16 
+                             new SqlConnection(connString2)   
+
+    let internal closeConnectionAsync2 (connection: SqlConnection) =  
+
+        async
+            {
+                try
+                    try
+                        do! connection.CloseAsync() |> Async.AwaitTask
+                        return Ok ()
+                    finally
+                        async 
+                            {
+                                do! connection.DisposeAsync().AsTask() |> Async.AwaitTask
+                            } |> Async.StartImmediate                      
+                with 
+                | ex -> return Error <| string ex.Message
+            }   
+            |> Async.RunSynchronously            
+            |> function
+                | Ok value  -> 
+                             value  
+                | Error err ->
+                             logInfoMsg <| sprintf "Err132B %s" err
+                             closeItBaby msg16  
+       
     let internal getConnection2 () =  
 
         let connString2 = @"Data Source=Misa\SQLEXPRESS;Initial Catalog=Logging;Integrated Security=True;Encrypt=False"
@@ -17,6 +63,7 @@ module Connection =
         try
             let connection = new SqlConnection(connString2)
             connection.Open()
+
             Ok connection   
         with 
         | ex -> Error <| string ex.Message
@@ -29,7 +76,7 @@ module Connection =
                          closeItBaby msg16 
                          new SqlConnection(connString2)   
 
-    let internal closeConnection (connection: SqlConnection) =  
+    let internal closeConnection2 (connection: SqlConnection) =  
         
         try
             try 

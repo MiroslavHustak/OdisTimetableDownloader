@@ -75,7 +75,9 @@ module WebScraping_KODISFM =
                                                          Console.CursorLeft <- 0  
 
                                                          //pro testovani ponechan aji puvodni seznam, cas od casu tra porovnat s record version
-                                                         KODIS_Submain.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
+                                                         KODIS_Submain.downloadAndSaveJson (jsonLinkList @ jsonLinkList3) (pathToJsonList @ pathToJsonList3) 
+
+                                                         //failwith "Test 27-09-2024"
                                                          
                                                          msg3 ()   
                                                          msg11 ()   
@@ -97,7 +99,7 @@ module WebScraping_KODISFM =
                                                 
             | Free (DownloadSelectedVariantFM next) -> 
                                                      try                                                        
-                                                         let connection = Database.Connection.getConnection ()
+                                                         let connection = Database.Connection.getConnectionAsync ()
 
                                                          try
                                                              match variantList |> List.length with
@@ -172,7 +174,7 @@ module WebScraping_KODISFM =
                                                                       ) 
                                                              Ok ()       
                                                          finally
-                                                             closeConnection connection 
+                                                             Database.Connection.closeConnectionAsync connection 
                                                      with 
                                                      | ex -> Error <| string ex.Message 
                                                      
@@ -217,6 +219,7 @@ module WebScraping_KODISFM =
         
         let endProcess = DateTime.Now
 
+        (*
         try
             let connection = Logging.Connection.getConnection2 ()
 
@@ -224,5 +227,20 @@ module WebScraping_KODISFM =
                 insertLogEntries connection
                 insertProcessTime connection [startProcess; endProcess]
             finally
-                closeConnection connection 
-        with ex -> () //zapis do log file neprovaden, to bych to mel za chvili plne....     
+                closeConnection2 connection 
+        with 
+        | ex -> () //zapis do log file neprovaden, to bych to mel za chvili plne....     
+        
+        *)
+
+        try
+            let connection = Logging.Connection.getConnectionAsync2 ()
+
+            try
+                insertLogEntriesAsync connection
+                insertProcessTimeAsync connection [startProcess; endProcess]
+            finally
+                closeConnectionAsync2 connection 
+        with 
+        | ex -> () //zapis do log file neprovaden, to bych to mel za chvili plne....   
+ 

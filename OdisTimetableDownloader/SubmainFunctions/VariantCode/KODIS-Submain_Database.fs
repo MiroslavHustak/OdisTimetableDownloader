@@ -745,10 +745,10 @@ module KODIS_Submain =
                 )   
 
         match param with 
-        | CurrentValidity           -> "dbo.ITVF_GetLinksCurrentValidity()" |> select connection pathToDir |> createPathsForDownloadedFiles
-        | FutureValidity            -> "dbo.ITVF_GetLinksFutureValidity()" |> select connection pathToDir |> createPathsForDownloadedFiles
-        //| ReplacementService      -> "dbo.ITVF_GetLinksReplacementService()" |> select connection pathToDir |> createPathsForDownloadedFiles   
-        | WithoutReplacementService -> "dbo.ITVF_GetLinksWithoutReplacementService()" |> select connection pathToDir |> createPathsForDownloadedFiles         
+        | CurrentValidity           -> "dbo.ITVF_GetLinksCurrentValidity()" |> selectAsync connection pathToDir |> createPathsForDownloadedFiles
+        | FutureValidity            -> "dbo.ITVF_GetLinksFutureValidity()" |> selectAsync connection pathToDir |> createPathsForDownloadedFiles
+        //| ReplacementService      -> "dbo.ITVF_GetLinksReplacementService()" |> selectAsync connection pathToDir |> createPathsForDownloadedFiles   
+        | WithoutReplacementService -> "dbo.ITVF_GetLinksWithoutReplacementService()" |> selectAsync connection pathToDir |> createPathsForDownloadedFiles         
      
     //IO operations made separate in order to have some structure in the free-monad-based design (for educational purposes)   
     let internal deleteAllODISDirectories pathToDir = 

@@ -70,7 +70,6 @@ module MDPO_Submain =
            
 
     //Html Type Provider - for educational purposes
-
     let internal filterTimetables2 () pathToDir = 
                
         let htmlNodeSeq = HtmlTypeProvider.Load(pathMdpoWebTimetables).Lists.Html.Descendants "a" 
