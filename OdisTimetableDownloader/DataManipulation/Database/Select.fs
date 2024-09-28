@@ -25,6 +25,11 @@ module Select =
 
     let internal selectAsync (connection : SqlConnection) pathToDir itvfCall = //jen jako template pro jine app, v konzolove aplikaci to nema zrejme vyznam
 
+        let neco err = 
+            logInfoMsg <| sprintf "Err020A %s" err
+            closeItBaby msg18             
+            []     
+
         async
             {
                 try
@@ -88,21 +93,22 @@ module Select =
             }
             |> Async.Catch
             |> Async.RunSynchronously  //musi byt, takze async tady nema vyznam, ale jakozto template se to hodi
-            |> Result.ofChoice  
-            |> function
-                | Ok value -> 
-                            value
-                            |> function
-                                | Ok value  -> 
-                                             value  
-                                | Error err ->
-                                             logInfoMsg <| sprintf "Err020A %s" err
-                                             closeItBaby msg18             
-                                             []        
-                | Error ex ->
-                            logInfoMsg <| sprintf "Err020B %s" (string ex.Message)
-                            closeItBaby msg18             
-                            []       
+            |> Result.ofChoice    
+            |> Result.map
+                (fun value -> 
+                            value 
+                            |> Result.defaultWith (fun err ->
+                                logInfoMsg <| sprintf "Err020A %s" err
+                                closeItBaby msg18
+                                []  
+                            )
+                )
+            |> Result.defaultWith 
+                (fun ex ->
+                         logInfoMsg <| sprintf "Err020B %s" (string ex.Message)
+                         closeItBaby msg18
+                         []  
+                )
 
     let internal select (connection : SqlConnection) pathToDir itvfCall =
         
