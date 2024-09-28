@@ -103,9 +103,8 @@ module InsertInto =
                                          cmdInsert.Parameters.AddWithValue("@FileToBeSaved", item.FileToBeSaved) |> ignore 
                                          cmdInsert.Parameters.AddWithValue("@PartialLink", item.PartialLink) |> ignore 
                                                                
-                                         let executeNonQuery = 
-                                             async { return! cmdInsert.ExecuteNonQueryAsync() |> Async.AwaitTask } |> Async.RunSynchronously
-                                             
+                                         let executeNonQuery = cmdInsert.ExecuteNonQuery() //kdyby nahoudou, tak ... async { return! cmdInsert.ExecuteNonQueryAsync() |> Async.AwaitTask } 
+                                         
                                          (>) executeNonQuery 0   //number of affected rows     
                               ) 
                           |> List.contains false

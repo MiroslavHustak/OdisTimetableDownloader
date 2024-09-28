@@ -218,8 +218,7 @@ module WebScraping_KODISFM =
             } |> interpret  
         
         let endProcess = DateTime.Now
-
-        (*
+        
         try
             let connection = Logging.Connection.getConnection2 ()
 
@@ -229,18 +228,4 @@ module WebScraping_KODISFM =
             finally
                 closeConnection2 connection 
         with 
-        | ex -> () //zapis do log file neprovaden, to bych to mel za chvili plne....     
-        
-        *)
-
-        try
-            let connection = Logging.Connection.getConnectionAsync2 ()
-
-            try
-                insertLogEntriesAsync connection
-                insertProcessTimeAsync connection [startProcess; endProcess]
-            finally
-                closeConnectionAsync2 connection 
-        with 
-        | ex -> () //zapis do log file neprovaden, to bych to mel za chvili plne....   
- 
+        | ex -> () //zapis do log file neprovaden, to bych to mel za chvili plne....    

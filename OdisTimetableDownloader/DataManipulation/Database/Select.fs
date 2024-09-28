@@ -23,7 +23,7 @@ open TransformationLayers.TransformationLayerGet
 
 module Select =
 
-    let internal selectAsync (connection : SqlConnection) pathToDir itvfCall =
+    let internal selectAsync (connection : SqlConnection) pathToDir itvfCall = //jen jako template pro jine app, v konzolove aplikaci to nema zrejme vyznam
 
         async
             {
@@ -87,7 +87,7 @@ module Select =
                 | ex -> return Error <| string ex.Message
             }
             |> Async.Catch
-            |> Async.RunSynchronously
+            |> Async.RunSynchronously  //musi byt, takze async tady nema vyznam, ale jakozto template se to hodi
             |> Result.ofChoice  
             |> function
                 | Ok value -> 

@@ -132,7 +132,7 @@ module LogFileData =
                         return 
                             fs
                             |> List.ofSeq
-                            |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) //TODO vyhazuje to tady chybu (Array-> null), File.ReadAllLines je mozna na vine
+                            |> List.map (fun jArrayLine -> Decode.fromString decoder jArrayLine) //TODO vyhazuje to tady chybu (Array -> null), File.ReadAllLines je mozna na vine
                             |> List.distinct
                             |> Result.sequence 
                     }
