@@ -24,12 +24,7 @@ open TransformationLayers.TransformationLayerGet
 module Select =
 
     let internal selectAsync (connection : SqlConnection) pathToDir itvfCall = //jen jako template pro jine app, v konzolove aplikaci to nema zrejme vyznam
-
-        let neco err = 
-            logInfoMsg <| sprintf "Err020A %s" err
-            closeItBaby msg18             
-            []     
-
+        
         async
             {
                 try
