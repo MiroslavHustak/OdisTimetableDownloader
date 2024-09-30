@@ -89,21 +89,9 @@ module DPO_Submain =
                                                 sprintf"%s%s" <| (s >> s1) adaptedLineName <| ".pdf"
                                             
                                             let pathToFile = 
-                                                let item2 = item2.Replace("?", String.Empty)
-                                                let lineName = 
-                                                    match item2.Contains("NAD") with
-                                                    | true when item2.Contains("NAD1") -> "NAD1.pdf"
-                                                    | true when item2.Contains("NAD2") -> "NAD2.pdf"
-                                                    | true when item2.Contains("NAD3") -> "NAD3.pdf"
-                                                    | true when item2.Contains("NAD4") -> "NAD4.pdf"
-                                                    | true when item2.Contains("NAD5") -> "NAD5.pdf"
-                                                    | true when item2.Contains("NAD6") -> "NAD6.pdf"
-                                                    | true when item2.Contains("NAD7") -> "NAD7.pdf"
-                                                    | true when item2.Contains("NAD8") -> "NAD8.pdf"
-                                                    | true when item2.Contains("NAD9") -> "NAD9.pdf"
-                                                    | _                                -> lineName
-                                            
+                                                let item2 = item2.Replace("?", String.Empty)                                                                                           
                                                 sprintf "%s/%s" pathToDir lineName
+
                                             linkToPdf, pathToFile
                           )
                       |> Seq.toList
@@ -158,7 +146,7 @@ module DPO_Submain =
                     with                                                         
                     | ex ->
                           logInfoMsg <| sprintf "Err035 %s" (string ex.Message)
-                          closeItBaby msg20 
+                          //closeItBaby msg20 
                           return Error String.Empty   
                 } 
 
@@ -181,12 +169,12 @@ module DPO_Submain =
                                        |> function
                                            | Some err ->
                                                        logInfoMsg <| sprintf "Err036 %s" err
-                                                       closeItBaby err                                                                      
+                                                       //closeItBaby err                                                                      
                                            | None     -> 
                                                        msgParam2 link 
                           | Error err ->
                                        logInfoMsg <| sprintf "Err037 %s" err
-                                       closeItBaby err              
+                                       //closeItBaby err              
 
                      let mapErr2 = 
                          function
