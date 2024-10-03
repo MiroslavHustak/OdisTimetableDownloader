@@ -75,7 +75,7 @@ module WebScraping_KODISFM =
                                                          Console.CursorLeft <- 0  
 
                                                          //pro testovani ponechan aji puvodni seznam, cas od casu tra porovnat s record version
-                                                         KODIS_Submain.downloadAndSaveJson (jsonLinkList @ jsonLinkList3) (pathToJsonList @ pathToJsonList3) 
+                                                         KODIS_Submain.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
 
                                                          //failwith "Test 27-09-2024"
                                                          

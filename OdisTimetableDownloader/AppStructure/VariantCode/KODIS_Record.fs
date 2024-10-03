@@ -76,7 +76,7 @@ module WebScraping_KODISFMRecord =
                                                          Console.Write("\r" + new string(' ', (-) Console.WindowWidth 1) + "\r")
                                                          Console.CursorLeft <- 0  
                                                         
-                                                         KODIS_SubmainRecord.downloadAndSaveJson (jsonLinkList @ jsonLinkList2) (pathToJsonList @ pathToJsonList2) 
+                                                         KODIS_SubmainRecord.downloadAndSaveJson (jsonLinkList @ jsonLinkList3) (pathToJsonList @ pathToJsonList3) 
                                                          
                                                          msg3 ()   
                                                          msg11 () 
