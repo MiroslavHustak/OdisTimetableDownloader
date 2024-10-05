@@ -1,6 +1,6 @@
 # OdisTimetableDownloader
 
-Hromadné stahování JŘ ODIS / Bulk downloader of ODIS timetables (proof of concept, about 4,500 LoC)
+Hromadné stahování JŘ ODIS / Bulk downloader of ODIS timetables (proof of concept, about 5,000 LoC)
 
 Konzolová aplikace.
 
