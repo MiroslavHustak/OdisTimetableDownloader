@@ -9,7 +9,7 @@ module CloseApp =
 
         msgParam1 err      
         Console.ReadKey() |> ignore 
-        System.Environment.Exit(1)  
+        System.Environment.Exit 1  
 
 module ConsoleFixers =
 
@@ -142,8 +142,8 @@ module CopyOrMoveFiles = //output -> Result type
                          
         pyramidOfDoom 
             {
-                let! sourceFilepath = Path.GetFullPath(source) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" source
-                let! destinFilepath = Path.GetFullPath(destination) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" destination
+                let! sourceFilepath = Path.GetFullPath source |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" source
+                let! destinFilepath = Path.GetFullPath destination |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" destination
 
                 let fInfodat : FileInfo = FileInfo sourceFilepath  
                 let! _ = fInfodat.Exists |> Option.ofBool, Error <| sprintf "Zdrojový soubor %s neexistuje" sourceFilepath 
@@ -253,7 +253,7 @@ module CopyOrMoveFilesFM =
                                       let sourceFilepath source =                                        
                                           pyramidOfDoom
                                               {
-                                                  let! value = Path.GetFullPath(source) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" source   
+                                                  let! value = Path.GetFullPath source |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" source   
                                                   let! value = 
                                                       (
                                                           let fInfodat: FileInfo = FileInfo value   
@@ -268,7 +268,7 @@ module CopyOrMoveFilesFM =
                                       let destinFilepath destination =                                        
                                           pyramidOfDoom
                                               {
-                                                  let! value = Path.GetFullPath(destination) |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" destination
+                                                  let! value = Path.GetFullPath destination |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" destination
                                                   (*
                                                       let! value = 
                                                           (

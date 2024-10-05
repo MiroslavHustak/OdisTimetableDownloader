@@ -48,7 +48,7 @@ module InsertInto =
            
              try
                  let isolationLevel = System.Data.IsolationLevel.Serializable                                  
-                 let transaction : SqlTransaction = connection.BeginTransaction(isolationLevel)   
+                 let transaction : SqlTransaction = connection.BeginTransaction isolationLevel   
                
                  try 
                      use cmdInsert = new SqlCommand(queryInsert, connection, transaction)
@@ -74,7 +74,7 @@ module InsertInto =
                                     
                                     cmdInsert.Parameters.Clear() // Clear parameters for each iteration    
                                     parameterTimeStamp.Value <- timestamp                             
-                                    cmdInsert.Parameters.Add(parameterTimeStamp) |> ignore    
+                                    cmdInsert.Parameters.Add parameterTimeStamp |> ignore    
 
                                     cmdInsert.Parameters.AddWithValue("@Logname", logName) |> ignore
                                     cmdInsert.Parameters.AddWithValue("@Message", message) |> ignore
@@ -118,7 +118,7 @@ module InsertInto =
                     
                  try
                      let isolationLevel = System.Data.IsolationLevel.Serializable                                      
-                     let transaction: SqlTransaction = connection.BeginTransaction(isolationLevel) 
+                     let transaction: SqlTransaction = connection.BeginTransaction isolationLevel 
                                      
                      try   
                          use cmdInsert = new SqlCommand(queryInsert, connection, transaction) 
@@ -134,9 +134,9 @@ module InsertInto =
                          cmdInsert.Parameters.Clear() // Clear parameters for each iteration    
                         
                          parameterStart.Value <- List.item 0 dataToBeInserted                             
-                         cmdInsert.Parameters.Add(parameterStart) |> ignore   
+                         cmdInsert.Parameters.Add parameterStart |> ignore   
                          parameterEnd.Value <- List.item 1 dataToBeInserted                             
-                         cmdInsert.Parameters.Add(parameterEnd) |> ignore    
+                         cmdInsert.Parameters.Add parameterEnd |> ignore    
                                                                               
                          cmdInsert.ExecuteNonQuery() > 0 //number of affected rows   
                          |> function                                             

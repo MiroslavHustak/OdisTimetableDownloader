@@ -43,13 +43,13 @@ module MDPO_Submain =
         urlList    
         |> Seq.collect 
             (fun url -> 
-                      let document = FSharp.Data.HtmlDocument.Load(url) //neni nullable, nesu exn
+                      let document = FSharp.Data.HtmlDocument.Load url //neni nullable, nesu exn
                       //HtmlDocument -> web scraping -> extracting data from HTML pages
                                                                                     
                       document.Descendants "a"                  
                       |> Seq.choose 
                           (fun htmlNode    ->
-                                            htmlNode.TryGetAttribute("href") //inner text zatim nepotrebuji, cisla linek mam resena jinak 
+                                            htmlNode.TryGetAttribute "href" //inner text zatim nepotrebuji, cisla linek mam resena jinak 
                                             |> Option.map (fun a -> string <| htmlNode.InnerText(), string <| a.Value()) //priste to uz tak nerobit, u string zrob Option.ofStringObj, atd.                                            
                           )      
                       |> Seq.filter 

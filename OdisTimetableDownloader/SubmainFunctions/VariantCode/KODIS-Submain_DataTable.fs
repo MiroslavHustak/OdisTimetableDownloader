@@ -66,7 +66,7 @@ module KODIS_SubmainDataTable =
                             match not <| NetworkInterface.GetIsNetworkAvailable() with
                             | true  -> (processorJson () 120000).Post(First 1)                                                                                                                                            
                             | false -> () 
-                            do! Async.Sleep(3000)                            
+                            do! Async.Sleep 3000                            
                         }
             )   
         |> Async.StartImmediate   
@@ -144,17 +144,17 @@ module KODIS_SubmainDataTable =
                                  let json = 
                                      pyramidOfDoom
                                          {
-                                             let filepath = Path.GetFullPath(pathToJson) //pathToJson pod kontrolou, filepath nebude null
+                                             let filepath = Path.GetFullPath pathToJson //pathToJson pod kontrolou, filepath nebude null
                                                 
                                              let fInfoDat = FileInfo pathToJson
                                              let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
                                      
-                                             let fs = File.ReadAllText(pathToJson) //pathToJson pod kontrolou, fs nebude null
+                                             let fs = File.ReadAllText pathToJson //pathToJson pod kontrolou, fs nebude null
                                             
                                              return fs
                                          }   
                                          
-                                 JsonProvider1.Parse(json) 
+                                 JsonProvider1.Parse json 
                                  |> Option.ofNull  
                                  |> function 
                                      | Some value -> value |> Seq.map _.Timetable                                                
@@ -203,17 +203,17 @@ module KODIS_SubmainDataTable =
                                  let json = //tady nelze Result.sequence 
                                      pyramidOfDoom
                                          {
-                                             let filepath = Path.GetFullPath(pathToJson) //pathToJson pod kontrolou, filepath nebude null
+                                             let filepath = Path.GetFullPath pathToJson //pathToJson pod kontrolou, filepath nebude null
                                              
                                              let fInfoDat = FileInfo pathToJson
                                              let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
                                      
-                                             let fs = File.ReadAllText(pathToJson) //pathToJson pod kontrolou, fs nebude null                                       
+                                             let fs = File.ReadAllText pathToJson //pathToJson pod kontrolou, fs nebude null                                       
                                                                                                   
                                              return fs
                                          }    
 
-                                 let kodisJsonSamples = JsonProvider2.Parse(json) |> Option.ofNull
+                                 let kodisJsonSamples = JsonProvider2.Parse json |> Option.ofNull
                                  
                                  let timetables = 
                                      kodisJsonSamples 
@@ -321,17 +321,17 @@ module KODIS_SubmainDataTable =
                                      let json = //tady nelze Result.sequence 
                                          pyramidOfDoom
                                              {
-                                                 let filepath = Path.GetFullPath(pathToJson) //pathToJson pod kontrolou, filepath nebude null
+                                                 let filepath = Path.GetFullPath pathToJson //pathToJson pod kontrolou, filepath nebude null
                                                  
                                                  let fInfoDat = FileInfo pathToJson
                                                  let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
                                      
-                                                 let fs = File.ReadAllText(pathToJson) //pathToJson pod kontrolou, fs nebude null
+                                                 let fs = File.ReadAllText pathToJson //pathToJson pod kontrolou, fs nebude null
 
                                                  return fs
                                              }    
                                                           
-                                     let kodisJsonSamples = JsonProvider1.Parse(json) |> Option.ofNull  
+                                     let kodisJsonSamples = JsonProvider1.Parse json |> Option.ofNull  
                                                           
                                      kodisJsonSamples 
                                      |> function 
@@ -432,7 +432,7 @@ module KODIS_SubmainDataTable =
             try
                 let pattern = @"202[3-9]_[0-1][0-9]_[0-3][0-9]_202[4-9]_[0-1][0-9]_[0-3][0-9]"
                 let regex = Regex pattern 
-                let matchResult = regex.Match(input)
+                let matchResult = regex.Match input
         
                 match matchResult.Success with
                 | true  -> Ok input 
@@ -453,7 +453,7 @@ module KODIS_SubmainDataTable =
             try
                 let pattern = @"202[3-9]_[0-1][0-9]_[0-3][0-9]_202[4-9]_[0-1][0-9]_[0-3][0-9]"
                 let regex = Regex pattern 
-                let matchResult = regex.Match(input)
+                let matchResult = regex.Match input
         
                 match matchResult.Success with
                 | true  -> Ok matchResult.Value
@@ -508,7 +508,7 @@ module KODIS_SubmainDataTable =
         let extractStartDate (input : string) =
 
              let result = 
-                 match input.Equals(String.Empty) with
+                 match input.Equals String.Empty with
                  | true  -> String.Empty
                  | _     -> input.[ 0..min 9 (input.Length - 1) ] 
              result.Replace("_", "-")
@@ -516,15 +516,15 @@ module KODIS_SubmainDataTable =
         let extractEndDate (input : string) =
 
             let result = 
-                match input.Equals(String.Empty) with
+                match input.Equals String.Empty with
                 | true  -> String.Empty
                 | _     -> input.[ max 0 (input.Length - 10).. ]
             result.Replace("_", "-")
 
         let splitString (input : string) =   
 
-            match input.StartsWith(pathKodisAmazonLink) with
-            | true  -> [ pathKodisAmazonLink; input.Substring(pathKodisAmazonLink.Length) ]
+            match input.StartsWith pathKodisAmazonLink with
+            | true  -> [ pathKodisAmazonLink; input.Substring pathKodisAmazonLink.Length ]
             | false -> [ pathKodisAmazonLink; input ]
 
         //*************************************Splitting Kodis links into DataTable columns********************************************
@@ -840,10 +840,10 @@ module KODIS_SubmainDataTable =
                              |> List.iter
                                  (fun item -> 
                                             let dir = dir.Replace("_vyluk", sprintf "%s\\%s" "_vyluk" item)
-                                            Directory.CreateDirectory(dir) |> ignore
+                                            Directory.CreateDirectory dir |> ignore
                                  )           
                      | _    -> 
-                             Directory.CreateDirectory(sprintf "%s" dir) |> ignore           
+                             Directory.CreateDirectory (sprintf "%s" dir) |> ignore           
                 )
                 |> Ok
         with 
@@ -910,7 +910,7 @@ module KODIS_SubmainDataTable =
                                                    let pathToFileExist =  
                                                        pyramidOfDoom
                                                            {
-                                                               let filepath = Path.GetFullPath(pathToFile) |> Option.ofNullEmpty 
+                                                               let filepath = Path.GetFullPath pathToFile |> Option.ofNullEmpty 
                                                                let! filepath = filepath, None
 
                                                                let fInfodat: FileInfo = FileInfo filepath

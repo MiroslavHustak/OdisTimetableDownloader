@@ -50,7 +50,7 @@ module InsertInto =
             //System.Data.IsolationLevel.RepeatableRead
             //System.Data.IsolationLevel.ReadUncommitted
                                
-            let transaction : SqlTransaction = connection.BeginTransaction(isolationLevel) //Transaction to be implemented for all commands linked to the connection
+            let transaction : SqlTransaction = connection.BeginTransaction isolationLevel //Transaction to be implemented for all commands linked to the connection
                 
             try 
                 use cmdDeleteAll = new SqlCommand(queryDeleteAll, connection, transaction) 
@@ -91,10 +91,10 @@ module InsertInto =
                                          cmdInsert.Parameters.AddWithValue("@NewPrefix", item.NewPrefix) |> ignore
     
                                          parameterStart.Value <- item.StartDate
-                                         cmdInsert.Parameters.Add(parameterStart) |> ignore
+                                         cmdInsert.Parameters.Add parameterStart |> ignore
     
                                          parameterEnd.Value <- item.EndDate                                
-                                         cmdInsert.Parameters.Add(parameterEnd) |> ignore
+                                         cmdInsert.Parameters.Add parameterEnd |> ignore
     
                                          cmdInsert.Parameters.AddWithValue("@TotalDateInterval", item.TotalDateInterval) |> ignore
                                          cmdInsert.Parameters.AddWithValue("@VT_Suffix", item.Suffix) |> ignore

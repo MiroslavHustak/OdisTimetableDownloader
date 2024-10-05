@@ -53,7 +53,7 @@ module InsertSelectSort =
                        newRow.["FileToBeSaved"] <- item.FileToBeSaved
                        newRow.["PartialLink"] <- item.PartialLink
                        
-                       dt.Rows.Add(newRow)
+                       dt.Rows.Add newRow
             )                  
 
     let internal sortLinksOut (dt : DataTable) (dataToBeInserted : DtDtoSend list) validity = 

@@ -47,13 +47,13 @@ module Select =
 
                                                  match successfullyRead with
                                                  | true  ->
-                                                          let indexCompleteLink = reader.GetOrdinal("CompleteLink")
-                                                          let indexFileToBeSaved = reader.GetOrdinal("FileToBeSaved")
+                                                          let indexCompleteLink = reader.GetOrdinal "CompleteLink"
+                                                          let indexFileToBeSaved = reader.GetOrdinal "FileToBeSaved"
                                     
                                                           let record : DbDtoGet = 
                                                               {
-                                                                  CompleteLink = reader.GetString(indexCompleteLink) |> Option.ofNullEmpty
-                                                                  FileToBeSaved = reader.GetString(indexFileToBeSaved) |> Option.ofNullEmpty
+                                                                  CompleteLink = reader.GetString indexCompleteLink |> Option.ofNullEmpty
+                                                                  FileToBeSaved = reader.GetString indexFileToBeSaved |> Option.ofNullEmpty
                                                               }
                                                           return Some (record, ())
                                                  | false ->
@@ -128,13 +128,13 @@ module Select =
                     (fun _ -> 
                             seq
                                 {
-                                    let indexCompleteLink = reader.GetOrdinal("CompleteLink")
-                                    let indexFileToBeSaved = reader.GetOrdinal("FileToBeSaved")
+                                    let indexCompleteLink = reader.GetOrdinal "CompleteLink"
+                                    let indexFileToBeSaved = reader.GetOrdinal "FileToBeSaved"
 
                                     let record : DbDtoGet = 
                                         {
-                                            CompleteLink = reader.GetString(indexCompleteLink) |> Option.ofNullEmpty
-                                            FileToBeSaved = reader.GetString(indexFileToBeSaved) |> Option.ofNullEmpty
+                                            CompleteLink = reader.GetString indexCompleteLink |> Option.ofNullEmpty
+                                            FileToBeSaved = reader.GetString indexFileToBeSaved |> Option.ofNullEmpty
                                         }
 
                                     yield record    

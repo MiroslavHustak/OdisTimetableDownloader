@@ -37,7 +37,7 @@ module LogFileData =
             try   
                 pyramidOfDoom
                     {
-                        let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
+                        let filepath = Path.GetFullPath logFileName |> Option.ofNullEmpty  
                         let! filepath = filepath, Error (sprintf "%s%s" "Chyba při čtení cesty k souboru " logFileName)
             
                         let fInfodat: FileInfo = FileInfo logFileName
@@ -119,14 +119,14 @@ module LogFileData =
 
                 pyramidOfDoom
                     {
-                        let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
+                        let filepath = Path.GetFullPath logFileName |> Option.ofNullEmpty  
                         let! filepath = filepath, Error (sprintf "Chyba při čtení cesty k souboru %s" logFileName)
     
                         let fInfoDat = FileInfo logFileName
                         let! _ = fInfoDat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName)
                         
                         //For small to medium files, File.ReadAllLines is usually faster
-                        let fs = File.ReadAllLines(logFileName) //Automaticky zrobi close, dispose
+                        let fs = File.ReadAllLines logFileName //Automaticky zrobi close, dispose
                         let! fs = fs |> Option.ofNull, Error (sprintf "%s%s" "Chyba při čtení dat ze souboru " logFileName)
                                         
                         return 
@@ -155,7 +155,7 @@ module LogFileData =
                                   | IOExnErr err 
                                       ->                                 
                                        // Handle IO exceptions (file is locked) and retry after a delay
-                                       System.Threading.Thread.Sleep(1000) 
+                                       System.Threading.Thread.Sleep 1000 
 
                                        match counter < 10 with  //10 pokusu o zapis do log file
                                        | false -> 
@@ -191,17 +191,17 @@ module LogFileData =
         //nepouzivano, pouze for educational purposes, bez try-with bloku
         pyramidOfDoom
             {
-                let filepath = Path.GetFullPath(logFileName) |> Option.ofNullEmpty  
+                let filepath = Path.GetFullPath logFileName |> Option.ofNullEmpty  
                 let! filepath = filepath, Error (sprintf "%s%s" "Chyba při čtení cesty k souboru " logFileName)
     
                 let fInfodat: FileInfo = FileInfo logFileName
                 let! _ =  fInfodat.Exists |> Option.ofBool, Error (sprintf "Soubor %s nenalezen" logFileName) 
                                            
                 return 
-                    File.ReadAllLines(logFileName)
+                    File.ReadAllLines logFileName
                     |> Seq.map 
                         (fun line ->                             
-                                   let item = JArray.Parse(line)                   
+                                   let item = JArray.Parse line                   
                                    //tady nevadi pripadne String.Empty   
                                    let timestamp = string item.[0] //nelze Array.item 0
                                    let logName = string item.[1]

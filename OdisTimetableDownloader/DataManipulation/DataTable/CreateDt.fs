@@ -8,16 +8,16 @@ module CreateDt =
         
     let internal dt () = 
 
-        let dtTimetableLinks = new DataTable()
+        use dtTimetableLinks = new DataTable()
         
         let addColumn (name : string) (dataType : Type) =
             
-            let dtColumn = new DataColumn()
+            use dtColumn = new DataColumn()
 
             dtColumn.DataType <- dataType
             dtColumn.ColumnName <- name
 
-            dtTimetableLinks.Columns.Add(dtColumn)
+            dtTimetableLinks.Columns.Add dtColumn
         
         //musi byt jen .NET type, aby nebyly problemy 
         addColumn "OldPrefix" typeof<string>

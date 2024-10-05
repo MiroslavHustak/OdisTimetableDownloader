@@ -15,7 +15,7 @@ module EmbeddedTP =
         
     let pathkodisMHDTotal = 
         try
-            System.IO.Path.Combine(ResolutionFolder, @"KODISJson/kodisMHDTotal.json")
+            System.IO.Path.Combine (ResolutionFolder, @"KODISJson/kodisMHDTotal.json")
         with
         | _ -> String.Empty  //vypada to, ze se nic nestane, kdyz bude String.empty v JsonProvider1.Parse(tempJson1), v dokumentaci bohuzel o tom nic neni 
 

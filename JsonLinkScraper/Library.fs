@@ -32,7 +32,7 @@ module Links =
 
         printfn "Press any key to close this app"
         Console.ReadKey() |> ignore 
-        System.Environment.Exit(1)  
+        System.Environment.Exit 1  
 
     let private scrapeLinks executablePath =
    
@@ -61,7 +61,7 @@ module Links =
                                               )                       
                    
                     use! browser =
-                        Puppeteer.LaunchAsync(launchOptions)       
+                        Puppeteer.LaunchAsync launchOptions       
                         |> Option.ofNull
                         |> function
                             | Some value ->
@@ -69,7 +69,7 @@ module Links =
                             | None       -> 
                                           printfn "Error in scrapeLinks: %s" "browser -> null"
                                           closeTest () 
-                                          Puppeteer.LaunchAsync(launchOptions)   
+                                          Puppeteer.LaunchAsync launchOptions   
                         |> Async.AwaitTask   
                    
                     use! page =
@@ -92,7 +92,7 @@ module Links =
                                           {
                                               try
                                                   // Navigate to the target URL                                                 
-                                                  do! page.GoToAsync(url)      
+                                                  do! page.GoToAsync url      
                                                       |> Option.ofNull
                                                       |> function
                                                           | Some value ->
@@ -100,7 +100,7 @@ module Links =
                                                           | None       -> 
                                                                         printfn "Error in scrapeLinks: %s" "response -> null"
                                                                         closeTest ()
-                                                                        page.GoToAsync(url)
+                                                                        page.GoToAsync url
                                                       |> Async.AwaitTask      
                                                       |> Async.Ignore
                                                   
@@ -140,7 +140,7 @@ module Links =
                       printfn "Error in scrapeLinks: %s" (string ex.Message)
                       printfn "Press any key to close this app"
                       Console.ReadKey() |> ignore 
-                      System.Environment.Exit(1) 
+                      System.Environment.Exit 1 
                       
                       return [] 
             }
@@ -170,7 +170,7 @@ module Links =
                                               )  
                    
                     use! browser =
-                        Puppeteer.LaunchAsync(launchOptions)       
+                        Puppeteer.LaunchAsync launchOptions       
                         |> Option.ofNull
                         |> function
                             | Some value ->
@@ -178,7 +178,7 @@ module Links =
                             | None       -> 
                                           printfn "Error in captureNetworkRequest: %s" "browser -> null"
                                           closeTest ()
-                                          Puppeteer.LaunchAsync(launchOptions)   
+                                          Puppeteer.LaunchAsync launchOptions   
                         |> Async.AwaitTask   
                    
                     use! page =
@@ -194,7 +194,7 @@ module Links =
                         |> Async.AwaitTask 
 
                     // Set up request interception to monitor all network requests                    
-                    do! page.SetRequestInterceptionAsync(true)                                                    
+                    do! page.SetRequestInterceptionAsync true                                                    
                         |> Option.ofNull
                         |> function
                             | Some value ->
@@ -202,7 +202,7 @@ module Links =
                             | None       -> 
                                           printfn "Error in captureNetworkRequest: %s" "task -> null"
                                           closeTest ()
-                                          page.SetRequestInterceptionAsync(true)  
+                                          page.SetRequestInterceptionAsync true  
                         |> Async.AwaitTask
                                             
                     let capturedUrls = 
@@ -246,7 +246,7 @@ module Links =
                                       {
                                           try
                                               // Navigate to the target URL                                             
-                                              do! page.GoToAsync(url)      
+                                              do! page.GoToAsync url      
                                                   |> Option.ofNull
                                                   |> function
                                                       | Some value ->
@@ -254,7 +254,7 @@ module Links =
                                                       | None       -> 
                                                                     printfn "Error in scrapeLinks: %s" "response -> null"
                                                                     closeTest ()
-                                                                    page.GoToAsync(url)  
+                                                                    page.GoToAsync url  
                                                   |> Async.AwaitTask      
                                                   |> Async.Ignore
                                               do! Task.Delay(5000) |> Async.AwaitTask

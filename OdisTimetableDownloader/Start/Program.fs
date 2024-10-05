@@ -263,7 +263,7 @@ let main argv =
         let timetableVariant (fn : ConsoleKeyInfo) = 
             try
                 match fn.Key with
-                | ConsoleKey.Escape -> Ok <| System.Environment.Exit(0)
+                | ConsoleKey.Escape -> Ok <| System.Environment.Exit 0
                 | _                 -> Ok <| variant ()
             with ex -> Error <| string ex.Message
                             

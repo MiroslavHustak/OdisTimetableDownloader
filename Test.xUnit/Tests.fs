@@ -29,7 +29,7 @@ module PassingTests =
 
             let equalLengths = splittedList |> List.length = Environment.ProcessorCount
                         
-            Assert.True(equalLengths)
+            Assert.True equalLengths
         with
         | ex -> failwith (sprintf "xUnitTestError 01P: %s" ex.Message)       
 
@@ -45,9 +45,6 @@ module PassingTests =
 
             let lastListLengthNotZero = (<>) (splittedList |> List.item (Environment.ProcessorCount - 1) |> List.length) 0
                               
-            Assert.True(lastListLengthNotZero)
+            Assert.True lastListLengthNotZero
         with
         | ex -> failwith (sprintf "xUnitTestError 02P: %s" ex.Message)
-
-    
-   

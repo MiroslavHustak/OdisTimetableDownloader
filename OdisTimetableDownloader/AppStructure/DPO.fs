@@ -79,7 +79,7 @@ module WebScraping_DPO =
                                             //rozdil mezi Directory a DirectoryInfo viz Unique_Identifier_And_Metadata_File_Creator.sln -> MainLogicDG.fs
                                           let dirInfo = DirectoryInfo pathToDir   
                                               in 
-                                              dirInfo.EnumerateDirectories()
+                                              dirInfo.EnumerateDirectories ()
                                               |> Seq.filter (fun item -> item.Name = dirName) 
                                               |> Seq.iter _.Delete(true) //trochu je to hack, ale nemusim se zabyvat tryHead, bo moze byt empty kolekce 
                                               |> Ok
@@ -99,7 +99,7 @@ module WebScraping_DPO =
             | CreateFolders          -> 
                                       try
                                           dirList pathToDir
-                                          |> List.iter (fun dir -> Directory.CreateDirectory(dir) |> ignore) 
+                                          |> List.iter (fun dir -> Directory.CreateDirectory dir |> ignore) 
                                           |> Ok
 
                                       with

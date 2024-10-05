@@ -58,7 +58,7 @@ module FsCheckTests =
 
                        match item < l with
                        | true  -> 
-                                let randomIndex = (new Random()).Next(0, List.length keyList)
+                                let randomIndex = (Random()).Next(0, List.length keyList)
                                 List.item randomIndex keyList  
                        | false ->  
                                 0

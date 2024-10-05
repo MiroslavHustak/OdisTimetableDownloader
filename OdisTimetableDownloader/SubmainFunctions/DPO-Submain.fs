@@ -38,7 +38,7 @@ module DPO_Submain =
         let getLastThreeCharacters input =
             match String.length input <= 3 with
             | true  -> input 
-            | false -> input.Substring(input.Length - 3)
+            | false -> input.Substring (input.Length - 3)
 
         let removeLastFourCharacters input =
             match String.length input <= 4 with
@@ -55,12 +55,12 @@ module DPO_Submain =
         urlList
         |> List.collect 
             (fun url -> 
-                      let document = FSharp.Data.HtmlDocument.Load(url) //neni nullable, nesu exn
+                      let document = FSharp.Data.HtmlDocument.Load url //neni nullable, nesu exn
                   
                       document.Descendants "a"
                       |> Seq.choose 
                           (fun htmlNode    ->
-                                            htmlNode.TryGetAttribute("href") //inner text zatim nepotrebuji, cisla linek mam resena jinak  
+                                            htmlNode.TryGetAttribute "href" //inner text zatim nepotrebuji, cisla linek mam resena jinak  
                                             |> Option.map (fun a -> string <| htmlNode.InnerText(), string <| a.Value()) //priste to uz tak nerobit, u string zrob Option.ofNull, atd.                                         
                           )  
                       |> Seq.filter
@@ -109,7 +109,7 @@ module DPO_Submain =
                             
                             pyramidOfDoom
                                 {
-                                    let!_ = not <| File.Exists(pathToFile) |> Option.ofBool, Error String.Empty
+                                    let!_ = not <| File.Exists pathToFile |> Option.ofBool, Error String.Empty
                                     let! client = new HttpClient() |> Option.ofNull, Error String.Empty
 
                                     return Ok client        
@@ -117,7 +117,7 @@ module DPO_Submain =
                         
                         match client with
                         | Ok client ->      
-                                     use! response = client.GetAsync(uri) |> Async.AwaitTask
+                                     use! response = client.GetAsync uri |> Async.AwaitTask
                         
                                      match response.IsSuccessStatusCode with //true if StatusCode was in the range 200-299; otherwise, false.
                                      | true  -> 

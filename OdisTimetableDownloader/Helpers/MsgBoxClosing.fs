@@ -65,8 +65,8 @@ module MsgBoxClosing =
     //For educational purposes
     let private agent () = 
 
-        MailboxProcessor.Start
-            (fun inbox 
+        MailboxProcessor.Start <|
+            fun inbox 
                 ->          
                  let rec messageLoop () =
                      async
@@ -76,12 +76,12 @@ module MsgBoxClosing =
                          }
                        
                  messageLoop ()
-            ) 
+             
             
     let internal processorPdf =
 
-        MailboxProcessor.Start
-           (fun inbox 
+        MailboxProcessor.Start <|
+           fun inbox 
                ->
                 let rec loop n =
                     async
@@ -91,7 +91,7 @@ module MsgBoxClosing =
                                 -> 
                                  match (=) n 0 with
                                  | false -> 
-                                          do! Async.Sleep(360000)
+                                          do! Async.Sleep 360000
                                  | true  -> 
                                           clickOnOKButton boxJsonTitle
 
@@ -102,7 +102,7 @@ module MsgBoxClosing =
                                                   MessageBoxButtons.OK
                                               )
                                           |> function
-                                              | DialogResult.OK -> System.Environment.Exit(1)                                                                               
+                                              | DialogResult.OK -> System.Environment.Exit 1                                                                               
                                               | _               -> ()   
                                           return! loop (n + i)
 
@@ -111,13 +111,12 @@ module MsgBoxClosing =
                                  replyChannel.Reply n 
                                  return! loop n
                         }
-                loop 0
-           )                             
+                loop 0           
 
     let internal processorJson () (waitingTime : int) = 
 
-        MailboxProcessor.Start
-            (fun inbox 
+        MailboxProcessor.Start <|
+            fun inbox 
                 ->
                  let rec loop isFirst =
                      async
@@ -136,7 +135,7 @@ module MsgBoxClosing =
 
                                       AsyncSeq.initInfinite (fun _ -> result <> DialogResult.OK)
                                       |> AsyncSeq.takeWhile ((<>) true) 
-                                      |> AsyncSeq.iterAsync (fun _ -> async { do! Async.Sleep(waitingTime) }) 
+                                      |> AsyncSeq.iterAsync (fun _ -> async { do! Async.Sleep waitingTime }) 
                                       |> Async.StartImmediate 
                                             
                                   let rec keepOneMsgBox () = 
@@ -156,4 +155,3 @@ module MsgBoxClosing =
                          }
 
                  loop true // Start with isFirst set to true
-            )     

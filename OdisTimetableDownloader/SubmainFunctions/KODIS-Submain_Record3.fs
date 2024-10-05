@@ -4,6 +4,7 @@ open System
 open System.IO
 open System.Net
 open System.Threading
+open System.Threading.Tasks
 open System.Net.NetworkInformation
 open System.Text.RegularExpressions
 
@@ -37,6 +38,7 @@ open Helpers.ProgressBarFSharp
 
 open DataModelling.DataModel
 
+
 module KODIS_SubmainRecord3 =    
         
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     
@@ -50,12 +52,12 @@ module KODIS_SubmainRecord3 =
 
         pyramidOfDoom
             {
-                let filepath = Path.GetFullPath(pathToJson) //pathToJson pod kontrolou, filepath nebude null
+                let filepath = Path.GetFullPath pathToJson //pathToJson pod kontrolou, filepath nebude null
                                                 
                 let fInfoDat = FileInfo pathToJson
                 let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
 
-                return File.ReadAllText(pathToJson) //pathToJson pod kontrolou, fs nebude null                                            
+                return File.ReadAllText pathToJson //pathToJson pod kontrolou, fs nebude null                                            
             }    
         
     let private tempJson1 = readAllText pathkodisMHDTotal
@@ -78,7 +80,7 @@ module KODIS_SubmainRecord3 =
                             match not <| NetworkInterface.GetIsNetworkAvailable() with
                             | true  -> (processorJson () 120000).Post(First 1)                                                                                                                                            
                             | false -> () 
-                            do! Async.Sleep(3000)                            
+                            do! Async.Sleep 3000                            
                         }
             )   
         |> Async.StartImmediate   
@@ -148,6 +150,7 @@ module KODIS_SubmainRecord3 =
                     let! pathToJsonList = fun env -> env 
 
                     let result () = 
+
                         pathToJsonList 
                         |> Seq.ofList 
                         |> Seq.collect 
@@ -155,9 +158,9 @@ module KODIS_SubmainRecord3 =
                                 ->   
                                  try
                                      let json = readAllText pathToJson                                        
-                                     JsonProvider1.Parse(json) 
+                                     JsonProvider1.Parse json 
                                  with 
-                                 | _ -> JsonProvider1.Parse(tempJson1) 
+                                 | _ -> JsonProvider1.Parse tempJson1 
                                  
                                  |> Option.ofNull  
                                  |> function 
@@ -207,9 +210,9 @@ module KODIS_SubmainRecord3 =
                                  let kodisJsonSamples =                                     
                                      try   
                                          let json = readAllText pathToJson //tady nelze Result.sequence 
-                                         JsonProvider2.Parse(json)
+                                         JsonProvider2.Parse json
                                      with 
-                                     | _ -> JsonProvider2.Parse(tempJson2) 
+                                     | _ -> JsonProvider2.Parse tempJson2 
                                  
                                  let timetables = 
                                      kodisJsonSamples |> Option.ofNull
@@ -274,90 +277,90 @@ module KODIS_SubmainRecord3 =
          
         let kodisAttachments : Reader<string list, string seq> = //Reader monad for educational purposes only, no real benefit here
             
-                reader 
-                    {
-                        let! pathToJsonList = fun env -> env 
+            reader 
+                {
+                    let! pathToJsonList = fun env -> env 
                         
-                        let result () = 
+                    let result () = 
 
-                            pathToJsonList
-                            |> Seq.ofList 
-                            |> Seq.collect  //vzhledem ke komplikovanosti nepouzivam Result.sequence pro Array.collect (po zmene na seq ocekavam to same), nejde Some, nejde Ok jako vyse
-                                (fun pathToJson 
-                                    -> 
-                                     let fn1 (value : JsonProvider1.Attachment seq) = 
-                                         value
-                                         |> Array.ofSeq
-                                         |> Array.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace) //jj, funguje to :-)                                    
-                                         |> Array.choose id //co neprojde, to beze slova ignoruju
-                                         |> Array.toSeq
+                        pathToJsonList
+                        |> Seq.ofList 
+                        |> Seq.collect  //vzhledem ke komplikovanosti nepouzivam Result.sequence pro Array.collect (po zmene na seq ocekavam to same), nejde Some, nejde Ok jako vyse
+                            (fun pathToJson 
+                                -> 
+                                let fn1 (value : JsonProvider1.Attachment seq) = 
+                                    value
+                                    |> Array.ofSeq
+                                    |> Array.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace) //jj, funguje to :-)                                    
+                                    |> Array.choose id //co neprojde, to beze slova ignoruju
+                                    |> Array.toSeq
 
-                                     let fn2 (item : JsonProvider1.Vyluky) =    
-                                         item.Attachments 
-                                         |> Option.ofNull        
-                                         |> function 
-                                             | Some value ->
-                                                           value |> fn1
-                                             | None       -> 
-                                                           msg5 () 
-                                                           logInfoMsg <| sprintf "007A %s" "resulting in None"
-                                                           Seq.empty                
+                                let fn2 (item : JsonProvider1.Vyluky) =    
+                                    item.Attachments 
+                                    |> Option.ofNull        
+                                    |> function 
+                                        | Some value ->
+                                                      value |> fn1
+                                        | None       -> 
+                                                      msg5 () 
+                                                      logInfoMsg <| sprintf "007A %s" "resulting in None"
+                                                      Seq.empty                
 
-                                     let fn3 (item : JsonProvider1.Root) =  
-                                         item.Vyluky
-                                         |> Option.ofNull  
-                                         |> function 
-                                             | Some value ->
-                                                           value |> Seq.collect fn2 
-                                             | None       ->
-                                                           msg5 () 
-                                                           logInfoMsg <| sprintf "007B %s" "resulting in None"
-                                                           Seq.empty                                      
+                                let fn3 (item : JsonProvider1.Root) =  
+                                    item.Vyluky
+                                    |> Option.ofNull  
+                                    |> function 
+                                        | Some value ->
+                                                      value |> Seq.collect fn2 
+                                        | None       ->
+                                                      msg5 () 
+                                                      logInfoMsg <| sprintf "007B %s" "resulting in None"
+                                                      Seq.empty                                      
                                                           
-                                     let kodisJsonSamples = 
-                                         try
-                                             let json = readAllText pathToJson //tady nelze Result.sequence 
-                                             JsonProvider1.Parse(json) 
-                                         with
-                                         | _ -> JsonProvider1.Parse(tempJson1)                                    
+                                let kodisJsonSamples = 
+                                    try
+                                        let json = readAllText pathToJson //tady nelze Result.sequence 
+                                        JsonProvider1.Parse json 
+                                    with
+                                    | _ -> JsonProvider1.Parse tempJson1                                    
                                                           
-                                     kodisJsonSamples 
-                                     |> Option.ofNull  
-                                     |> function 
-                                         | Some value -> 
-                                                       value |> Seq.collect fn3 
-                                         | None       -> 
-                                                       msg5 () 
-                                                       logInfoMsg <| sprintf "007C %s" "resulting in None"
-                                                       Seq.empty                                
-                                ) 
+                                kodisJsonSamples 
+                                |> Option.ofNull  
+                                |> function 
+                                    | Some value -> 
+                                                  value |> Seq.collect fn3 
+                                    | None       -> 
+                                                  msg5 () 
+                                                  logInfoMsg <| sprintf "007C %s" "resulting in None"
+                                                  Seq.empty                                
+                            ) 
                     
-                        return 
-                            try
-                                let (|EmptySeq|_|) a =
-                                    match Seq.isEmpty a with
-                                    | true  -> Some () 
-                                    | false -> None
+                    return 
+                        try
+                            let (|EmptySeq|_|) a =
+                                match Seq.isEmpty a with
+                                | true  -> Some () 
+                                | false -> None
 
-                                let value = result () 
+                            let value = result () 
                                  
-                                value
-                                |> function
-                                    | EmptySeq -> Error msg16                                        
-                                    | _        -> Ok value
-
-                            with 
-                            | ex -> Error <| string ex.Message  
-
+                            value
                             |> function
-                                | Ok value  ->
-                                             value
-                                | Error err ->
-                                             logInfoMsg <| sprintf "Err006A %s" err 
-                                             msg5 ()   
-                                             closeItBaby msg16 
-                                             Seq.empty     
-                    }
+                                | EmptySeq -> Error msg16                                        
+                                | _        -> Ok value
+
+                        with 
+                        | ex -> Error <| string ex.Message  
+
+                        |> function
+                            | Ok value  ->
+                                         value
+                            | Error err ->
+                                         logInfoMsg <| sprintf "Err006A %s" err 
+                                         msg5 ()   
+                                         closeItBaby msg16 
+                                         Seq.empty     
+                }
         
         let addOn () =  
             [
@@ -407,9 +410,33 @@ module KODIS_SubmainRecord3 =
                              logInfoMsg <| sprintf "Err214 %s" err
                              msg5 ()
                              Seq.empty      
-       
-        //taskAllJsonLists () //je to jen 1-2 vteriny, rychlost stejna
-        taskAllJsonListsParallel ()  
+
+        let taskAllJsonLists2 () = 
+            task
+                {
+                    try 
+                        let task1 = Task.Run(fun () -> kodisAttachments pathToJsonList)
+                        let task2 = Task.Run(fun () -> kodisTimetables pathToJsonList)
+                        let task3 = Task.Run(fun () -> kodisTimetables3 pathToJsonList3)
+        
+                        let! results = Task.WhenAll [| task1; task2; task3 |]
+        
+                        let combinedTask = 
+                            results 
+                            |> Seq.concat  // Concatenate the results
+                            |> Seq.append (addOn())  // Append the add-on task
+                            |> Seq.distinct
+        
+                        return combinedTask
+                    with
+                    | ex -> 
+                        logInfoMsg <| sprintf "Err214 %s" ex.Message
+                        msg5 ()
+                        return Seq.empty
+                }
+               
+        taskAllJsonLists () //je to jen 1-2 vteriny, rychlost stejna
+        //taskAllJsonListsParallel ()  
     
     //input from seq -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
     let private filterTimetables () param (pathToDir : string) diggingResult = 
@@ -421,7 +448,7 @@ module KODIS_SubmainRecord3 =
             try
                 let pattern = @"202[3-9]_[0-1][0-9]_[0-3][0-9]_202[4-9]_[0-1][0-9]_[0-3][0-9]"
                 let regex = Regex pattern 
-                let matchResult = regex.Match(input)
+                let matchResult = regex.Match input
         
                 match matchResult.Success with
                 | true  -> Ok input 
@@ -442,7 +469,7 @@ module KODIS_SubmainRecord3 =
             try
                 let pattern = @"202[3-9]_[0-1][0-9]_[0-3][0-9]_202[4-9]_[0-1][0-9]_[0-3][0-9]"
                 let regex = Regex pattern 
-                let matchResult = regex.Match(input)
+                let matchResult = regex.Match input
         
                 match matchResult.Success with
                 | true  -> Ok matchResult.Value
@@ -462,12 +489,12 @@ module KODIS_SubmainRecord3 =
 
             let prefix = "NAD_"
             
-            match input.StartsWith(prefix) with
+            match input.StartsWith prefix with
             | false -> 
                      (None, 0)
             | true  ->
                      let startIdx = prefix.Length
-                     let restOfString = input.Substring(startIdx)
+                     let restOfString = input.Substring startIdx
 
                      match restOfString.IndexOf('_') with
                      | -1             -> 
@@ -505,15 +532,15 @@ module KODIS_SubmainRecord3 =
         let extractEndDate (input : string) =
 
             let result = 
-                match input.Equals(String.Empty) with
+                match input.Equals String.Empty with
                 | true  -> String.Empty
                 | _     -> input.[ max 0 (input.Length - 10).. ]
             result.Replace("_", "-")
 
         let splitString (input : string) =   
 
-            match input.StartsWith(pathKodisAmazonLink) with
-            | true  -> [ pathKodisAmazonLink; input.Substring(pathKodisAmazonLink.Length) ]
+            match input.StartsWith pathKodisAmazonLink with
+            | true  -> [ pathKodisAmazonLink; input.Substring pathKodisAmazonLink.Length ]
             | false -> [ pathKodisAmazonLink; input ]
 
         //*************************************Splitting Kodis links into DataTable columns********************************************
@@ -666,7 +693,6 @@ module KODIS_SubmainRecord3 =
                            cond1 && cond2 
                 )         
             |> List.Parallel.map (fun item -> splitKodisLink item) 
-
         
         //**********************Cesty pro soubory pro aktualni a dlouhodobe platne a pro ostatni********************************************************
         let createPathsForDownloadedFiles filteredList =
@@ -829,10 +855,10 @@ module KODIS_SubmainRecord3 =
                              |> List.iter
                                  (fun item -> 
                                             let dir = dir.Replace("_vyluk", sprintf "%s\\%s" "_vyluk" item)
-                                            Directory.CreateDirectory(dir) |> ignore
+                                            Directory.CreateDirectory dir |> ignore
                                  )           
                      | _    -> 
-                             Directory.CreateDirectory(sprintf "%s" dir) |> ignore           
+                             Directory.CreateDirectory (sprintf "%s" dir) |> ignore           
                 )
                 |> Ok
         with 
@@ -899,7 +925,7 @@ module KODIS_SubmainRecord3 =
                                                    let pathToFileExist =  
                                                        pyramidOfDoom
                                                            {
-                                                               let filepath = Path.GetFullPath(pathToFile) |> Option.ofNullEmpty 
+                                                               let filepath = Path.GetFullPath pathToFile |> Option.ofNullEmpty 
                                                                let! filepath = filepath, None
 
                                                                let fInfodat: FileInfo = FileInfo filepath
