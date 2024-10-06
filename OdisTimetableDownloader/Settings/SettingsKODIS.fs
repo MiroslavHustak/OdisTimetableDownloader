@@ -38,7 +38,7 @@ module SettingsKODIS =
         }
 
     let internal context2 =  
-         {
+        {
             summerHolidayEnd1  = DateTime (2024, 8, 31)
             summerHolidayEnd2 = DateTime(2024, 9, 1)
             currentTime = DateTime.Now.Date
