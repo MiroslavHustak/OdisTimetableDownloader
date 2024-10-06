@@ -748,9 +748,9 @@ module KODIS_SubmainRecord3 =
                 )   
        
         match param with 
-        | CurrentValidity           -> Records.SortRecordData.sortLinksOut dataToBeFiltered currentTime dateTimeMinValue CurrentValidity |> createPathsForDownloadedFiles 
-        | FutureValidity            -> Records.SortRecordData.sortLinksOut dataToBeFiltered currentTime dateTimeMinValue FutureValidity |> createPathsForDownloadedFiles 
-        | WithoutReplacementService -> Records.SortRecordData.sortLinksOut dataToBeFiltered currentTime dateTimeMinValue WithoutReplacementService |> createPathsForDownloadedFiles 
+        | CurrentValidity           -> Records.SortRecordData.sortLinksOut dataToBeFiltered CurrentValidity |> createPathsForDownloadedFiles 
+        | FutureValidity            -> Records.SortRecordData.sortLinksOut dataToBeFiltered FutureValidity |> createPathsForDownloadedFiles 
+        | WithoutReplacementService -> Records.SortRecordData.sortLinksOut dataToBeFiltered WithoutReplacementService |> createPathsForDownloadedFiles 
      
     //IO operations made separate in order to have some structure in the free-monad-based design (for educational purposes)   
     let internal deleteAllODISDirectories pathToDir = 

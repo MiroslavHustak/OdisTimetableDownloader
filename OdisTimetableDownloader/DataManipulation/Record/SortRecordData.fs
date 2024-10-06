@@ -19,19 +19,19 @@ open DataModelling.DataModel
 
 module SortRecordData =  
        
-    let internal sortLinksOut (dataToBeFiltered : RcData list) currentTime dateTimeMinValue validity = 
+    let internal sortLinksOut (dataToBeFiltered : RcData list) validity = 
          
-        let condition dateValidityStart dateValidityEnd (fileToBeSaved : string) = 
+        let condition context2 dateValidityStart dateValidityEnd (fileToBeSaved : string) = 
 
             match validity with 
             | CurrentValidity           -> 
-                                         ((dateValidityStart <= currentTime
+                                         ((dateValidityStart <= context2.currentTime
                                          && 
-                                         dateValidityEnd >= currentTime)
+                                         dateValidityEnd >= context2.currentTime)
                                          ||
-                                         (dateValidityStart = currentTime 
+                                         (dateValidityStart = context2.currentTime 
                                          && 
-                                         dateValidityEnd = currentTime))
+                                         dateValidityEnd = context2.currentTime))
                                          &&
                                          (
                                          not <| fileToBeSaved.Contains("046_2024_01_02_2024_12_14")
@@ -42,24 +42,24 @@ module SortRecordData =
                                          )
 
             | FutureValidity            ->
-                                         dateValidityStart > currentTime
+                                         dateValidityStart > context2.currentTime
                   
             | WithoutReplacementService ->                                         
-                                         ((dateValidityStart <= currentTime 
+                                         ((dateValidityStart <= context2.currentTime 
                                          && 
-                                         dateValidityEnd >= currentTime)
+                                         dateValidityEnd >= context2.currentTime)
                                          ||
-                                         (dateValidityStart = currentTime 
+                                         (dateValidityStart = context2.currentTime 
                                          && 
-                                         dateValidityEnd = currentTime))
+                                         dateValidityEnd = context2.currentTime))
                                          &&
                                          (not <| fileToBeSaved.Contains("_v") 
                                          && not <| fileToBeSaved.Contains("X")
                                          && not <| fileToBeSaved.Contains("NAD")) 
                                          &&
-                                         (dateValidityEnd <> summerHolidayEnd1
+                                         (dateValidityEnd <> context2.summerHolidayEnd1
                                          && 
-                                         dateValidityEnd <> summerHolidayEnd2)
+                                         dateValidityEnd <> context2.summerHolidayEnd2)
                                          &&
                                          (
                                          not <| fileToBeSaved.Contains("020_2024_01_02_2024_12_14")
@@ -79,14 +79,14 @@ module SortRecordData =
                                             let startDate = 
                                                 row.StartDateRc
                                                 |> function StartDateRcOpt value -> value
-                                                |> function Some value -> value | None -> dateTimeMinValue
+                                                |> function Some value -> value | None -> context2.dateTimeMinValue
                                             let endDate = 
                                                 row.EndDateRc                                                         
                                                 |> function EndDateRcOpt value -> value
-                                                |> function Some value -> value | None -> dateTimeMinValue
+                                                |> function Some value -> value | None -> context2.dateTimeMinValue
                                             let fileToBeSaved = row.FileToBeSavedRc |> function FileToBeSaved value -> value                         
                                         
-                                            condition startDate endDate fileToBeSaved
+                                            condition context2 startDate endDate fileToBeSaved
                                     )     
                               |> Seq.map
                                   (fun row ->
@@ -106,14 +106,14 @@ module SortRecordData =
                                             let startDate = 
                                                 row.StartDateRc
                                                 |> function StartDateRcOpt value -> value
-                                                |> function Some value -> value | None -> dateTimeMinValue
+                                                |> function Some value -> value | None -> context2.dateTimeMinValue
                                             let endDate = 
                                                 row.EndDateRc                                                         
                                                 |> function EndDateRcOpt value -> value
-                                                |> function Some value -> value | None -> dateTimeMinValue
+                                                |> function Some value -> value | None -> context2.dateTimeMinValue
                                             let fileToBeSaved = row.FileToBeSavedRc  |> function FileToBeSaved value -> value                      
                                         
-                                            condition startDate endDate fileToBeSaved
+                                            condition context2 startDate endDate fileToBeSaved
                                   )           
                               |> Seq.sortByDescending (fun row -> row.StartDateRc)
                               |> Seq.groupBy (fun row -> row.NewPrefixRc)

@@ -29,6 +29,22 @@ module SettingsKODIS =
     let internal currentTime = DateTime.Now.Date
     let internal dateTimeMinValue = DateTime.MinValue
 
+    type internal Context2 = 
+        {
+            summerHolidayEnd1 : DateTime
+            summerHolidayEnd2 : DateTime
+            currentTime : DateTime
+            dateTimeMinValue : DateTime     
+        }
+
+    let internal context2 =  
+         {
+            summerHolidayEnd1  = DateTime (2024, 8, 31)
+            summerHolidayEnd2 = DateTime(2024, 9, 1)
+            currentTime = DateTime.Now.Date
+            dateTimeMinValue = DateTime.MinValue  
+        }
+
     let internal sortedLines =
         [ 
             "linky 001-199"; "linky 200-299"; "linky 300-399"; 
