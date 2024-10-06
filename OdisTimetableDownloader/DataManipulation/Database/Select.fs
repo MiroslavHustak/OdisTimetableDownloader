@@ -92,11 +92,12 @@ module Select =
             |> Result.map
                 (fun value -> 
                             value 
-                            |> Result.defaultWith (fun err ->
-                                logInfoMsg <| sprintf "Err020A %s" err
-                                closeItBaby msg18
-                                []  
-                            )
+                            |> Result.defaultWith
+                                (fun err ->
+                                          logInfoMsg <| sprintf "Err020A %s" err
+                                          closeItBaby msg18
+                                          []  
+                                )
                 )
             |> Result.defaultWith 
                 (fun ex ->

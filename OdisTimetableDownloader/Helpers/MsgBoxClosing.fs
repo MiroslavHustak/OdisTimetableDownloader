@@ -75,8 +75,7 @@ module MsgBoxClosing =
                              return! messageLoop ()
                          }
                        
-                 messageLoop ()
-             
+                 messageLoop ()             
             
     let internal processorPdf =
 
