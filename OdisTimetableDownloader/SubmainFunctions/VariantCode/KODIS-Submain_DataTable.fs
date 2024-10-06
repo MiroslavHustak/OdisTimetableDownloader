@@ -240,10 +240,10 @@ module KODIS_SubmainDataTable =
                                          | Some value ->
                                                        value
                                                        |> Seq.collect (fun item -> item.Attachments)
-                                                       |> Array.ofSeq
-                                                       |> Array.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace)                                
-                                                       |> Array.choose id //co neprojde, to beze slova ignoruju
-                                                       |> Array.toSeq
+                                                       |> List.ofSeq
+                                                       |> List.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace)                                
+                                                       |> List.choose id //co neprojde, to beze slova ignoruju
+                                                       |> List.toSeq
                                          | None       ->
                                                        Seq.empty  
 
@@ -291,10 +291,10 @@ module KODIS_SubmainDataTable =
                                     -> 
                                      let fn1 (value : JsonProvider1.Attachment seq) = 
                                          value
-                                         |> Array.ofSeq
-                                         |> Array.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace) //jj, funguje to :-)                                    
-                                         |> Array.choose id //co neprojde, to beze slova ignoruju
-                                         |> Array.toSeq
+                                         |> List.ofSeq
+                                         |> List.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace) //jj, funguje to :-)                                    
+                                         |> List.choose id //co neprojde, to beze slova ignoruju
+                                         |> List.toSeq
 
                                      let fn2 (item : JsonProvider1.Vyluky) =    
                                          item.Attachments 

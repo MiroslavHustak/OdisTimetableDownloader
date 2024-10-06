@@ -95,7 +95,8 @@ module KODIS_SubmainRecord3 =
         let counterAndProgressBar =
             MailboxProcessor.Start <|
                 fun inbox ->
-                           let rec loop n = async { match! inbox.Receive() with Inc i -> progressBarContinuous n l; return! loop (n + i) }
+                           let rec loop n = 
+                               async { match! inbox.Receive() with Inc i -> progressBarContinuous n l; return! loop (n + i) }
                            loop 0
 
         let result = 
@@ -105,13 +106,13 @@ module KODIS_SubmainRecord3 =
                     ->                       
                      async
                          {    
-                             use! response = (>>) get Request.sendAsync <| uri 
+                             use! response = get >> Request.sendAsync <| uri 
 
                              match response.statusCode with
                              | HttpStatusCode.OK
                                  ->                                                                                                   
                                   counterAndProgressBar.Post(Inc 1)                                                   
-                                  do! (>>) response.SaveFileAsync Async.AwaitTask <| path                                                   
+                                  do! response.SaveFileAsync >> Async.AwaitTask <| path                                                   
                                   return Ok ()                                
                              | _ ->  
                                   return Error "HttpStatusCode.OK is not OK"     
@@ -124,11 +125,11 @@ module KODIS_SubmainRecord3 =
         pyramidOfInferno
             {
                 let errorFn1 err = 
-                    logInfoMsg <| sprintf "Err001 %s" err
+                    sprintf "Err001 %s" >> logInfoMsg <| err
                     closeItBaby msg5A
 
                 let errorFn2 (err : exn) = 
-                    logInfoMsg <| sprintf "Err002 %s" (string err.Message)
+                    sprintf "Err002 %s" >> logInfoMsg <| (string err.Message)
                     closeItBaby msg5A
 
                 let! value = result |> Result.sequence, errorFn2 
@@ -189,7 +190,7 @@ module KODIS_SubmainRecord3 =
                             | Ok value  -> 
                                          value
                             | Error err -> 
-                                         logInfoMsg <| sprintf "Err004A %s" err 
+                                         sprintf "Err004A %s" >> logInfoMsg <| err 
                                          closeItBaby msg16 
                                          Seq.empty      
                 }
@@ -215,7 +216,8 @@ module KODIS_SubmainRecord3 =
                                      | _ -> JsonProvider2.Parse tempJson2 
                                  
                                  let timetables = 
-                                     kodisJsonSamples |> Option.ofNull
+                                     kodisJsonSamples
+                                     |> Option.ofNull
                                      |> function 
                                          | Some value -> 
                                                        value.Data
@@ -224,7 +226,8 @@ module KODIS_SubmainRecord3 =
                                                        Seq.empty  
                                  
                                  let vyluky = 
-                                     kodisJsonSamples |> Option.ofNull
+                                     kodisJsonSamples
+                                     |> Option.ofNull
                                      |> function 
                                         | Some value -> 
                                                       value.Data 
@@ -239,10 +242,10 @@ module KODIS_SubmainRecord3 =
                                          | Some value ->
                                                        value
                                                        |> Seq.collect (fun item -> item.Attachments)
-                                                       |> Array.ofSeq
-                                                       |> Array.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace)                                
-                                                       |> Array.choose id //co neprojde, to beze slova ignoruju
-                                                       |> Array.toSeq
+                                                       |> List.ofSeq
+                                                       |> List.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace)                                
+                                                       |> List.choose id //co neprojde, to beze slova ignoruju
+                                                       |> List.toSeq
                                          | None       ->
                                                        Seq.empty  
 
@@ -270,7 +273,7 @@ module KODIS_SubmainRecord3 =
                             | Ok value  -> 
                                          value
                             | Error err ->
-                                         logInfoMsg <| sprintf "Err004 %s" err 
+                                         sprintf "Err004 %s" >> logInfoMsg <| err 
                                          closeItBaby msg16 
                                          Seq.empty      
                 }       
@@ -290,10 +293,10 @@ module KODIS_SubmainRecord3 =
                                 -> 
                                 let fn1 (value : JsonProvider1.Attachment seq) = 
                                     value
-                                    |> Array.ofSeq
-                                    |> Array.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace) //jj, funguje to :-)                                    
-                                    |> Array.choose id //co neprojde, to beze slova ignoruju
-                                    |> Array.toSeq
+                                    |> List.ofSeq
+                                    |> List.Parallel.map (fun item -> item.Url |> Option.ofNullEmptySpace) //jj, funguje to :-)                                    
+                                    |> List.choose id //co neprojde, to beze slova ignoruju
+                                    |> List.toSeq
 
                                 let fn2 (item : JsonProvider1.Vyluky) =    
                                     item.Attachments 
@@ -303,7 +306,7 @@ module KODIS_SubmainRecord3 =
                                                       value |> fn1
                                         | None       -> 
                                                       msg5 () 
-                                                      logInfoMsg <| sprintf "007A %s" "resulting in None"
+                                                      sprintf "007A %s" >> logInfoMsg <| "resulting in None"
                                                       Seq.empty                
 
                                 let fn3 (item : JsonProvider1.Root) =  
@@ -314,7 +317,7 @@ module KODIS_SubmainRecord3 =
                                                       value |> Seq.collect fn2 
                                         | None       ->
                                                       msg5 () 
-                                                      logInfoMsg <| sprintf "007B %s" "resulting in None"
+                                                      sprintf "007B %s" >> logInfoMsg <| "resulting in None"
                                                       Seq.empty                                      
                                                           
                                 let kodisJsonSamples = 
@@ -331,7 +334,7 @@ module KODIS_SubmainRecord3 =
                                                   value |> Seq.collect fn3 
                                     | None       -> 
                                                   msg5 () 
-                                                  logInfoMsg <| sprintf "007C %s" "resulting in None"
+                                                  sprintf "007C %s" >> logInfoMsg <| "resulting in None"
                                                   Seq.empty                                
                             ) 
                     
@@ -356,7 +359,7 @@ module KODIS_SubmainRecord3 =
                             | Ok value  ->
                                          value
                             | Error err ->
-                                         logInfoMsg <| sprintf "Err006A %s" err 
+                                         sprintf "Err006A %s" >> logInfoMsg <| err 
                                          msg5 ()   
                                          closeItBaby msg16 
                                          Seq.empty     
@@ -386,7 +389,7 @@ module KODIS_SubmainRecord3 =
                              let task = value |> Seq.ofArray |> Seq.concat 
                              (Seq.append <| task <| addOn()) |> Seq.distinct
                 | Error err ->
-                             logInfoMsg <| sprintf "Err214 %s" (string err.Message)
+                             sprintf "Err214 %s" >> logInfoMsg <| (string err.Message)
                              msg5 ()
                              Seq.empty       
         
@@ -407,7 +410,7 @@ module KODIS_SubmainRecord3 =
                 | Ok value  ->                             
                              value
                 | Error err ->
-                             logInfoMsg <| sprintf "Err214 %s" err
+                             sprintf "Err214 %s" >> logInfoMsg <| err
                              msg5 ()
                              Seq.empty      
 
@@ -430,13 +433,15 @@ module KODIS_SubmainRecord3 =
                         return combinedTask
                     with
                     | ex -> 
-                        logInfoMsg <| sprintf "Err214 %s" ex.Message
-                        msg5 ()
-                        return Seq.empty
+                          sprintf "Err214 %s" >> logInfoMsg <| ex.Message
+                          msg5 ()
+                          return Seq.empty
                 }
-               
-        taskAllJsonLists () //je to jen 1-2 vteriny, rychlost stejna
-        //taskAllJsonListsParallel ()  
+        
+        //je to jen 1-2 vteriny, rychlost stejna       
+        //taskAllJsonLists () 
+        //taskAllJsonLists2 ()
+        taskAllJsonListsParallel ()  
     
     //input from seq -> change of input data -> output into datatable -> filtering data from datable -> links*paths     
     let private filterTimetables () param (pathToDir : string) diggingResult = 
@@ -460,7 +465,7 @@ module KODIS_SubmainRecord3 =
                 | Ok value  -> 
                              value  
                 | Error err ->
-                             logInfoMsg <| sprintf "Err008 %s" err
+                             sprintf "Err008 %s" >> logInfoMsg <| err
                              msg9 ()
                              String.Empty    
         
@@ -481,7 +486,7 @@ module KODIS_SubmainRecord3 =
                 | Ok value  -> 
                              value  
                 | Error err ->
-                             logInfoMsg <| sprintf "Err009 %s" err
+                             sprintf "Err009 %s" >> logInfoMsg <| err
                              msg9 ()
                              String.Empty     
 
@@ -561,7 +566,7 @@ module KODIS_SubmainRecord3 =
                     | Ok value  -> 
                                  value  
                     | Error err ->
-                                 logInfoMsg <| sprintf "Err010 %s" err
+                                 sprintf "Err010 %s" >> logInfoMsg <| err
                                  msg9 ()
                                  String.Empty      
 
@@ -580,7 +585,7 @@ module KODIS_SubmainRecord3 =
                     | Ok value  -> 
                                  value  
                     | Error err ->
-                                 logInfoMsg <| sprintf "Err011 %s" err
+                                 sprintf "Err011 %s" >> logInfoMsg <| err
                                  msg9 ()
                                  String.Empty   
         
@@ -775,7 +780,7 @@ module KODIS_SubmainRecord3 =
                             | Ok value  -> 
                                          value  
                             | Error err ->
-                                         logInfoMsg <| sprintf "Err012 %s" err
+                                         sprintf "Err012 %s" >> logInfoMsg <| err
                                          closeItBaby msg16 
                 }
 
@@ -832,7 +837,7 @@ module KODIS_SubmainRecord3 =
                             | Ok value  -> 
                                          value  
                             | Error err ->
-                                         logInfoMsg <| sprintf "Err012B %s" err
+                                         sprintf "Err012B %s" >> logInfoMsg <| err
                                          closeItBaby msg16  
                 }
 
@@ -868,7 +873,7 @@ module KODIS_SubmainRecord3 =
             | Ok value  -> 
                          value  
             | Error err ->
-                         logInfoMsg <| sprintf "Err013 %s" err
+                         sprintf "Err013 %s" >> logInfoMsg <| err
                          closeItBaby msg16   
     
     //input from data filtering (links * paths) -> http request -> IO operation -> saving pdf data files on HD    
@@ -889,11 +894,7 @@ module KODIS_SubmainRecord3 =
                         fun inbox 
                             ->
                              let rec loop n =
-                                 async
-                                     { 
-                                         match! inbox.Receive() with
-                                         | Inc i -> progressBarContinuous n l; return! loop (n + i)
-                                     }
+                                 async { match! inbox.Receive() with Inc i -> progressBarContinuous n l; return! loop (n + i) }
                              loop 0
                                                  
                 return                  
@@ -917,7 +918,7 @@ module KODIS_SubmainRecord3 =
                                                           GET(uri) 
                                                       }    
                                               
-                                              use! response = (>>) get Request.sendAsync <| uri  
+                                              use! response = get >> Request.sendAsync <| uri  
                                                 
                                               match response.statusCode with
                                               | HttpStatusCode.OK 
@@ -935,7 +936,7 @@ module KODIS_SubmainRecord3 =
                                                            } 
                                                                            
                                                    match pathToFileExist with
-                                                   | Some _ -> return! (>>) response.SaveFileAsync Async.AwaitTask <| pathToFile      //Original FsHttp library function    
+                                                   | Some _ -> return! response.SaveFileAsync >> Async.AwaitTask <| pathToFile      //Original FsHttp library function    
                                                    | None   -> return ()  //nechame chybu tise projit                                                                                                                                                                  
                                               | _                
                                                   -> 
@@ -948,7 +949,7 @@ module KODIS_SubmainRecord3 =
                                  | Ok _      ->    
                                               ()
                                  | Error err ->
-                                              logInfoMsg <| sprintf "Err014 %s" (string err.Message)
+                                              sprintf "Err014 %s" >> logInfoMsg <| (string err.Message)
                                               msgParam2 uri  //nechame chybu projit v loop => nebude Result.sequence
                         )  
                     |> List.tryHead  
@@ -968,7 +969,7 @@ module KODIS_SubmainRecord3 =
             | Ok value  -> 
                          value  
             | Error err ->
-                         logInfoMsg <| sprintf "Err018 %s" err
+                         sprintf "Err018 %s" >> logInfoMsg <| err
                          closeItBaby msg16  
                          []
                            
@@ -983,7 +984,7 @@ module KODIS_SubmainRecord3 =
                      | false ->
                               msgParam5 context.dir 
                               msg13 ()    
-                              logInfoMsg <| sprintf "Err019A, directory %s does not exist" context.dir
+                              sprintf "Err019A, directory %s does not exist" >> logInfoMsg <| context.dir
                      | true  ->
                               try
                                   //input from data filtering (links * paths) -> http request -> saving pdf files on HD
@@ -995,6 +996,6 @@ module KODIS_SubmainRecord3 =
                                         msgParam4 context.dir  
                               with
                               | ex -> 
-                                    logInfoMsg <| sprintf "Err019 %s" (string ex.Message)
+                                    sprintf "Err019 %s" >> logInfoMsg <| (string ex.Message)
                                     closeItBaby msg16   
              }               
