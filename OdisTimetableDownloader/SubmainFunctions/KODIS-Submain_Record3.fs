@@ -678,7 +678,7 @@ module KODIS_SubmainRecord3 =
             }
      
         //**********************Filtering and datatable data inserting********************************************************
-        let dataToBeInserted = 
+        let dataToBeFiltered = 
             //stejna doba procesu pro vsechny varianty (List, Array, parallel)
             diggingResult    
             |> List.ofSeq
@@ -748,10 +748,9 @@ module KODIS_SubmainRecord3 =
                 )   
        
         match param with 
-        | CurrentValidity           -> Records.SortRecordData.sortLinksOut dataToBeInserted CurrentValidity |> createPathsForDownloadedFiles
-        | FutureValidity            -> Records.SortRecordData.sortLinksOut dataToBeInserted FutureValidity |> createPathsForDownloadedFiles
-        // | ReplacementService     -> Records.SortRecordData.sortLinksOut dataToBeInserted ReplacementService |> createPathsForDownloadedFiles 
-        | WithoutReplacementService -> Records.SortRecordData.sortLinksOut dataToBeInserted WithoutReplacementService |> createPathsForDownloadedFiles   
+        | CurrentValidity           -> Records.SortRecordData.sortLinksOut dataToBeFiltered currentTime dateTimeMinValue CurrentValidity |> createPathsForDownloadedFiles 
+        | FutureValidity            -> Records.SortRecordData.sortLinksOut dataToBeFiltered currentTime dateTimeMinValue FutureValidity |> createPathsForDownloadedFiles 
+        | WithoutReplacementService -> Records.SortRecordData.sortLinksOut dataToBeFiltered currentTime dateTimeMinValue WithoutReplacementService |> createPathsForDownloadedFiles 
      
     //IO operations made separate in order to have some structure in the free-monad-based design (for educational purposes)   
     let internal deleteAllODISDirectories pathToDir = 
@@ -963,7 +962,7 @@ module KODIS_SubmainRecord3 =
         try 
             digThroughJsonStructure >> filterTimetables () variant dir <| () |> Ok
         with
-        | ex -> Error <| string ex.Message
+        | ex -> Error <| string ex.Message   
         
         |> function
             | Ok value  -> 

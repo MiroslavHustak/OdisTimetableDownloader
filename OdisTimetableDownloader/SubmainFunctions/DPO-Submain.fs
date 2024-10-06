@@ -60,8 +60,18 @@ module DPO_Submain =
                       document.Descendants "a"
                       |> Seq.choose 
                           (fun htmlNode    ->
+                                            //htmlNode.TryGetAttribute "href" //inner text zatim nepotrebuji, cisla linek mam resena jinak  
+                                            //|> Option.map (fun a -> string <| htmlNode.InnerText(), string <| a.Value()) //priste to uz tak nerobit, u string zrob Option.ofNull, atd.  
                                             htmlNode.TryGetAttribute "href" //inner text zatim nepotrebuji, cisla linek mam resena jinak  
-                                            |> Option.map (fun a -> string <| htmlNode.InnerText(), string <| a.Value()) //priste to uz tak nerobit, u string zrob Option.ofNull, atd.                                         
+                                            |> Option.bind
+                                                (fun attr -> 
+                                                           let nodes = htmlNode.InnerText() |> Option.ofNullEmpty
+                                                           let attr = attr.Value() |> Option.ofNullEmpty
+                                                        
+                                                           match nodes, attr with
+                                                           | Some nodes, Some attr -> Some (nodes, attr)
+                                                           | _                     -> None 
+                                                )          
                           )  
                       |> Seq.filter
                           (fun (_ , item2) ->
