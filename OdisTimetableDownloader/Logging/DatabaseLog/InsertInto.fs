@@ -8,10 +8,15 @@ open Microsoft.Data.SqlClient
 //******************************
 
 open Logging.Logging
-open Helpers.CloseApp
 open Settings.Messages
 
-module InsertInto =     
+module InsertInto =  
+    
+    let private closeItBaby err = 
+
+        printfn "\nChyba při zápisu hodnot z logfile do DB. Zmáčkni cokoliv pro ukončení programu a mrkni se na problém. Popis chyby: %s" err     
+        Console.ReadKey() |> ignore 
+        System.Environment.Exit 1 
 
     let internal insertLogEntries (connection : SqlConnection) =
 

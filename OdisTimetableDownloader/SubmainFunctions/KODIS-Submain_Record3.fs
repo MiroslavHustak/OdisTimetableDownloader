@@ -32,8 +32,9 @@ open Settings.SettingsGeneral
 
 open Helpers.MyString
 
-open Helpers.CloseApp   
+open Helpers.CloseApp  
 open Helpers.MsgBoxClosing
+open Helpers.FileInfoHelper
 open Helpers.ProgressBarFSharp  
 
 open DataModelling.DataModel
@@ -47,55 +48,30 @@ module KODIS_SubmainRecord3 =
 
 
     //*************************Helpers************************************************************
-
-    let private readAllText pathToJson = 
-
-        pyramidOfDoom
-            {
-                let filepath = Path.GetFullPath pathToJson //pathToJson pod kontrolou, filepath nebude null
-                                                
-                let fInfoDat = FileInfo pathToJson
-                let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
-
-                return File.ReadAllText pathToJson //pathToJson pod kontrolou, fs nebude null                                            
-            }    
-
-    let private readAllTextAsync pathToJson : Async<string> = 
-
-        pyramidOfDoom
-            {
-                let filepath = Path.GetFullPath pathToJson //pathToJson pod kontrolou, filepath nebude null
-                                                
-                let fInfoDat = FileInfo pathToJson
-                let! _ = fInfoDat.Exists |> Option.ofBool, async { return String.Empty }
-
-                return File.ReadAllTextAsync pathToJson |> Async.AwaitTask //pathToJson pod kontrolou, fs nebude null                                            
-            }    
-
+      
     let private tempJson1, tempJson2 = 
+
+        let jsonEmpty = """[ {} ]"""
+
         [
-            readAllTextAsync pathkodisMHDTotal
-            readAllTextAsync pathkodisMHDTotal2_0
+            readAllTextAsync pathkodisMHDTotal msg5A
+            readAllTextAsync pathkodisMHDTotal2_0 msg5A
         ]         
         |> Async.Parallel 
         |> Async.Catch
         |> Async.RunSynchronously
         |> Result.ofChoice                      
         |> function
-            | Ok value  ->
-                         let list = value |> List.ofArray 
-                           
-                         match List.tryItem 0 list, List.tryItem 1 list with
-                         | Some a, Some b -> 
-                                           a, b
-                         | _              -> 
-                                           sprintf "Err999 %s" >> logInfoMsg <| msg5A
-                                           closeItBaby msg5A
-                                           String.Empty, String.Empty                                
-            | Error exn -> 
-                         sprintf "Err999A %s" >> logInfoMsg <| (string exn.Message)
-                         closeItBaby msg5A
-                         String.Empty, String.Empty 
+            | Ok [|a; b|] -> 
+                           a, b
+            | Ok _        ->
+                           sprintf "Err999A %s" >> logInfoMsg <| "Unexpected number of results"
+                           closeItBaby msg5A
+                           jsonEmpty, jsonEmpty                                                
+            | Error exn   -> 
+                           sprintf "Err999A %s" >> logInfoMsg <| (string exn.Message)
+                           closeItBaby msg5A
+                           jsonEmpty, jsonEmpty
     
     //********************* Infinite checking for Json files download ******************************
     
@@ -192,7 +168,7 @@ module KODIS_SubmainRecord3 =
                             (fun pathToJson 
                                 ->   
                                  try
-                                     let json = readAllText pathToJson                                        
+                                     let json = readAllText pathToJson msg5A                                       
                                      JsonProvider1.Parse json 
                                  with 
                                  | _ -> JsonProvider1.Parse tempJson1 
@@ -244,7 +220,7 @@ module KODIS_SubmainRecord3 =
                                 ->     
                                  let kodisJsonSamples =                                     
                                      try   
-                                         let json = readAllText pathToJson //tady nelze Result.sequence 
+                                         let json = readAllText pathToJson msg5A //tady nelze Result.sequence 
                                          JsonProvider2.Parse json
                                      with 
                                      | _ -> JsonProvider2.Parse tempJson2 
@@ -356,7 +332,7 @@ module KODIS_SubmainRecord3 =
                                                           
                                 let kodisJsonSamples = 
                                     try
-                                        let json = readAllText pathToJson //tady nelze Result.sequence 
+                                        let json = readAllText pathToJson msg5A //tady nelze Result.sequence 
                                         JsonProvider1.Parse json 
                                     with
                                     | _ -> JsonProvider1.Parse tempJson1                                    

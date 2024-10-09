@@ -9,7 +9,60 @@ module CloseApp =
 
         msgParam1 err      
         Console.ReadKey() |> ignore 
-        System.Environment.Exit 1  
+        System.Environment.Exit 1 
+
+module FileInfoHelper = 
+
+    open System
+    open System.IO
+    
+    open Logging.Logging
+    open Settings.Messages
+
+    open MyFsToolkit
+    open MyFsToolkit.Builders 
+
+    let internal readAllText path msg = 
+
+        pyramidOfDoom
+            {
+                //path je sice casto pod kontrolou a filepath nebude null, nicmene pro jistotu...  
+                let! filepath = Path.GetFullPath path |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" path
+                                                
+                let fInfoDat = FileInfo filepath
+                let! _ = fInfoDat.Exists |> Option.ofBool, Error <| sprintf "Soubor %s neexistuje" filepath
+
+                return Ok <| File.ReadAllText filepath                                           
+            }    
+
+        |> function
+            | Ok value  -> 
+                         value
+            | Error err -> 
+                         sprintf "Err777 %s" >> logInfoMsg <| msg
+                         CloseApp.closeItBaby msg
+                         String.Empty  
+
+    let internal readAllTextAsync path msg : Async<string> = 
+
+        pyramidOfDoom
+            {   
+                //path je sice casto pod kontrolou a filepath nebude null, nicmene pro jistotu...  
+                let! filepath = Path.GetFullPath path |> Option.ofNullEmpty, Error <| sprintf "Chyba při čtení cesty k %s" path
+
+                let fInfoDat = FileInfo filepath
+                let! _ = fInfoDat.Exists |> Option.ofBool, Error <| sprintf "Soubor %s neexistuje" filepath
+
+                return Ok (File.ReadAllTextAsync filepath |> Async.AwaitTask)                                          
+            }  
+            
+        |> function
+            | Ok value  -> 
+                         value
+            | Error err -> 
+                         sprintf "Err777A %s" >> logInfoMsg <| msg
+                         CloseApp.closeItBaby msg
+                         async { return String.Empty }   
 
 module ConsoleFixers =
 

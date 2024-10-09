@@ -162,8 +162,6 @@ module KODIS_Submain =
                                  let json = 
                                      pyramidOfDoom
                                          {
-                                             let filepath = Path.GetFullPath pathToJson //pathToJson pod kontrolou, filepath nebude null
-                                                
                                              let fInfoDat = FileInfo pathToJson
                                              let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
                                      
@@ -220,8 +218,6 @@ module KODIS_Submain =
                                  let json = //tady nelze Result.sequence 
                                      pyramidOfDoom
                                          {
-                                             let filepath = Path.GetFullPath pathToJson //pathToJson pod kontrolou, filepath nebude null
-                                             
                                              let fInfoDat = FileInfo pathToJson
                                              let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
                                      
@@ -337,8 +333,6 @@ module KODIS_Submain =
                                      let json = //tady nelze Result.sequence 
                                          pyramidOfDoom
                                              {
-                                                 let filepath = Path.GetFullPath pathToJson //pathToJson pod kontrolou, filepath nebude null
-                                                 
                                                  let fInfoDat = FileInfo pathToJson
                                                  let! _ = fInfoDat.Exists |> Option.ofBool, String.Empty
                                      

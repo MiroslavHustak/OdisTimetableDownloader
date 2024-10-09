@@ -14,7 +14,13 @@ open MyFsToolkit
 
 open Settings.SettingsGeneral
 
-module Logging =     
+module Logging =   
+    
+    let private closeItBaby err = 
+
+        printfn "\nChyba při zápisu do logfile. Zmáčkni cokoliv pro ukončení programu a mrkni se na problém. Popis chyby: %s" err     
+        Console.ReadKey() |> ignore 
+        System.Environment.Exit 1 
 
     // Function to format log entry as JSON array
     let private formatLogEntry (msg: LogMessage) =

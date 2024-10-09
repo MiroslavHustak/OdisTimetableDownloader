@@ -9,10 +9,6 @@ open FSharp.Control
 open Microsoft.FSharp.Quotations
 open FSharp.Quotations.Evaluator.QuotationEvaluationExtensions
 
-//Just for fun :-)
-//Functions seem to be as fast as Array.Parallel.iter/map for non-CPU-bound operations,
-//but I have not tested too intensively....
-
 let private expr (param : 'a) = Expr.Value(param)  
   
 let private splitListIntoEqualParts (numParts : int) (originalList : 'a list) =   //well, almost equal parts :-)           
@@ -79,6 +75,18 @@ let iter action list =
           |> Async.RunSynchronously 
           |> ignore
 
+let iter' action list =
+
+    match list with
+    | [] ->
+          ()
+    | _  ->
+          list
+          |> List.map (fun item -> async { return action item })  // Create an async task for each item
+          |> Async.Parallel  
+          |> Async.RunSynchronously  
+          |> ignore 
+
 let iter2<'a, 'b> (mapping : 'a -> 'b -> unit) (xs1 : 'a list) (xs2 : 'b list) = 
     
     let l = xs1 |> List.length   
@@ -100,7 +108,7 @@ let iter2<'a, 'b> (mapping : 'a -> 'b -> unit) (xs1 : 'a list) (xs2 : 'b list) =
              |> Async.RunSynchronously
              |> ignore
     | true  -> 
-             ()
+             () 
 
 let map (action : 'a -> 'b) (list : 'a list) =
 
@@ -122,6 +130,18 @@ let map (action : 'a -> 'b) (list : 'a list) =
           |> Async.RunSynchronously
           |> List.ofArray
           |> List.concat
+
+let map' (action : 'a -> 'b) (list : 'a list) =
+
+    match list with
+    | [] ->
+          []
+    | _  ->
+          list
+          |> List.map (fun item -> async { return action item })  
+          |> Async.Parallel  
+          |> Async.RunSynchronously  
+          |> List.ofArray
  
 let map2<'a, 'b, 'c> (mapping : 'a -> 'b -> 'c) (xs1 : 'a list) (xs2 : 'b list) =   
     
@@ -145,4 +165,4 @@ let map2<'a, 'b, 'c> (mapping : 'a -> 'b -> 'c) (xs1 : 'a list) (xs2 : 'b list) 
              |> List.ofArray
              |> List.concat
     | true  ->
-             []
+             []   

@@ -20,10 +20,6 @@
     <Compile Include="Settings\SettingsMDPO.fs" />
     <Compile Include="Settings\SettingsDPO.fs" />
     <Compile Include="Settings\SettingsKODIS.fs" />
-    <Compile Include="Helpers\FMCmdLineWorkflows.fs" />
-    <Compile Include="Helpers\Helpers.fs" />
-    <Compile Include="Helpers\MsgBoxClosing.fs" />
-    <Compile Include="Helpers\ProgressBarFSharp.fs" />
     <Compile Include="Logging\Logging.fs" />
     <Content Include="Logging\DatabaseLog\SQL_Triggers.txt" />
     <Content Include="Logging\DatabaseLog\SQL_StoredProcedures.txt" />
@@ -31,6 +27,10 @@
     <Compile Include="Logging\DatabaseLog\Connection.fs" />
     <Compile Include="Logging\DatabaseLog\LogFileData.fs" />
     <Compile Include="Logging\DatabaseLog\InsertInto.fs" />
+    <Compile Include="Helpers\FMCmdLineWorkflows.fs" />
+    <Compile Include="Helpers\Helpers.fs" />
+    <Compile Include="Helpers\MsgBoxClosing.fs" />
+    <Compile Include="Helpers\ProgressBarFSharp.fs" />
     <Compile Include="DataModelling\DataModels.fs" />
     <Compile Include="DataModelling\Dtos.fs" />
     <Compile Include="DataModelling\TransformationLayers.fs" />
