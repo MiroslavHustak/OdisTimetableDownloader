@@ -59,9 +59,43 @@ module KODIS_SubmainRecord3 =
 
                 return File.ReadAllText pathToJson //pathToJson pod kontrolou, fs nebude null                                            
             }    
-        
-    let private tempJson1 = readAllText pathkodisMHDTotal
-    let private tempJson2 = readAllText pathkodisMHDTotal2_0
+
+    let private readAllTextAsync pathToJson : Async<string> = 
+
+        pyramidOfDoom
+            {
+                let filepath = Path.GetFullPath pathToJson //pathToJson pod kontrolou, filepath nebude null
+                                                
+                let fInfoDat = FileInfo pathToJson
+                let! _ = fInfoDat.Exists |> Option.ofBool, async { return String.Empty }
+
+                return File.ReadAllTextAsync pathToJson |> Async.AwaitTask //pathToJson pod kontrolou, fs nebude null                                            
+            }    
+
+    let private tempJson1, tempJson2 = 
+        [
+            readAllTextAsync pathkodisMHDTotal
+            readAllTextAsync pathkodisMHDTotal2_0
+        ]         
+        |> Async.Parallel 
+        |> Async.Catch
+        |> Async.RunSynchronously
+        |> Result.ofChoice                      
+        |> function
+            | Ok value  ->
+                         let list = value |> List.ofArray 
+                           
+                         match List.tryItem 0 list, List.tryItem 1 list with
+                         | Some a, Some b -> 
+                                           (a, b)
+                         | _              -> 
+                                           sprintf "Err999 %s" >> logInfoMsg <| msg5A
+                                           closeItBaby msg5A
+                                           (String.Empty, String.Empty)                                
+            | Error exn -> 
+                         sprintf "Err999A %s" >> logInfoMsg <| (string exn.Message)
+                         closeItBaby msg5A
+                         (String.Empty, String.Empty) 
     
     //********************* Infinite checking for Json files download ******************************
     
