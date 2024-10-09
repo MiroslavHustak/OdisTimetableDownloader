@@ -87,15 +87,15 @@ module KODIS_SubmainRecord3 =
                            
                          match List.tryItem 0 list, List.tryItem 1 list with
                          | Some a, Some b -> 
-                                           (a, b)
+                                           a, b
                          | _              -> 
                                            sprintf "Err999 %s" >> logInfoMsg <| msg5A
                                            closeItBaby msg5A
-                                           (String.Empty, String.Empty)                                
+                                           String.Empty, String.Empty                                
             | Error exn -> 
                          sprintf "Err999A %s" >> logInfoMsg <| (string exn.Message)
                          closeItBaby msg5A
-                         (String.Empty, String.Empty) 
+                         String.Empty, String.Empty 
     
     //********************* Infinite checking for Json files download ******************************
     
