@@ -13,6 +13,7 @@ module MDPO_Submain =
     //********************************
        
     open MyFsToolkit
+    open MyFsToolkit.Builders
 
     //********************************
 
@@ -49,19 +50,17 @@ module MDPO_Submain =
                       document.Descendants "a"                  
                       |> Seq.choose 
                           (fun htmlNode    ->
-                                            //htmlNode.TryGetAttribute("href") //inner text zatim nepotrebuji, cisla linek mam resena jinak  
-                                            //|> Option.map (fun a -> string <| htmlNode.InnerText(), string <| a.Value()) //priste to uz tak nerobit, u string zrob Option.ofNull, atd. 
-                                               
                                             htmlNode.TryGetAttribute "href" //inner text zatim nepotrebuji, cisla linek mam resena jinak  
                                             |> Option.bind
                                                 (fun attr -> 
-                                                           let nodes = htmlNode.InnerText() |> Option.ofNullEmpty
-                                                           let attr = attr.Value() |> Option.ofNullEmpty
-                                                           
-                                                           match nodes, attr with
-                                                           | Some nodes, Some attr -> Some (nodes, attr)
-                                                           | _                     -> None 
-                                                )                                                     
+                                                           pyramidOfDoom
+                                                               {
+                                                                   let! nodes = htmlNode.InnerText() |> Option.ofNullEmpty, None
+                                                                   let! attr = attr.Value() |> Option.ofNullEmpty, None
+                                                               
+                                                                   return Some (nodes, attr)
+                                                               }                                                          
+                                                )                                                        
                           )      
                       |> Seq.filter 
                           (fun (_ , item2) -> 
@@ -89,7 +88,16 @@ module MDPO_Submain =
         |> Seq.choose 
             (fun htmlNode    ->
                               htmlNode.TryGetAttribute("href") //inner text zatim nepotrebuji, cisla linek mam resena jinak 
-                              |> Option.map (fun a -> string <| htmlNode.InnerText(), string <| a.Value()) //priste to uz tak nerobit, u string zrob Option.ofStringObj, atd.                                            
+                              |> Option.bind
+                                  (fun attr -> 
+                                             pyramidOfDoom
+                                                 {
+                                                     let! nodes = htmlNode.InnerText() |> Option.ofNullEmpty, None
+                                                     let! attr = attr.Value() |> Option.ofNullEmpty, None
+                                                     
+                                                     return Some (nodes, attr)
+                                                 }                                                          
+                                  )                                                     
             )      
         |> Seq.filter 
             (fun (_ , item2) -> 

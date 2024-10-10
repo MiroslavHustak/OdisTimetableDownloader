@@ -224,7 +224,7 @@ module SettingsKODIS =
             sprintf "%s%s" partialPathJson @"kodisNAD2_0.json"
         ] 
         
-    let private codes = [ "0"; "12"; "24"; "48"; "60"; "72" ] //let s = "{\"data\":[],\"meta\""
+    let private codes = [ "0"; "12"; "24"; "48"; "60"; "72"; "84" ] //let s = "{\"data\":[],\"meta\""
         
     //Json Provider 2 
     let private jsonLinkListPartial code =
