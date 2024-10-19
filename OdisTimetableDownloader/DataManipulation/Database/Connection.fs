@@ -10,7 +10,7 @@ open Settings.Messages
 
 module Connection =   
 
-    let getConnectionAsync () =
+    let internal getConnectionAsync () =
 
         let connString = @"Data Source=Misa\SQLEXPRESS;Initial Catalog=TimetableDownloader;Integrated Security=True;Encrypt=False"
 
@@ -44,7 +44,8 @@ module Connection =
                         async 
                             {
                                 do! connection.DisposeAsync().AsTask() |> Async.AwaitTask
-                            } |> Async.StartImmediate                      
+                            } 
+                        |> Async.StartImmediate                      
                 with 
                 | ex -> return Error <| string ex.Message
             }   

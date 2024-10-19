@@ -23,7 +23,9 @@ open TransformationLayers.TransformationLayerGet
 
 module Select =
 
-    let internal selectAsync (connection : SqlConnection) pathToDir itvfCall = //jen jako template pro jine app, v konzolove aplikaci to nema zrejme vyznam
+    //template pro async connection je v mem SAFE Stack template
+
+    let internal selectAsync (connection : SqlConnection) pathToDir itvfCall = //jen jako template pro jine app, v konzolove aplikaci to nema vyznam
         
         async
             {
@@ -34,7 +36,7 @@ module Select =
                     let query = sprintf "SELECT * FROM %s" itvfCall  
                     use cmdCallITVFunction = new SqlCommand(query, connection)
     
-                    let! reader = cmdCallITVFunction.ExecuteReaderAsync() |> Async.AwaitTask
+                    use! reader = cmdCallITVFunction.ExecuteReaderAsync() |> Async.AwaitTask
     
                     try
                         let records = 
@@ -43,9 +45,9 @@ module Select =
                                 (fun () -> 
                                          async 
                                              {
-                                                 let! successfullyRead = reader.ReadAsync() |> Async.AwaitTask
+                                                 let successfullyRead = reader.ReadAsync() |> Async.AwaitTask
 
-                                                 match successfullyRead with
+                                                 match! successfullyRead with
                                                  | true  ->
                                                           let indexCompleteLink = reader.GetOrdinal "CompleteLink"
                                                           let indexFileToBeSaved = reader.GetOrdinal "FileToBeSaved"
@@ -81,7 +83,7 @@ module Select =
                         return results |> Result.sequence
     
                     finally
-                        reader.Dispose() 
+                        () //async { return! reader.DisposeAsync().AsTask() |> Async.AwaitTask } |> Async.StartImmediate
     
                 with
                 | ex -> return Error <| string ex.Message
@@ -105,6 +107,8 @@ module Select =
                          closeItBaby msg18
                          []  
                 )
+
+    //******************************** Sync variant ********************************
 
     let internal select (connection : SqlConnection) pathToDir itvfCall =
         

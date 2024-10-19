@@ -22,6 +22,9 @@ open DataModelling.DataModel
 
 module InsertInto =     
 
+    //******************************** Sync variant ********************************
+    //Template pro async je v mem SAFE Stack template, funkce insertOrUpdateAsync (connection: Async<Result<SqlConnection, string>>) ...
+
     let internal insert (connection : SqlConnection) (dataToBeInserted : DbDtoSend list) =
     
         let queryDeleteAll = "DELETE FROM TimetableLinks"
