@@ -96,7 +96,7 @@ let main argv =
     *)
     
     //*****************************Console******************************  
-    let updateDate = "20-10-2024"
+    let updateDate = "25-10-2024"
 
     try
         consoleAppProblemFixer() 
@@ -113,7 +113,7 @@ let main argv =
                      closeItBaby "Problém s textovým rozhraním." 
      
     //*****************************WebScraping******************************  
-    
+        
     let myWebscraping_DPO x =
 
         Console.Clear()
@@ -370,6 +370,23 @@ let main argv =
                        printfn "Gratuluji, ale pokud nevíš, co test obnáší, raději ukonči tento program ... \n"  
             
                        DtDbMVariantTest.Test2.main () 
+
+                       printfn "Stiskni cokoliv pro návrat na hlavní stránku."
+                       Console.ReadKey() |> ignore
+
+                       variant() 
+            | "74601" -> 
+                       printfn "\nTrefil jsi zrovna kód pro web testing tool zvaný Canopy."
+                       printfn "Gratuluji, ale pokud nevíš, co test obnáší, raději ukonči tento program ... \n"  
+
+                       printfn "Stiskni cokoliv pro pokračování testu."
+                       Console.ReadKey () |> ignore
+            
+                       match MyCanopy.MyCanopy.canopyResult () with
+                       | Ok _      -> printfn "\nSerializace proběhla v pořádku" 
+                       | Error err -> printfn "Chyba při serializaci: %s" err 
+
+                       Console.ReadKey () |> ignore
 
                        printfn "Stiskni cokoliv pro návrat na hlavní stránku."
                        Console.ReadKey() |> ignore

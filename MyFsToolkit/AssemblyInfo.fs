@@ -7,4 +7,5 @@ module AssemblyInfo =
     [<assembly : InternalsVisibleTo("OdisTimetableDownloader")>]
     [<assembly : InternalsVisibleTo("DtDbMVariantTest")>]
     [<assembly : InternalsVisibleTo("JsonLinkScraper")>]
+    [<assembly : InternalsVisibleTo("MyCanopy")>]
     do ()
