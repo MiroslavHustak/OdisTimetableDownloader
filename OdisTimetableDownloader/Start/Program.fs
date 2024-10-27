@@ -11,6 +11,8 @@ open BenchmarkDotNet.Attributes
 //**************************
 
 open MyFsToolkit
+open MyFsToolkit.Builders
+
 open Puppeteer.Links
 open BrowserDialogWindow
 
@@ -28,6 +30,9 @@ open Logging.Logging
 open Settings.Messages
 open Settings.SettingsKODIS
 open Settings.SettingsGeneral
+
+open Serialization.Serialisation
+open Serialization.Deserialisation
 
 open MainFunctions.WebScraping_DPO
 open MainFunctions.WebScraping_MDPO
@@ -332,7 +337,7 @@ let main argv =
                        myWebscraping_MDPO >> timetableVariant <| ()                      
             | "3"     ->
                        myWebscraping_KODIS >> timetableVariant <| ()   
-            | "74764" -> 
+            | "74766" -> 
                        printfn "\nTrefil jsi zrovna kód pro přístup k testování shodnosti odkazů na JSON soubory."
                        printfn "Gratuluji, ale pokud nevíš, co test obnáší, raději ukonči tento program ... \n"  
                    
@@ -383,7 +388,7 @@ let main argv =
                        Console.ReadKey () |> ignore
             
                        match MyCanopy.MyCanopy.canopyResult () with
-                       | Ok _      -> printfn "\nSerializace proběhla v pořádku" 
+                       | Ok _      -> printfn "\nSerializace proběhla v pořádku." 
                        | Error err -> printfn "Chyba při serializaci: %s" err 
 
                        Console.ReadKey () |> ignore
@@ -391,8 +396,45 @@ let main argv =
                        printfn "Stiskni cokoliv pro návrat na hlavní stránku."
                        Console.ReadKey() |> ignore
 
-                       variant()  
-                
+                       variant()                        
+            | "74764" -> 
+                       printfn "\nTrefil jsi zrovna kód pro přístup k testování shodnosti odkazů na JSON soubory."
+                       printfn "Gratuluji, ale pokud nevíš, co test obnáší, raději ukonči tento program ... \n"  
+            
+                       try         
+                            pyramidOfInferno
+                                {
+                                    let! list1 = deserializeFromJsonThoth2<string list> "CanopyResults/canopy_results.json", printfn "ErrorT 001 %s"
+                                    
+                                    let list1 =  
+                                        list1 
+                                        |> List.distinct 
+                                        |> List.filter (fun item -> not (item.Contains "2022") && not (item.Contains "timetables"))
+                                    
+                                    let! list2 = deserializeFromJsonThoth2<string list> "CanopyResults/filtered_results.json", printfn "ErrorT 002 %s"
+
+                                    let list3 = 
+                                        list1 
+                                        |> List.distinct 
+                                        |> List.filter (fun item -> not (List.contains item list2)) 
+                                        |> List.sort
+
+                                    let result = 
+                                        match serializeToJsonThoth2 list3 "CanopyResults/results.json" with
+                                        | Ok _      -> "Serializace výsledků ověřovacího testu proběhla v pořádku." 
+                                        | Error err -> sprintf "Chyba při serializaci: %s" err 
+                                    
+                                    printfn "%s" result
+                                        
+                                    return printfn "V canopyList je a v filteredList není: \n%A" list3
+                                }
+                       with
+                       | ex -> printfn "ErrorT 003 %s" (string ex.Message)
+            
+                       printfn "Stiskni cokoliv pro návrat na hlavní stránku."
+                       Console.ReadKey() |> ignore
+
+                       variant()                
             | _       ->
                        printfn "Varianta nebyla vybrána. Prosím zadej znovu."
                        variant()

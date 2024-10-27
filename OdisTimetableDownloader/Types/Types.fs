@@ -18,4 +18,5 @@ module Types =
             listMappingFunction : ('a -> 'b -> 'c) -> 'a list -> 'b list -> 'c list
             dir : string
             list : (string * string) list
+            canopyTest : bool
         }

@@ -93,8 +93,11 @@ module MyCanopy =
 
                 (pdfLinkList1 @ pdfLinkList2) |> List.choose id
             
-            let list = urls |> List.collect scrapeUrl
-
+            let list = 
+                urls 
+                |> List.collect scrapeUrl
+                |> List.filter (fun item -> not <| item.Contains "2022")
+           
             serializeToJsonThoth2 list "CanopyResults/canopy_results.json" 
 
         with

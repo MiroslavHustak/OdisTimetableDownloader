@@ -39,6 +39,7 @@ open Helpers.ProgressBarFSharp
 
 open DataModelling.DataModel
 
+open Serialization.Serialisation
 
 module KODIS_SubmainRecord3 =    
         
@@ -970,7 +971,20 @@ module KODIS_SubmainRecord3 =
         //operation on data
         //input from saved json files -> change of input data -> output into seq >> input from seq -> change of input data -> output into datatable -> data filtering (links*paths)          
         try 
-            digThroughJsonStructure >> filterTimetables () variant dir <| () |> Ok
+            let links = digThroughJsonStructure ()
+
+            let linksToBeSaved = 
+                links
+                |> List.ofSeq
+                |> List.filter (fun item -> not <| item.Contains "2022")
+
+            match serializeToJsonThoth2 linksToBeSaved "CanopyResults/json_download_results.json" with
+            | Ok _      -> printfn "Serializace odkazů pro ověření proběhla v pořádku." 
+            | Error err -> printfn "Chyba při serializaci: %s" err 
+
+            filterTimetables () variant dir links |> Ok
+            //digThroughJsonStructure >> filterTimetables () variant dir <| () |> Ok
+
         with
         | ex -> Error <| string ex.Message   
         
@@ -996,6 +1010,14 @@ module KODIS_SubmainRecord3 =
                               sprintf "Err019A, directory %s does not exist" >> logInfoMsg <| context.dir
                      | true  ->
                               try
+                                  match context.canopyTest with
+                                  | true  -> 
+                                           match serializeToJsonThoth2 (context.list |> List.unzip |> fst) "CanopyResults/filtered_results.json" with
+                                           | Ok _      -> printfn "Serializace filtrovaných odkazů pro ověření proběhla v pořádku." 
+                                           | Error err -> printfn "Chyba při serializaci: %s" err 
+                                  | false -> 
+                                           ()
+
                                   //input from data filtering (links * paths) -> http request -> saving pdf files on HD
                                   match context.list with
                                   | [] ->

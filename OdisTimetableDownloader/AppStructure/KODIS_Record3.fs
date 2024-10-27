@@ -131,6 +131,7 @@ module WebScraping_KODISFMRecord3 =
                                                                          listMappingFunction = listMappingFunction
                                                                          dir = dir
                                                                          list = list 
+                                                                         canopyTest = true
                                                                      }                                                                
                                                                
                                                                  match list.Length >= 8 with //eqv of 8 threads
@@ -166,6 +167,7 @@ module WebScraping_KODISFMRecord3 =
                                                                                   listMappingFunction = listMappingFunction
                                                                                   dir = dir
                                                                                   list = list
+                                                                                  canopyTest = false
                                                                               }                                                 
                                                   
                                                                           match variant with
