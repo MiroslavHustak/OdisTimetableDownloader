@@ -50,12 +50,14 @@
     <Compile Include="SubmainFunctions\DPO-Submain.fs" />
     <Compile Include="SubmainFunctions\MDPO-Submain.fs" />
     <Compile Include="SubmainFunctions\KODIS-Submain_Record3.fs" />
+    <Compile Include="SubmainFunctions\KODIS-Submain_Record4.fs" />
     <Compile Include="AppStructure\VariantCode\KODIS_Record.fs" />
     <Compile Include="AppStructure\VariantCode\KODIS_DataTable.fs" />
     <Compile Include="AppStructure\VariantCode\KODIS_Database.fs" />
     <Compile Include="AppStructure\DPO.fs" />
     <Compile Include="AppStructure\MDPO.fs" />
     <Compile Include="AppStructure\KODIS_Record3.fs" />
+    <Compile Include="AppStructure\KODIS_Record4.fs" />
     <Compile Include="Start\Program.fs" />
   </ItemGroup>
 

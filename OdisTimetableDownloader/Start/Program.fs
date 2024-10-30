@@ -243,6 +243,7 @@ let main argv =
                                          Console.Clear()
                                             
                                          MainFunctions3.WebScraping_KODISFMRecord3.webscraping_KODISFMRecord3 path variant
+                                         //MainFunctions4.WebScraping_KODISFMRecord4.webscraping_KODISFMRecord4 path variant
                                          //webscraping_KODISFMRecord path variant //record-based app 
                                          
                                          //webscraping_KODISFMDataTable path variant //datatable-based app
@@ -390,6 +391,10 @@ let main argv =
                        match MyCanopy.MyCanopy.canopyResult () with
                        | Ok _      -> printfn "\nSerializace proběhla v pořádku." 
                        | Error err -> printfn "Chyba při serializaci: %s" err 
+
+                       let result = MyCanopy.MyCanopy.putToRestApiTest ()
+                       printfn "%s" result.Message1 
+                       printfn "%s" result.Message2 
 
                        Console.ReadKey () |> ignore
 
