@@ -143,24 +143,24 @@ module KODIS_SubmainRecord4 =
                     match response.statusCode with
                     | HttpStatusCode.OK 
                         -> 
-                            let! jsonString = Response.toTextAsync response 
+                         let! jsonString = Response.toTextAsync response 
         
-                            return
-                                Decode.fromString decoderGetTest jsonString   
-                                |> function
-                                    | Ok value  ->
-                                                value                                
-                                    | Error err ->
-                                                { 
-                                                    GetLinks = String.Empty
-                                                    Message = err
-                                                } 
+                         return
+                             Decode.fromString decoderGetTest jsonString   
+                             |> function
+                                 | Ok value  ->
+                                              value                                
+                                 | Error err ->
+                                              { 
+                                                  GetLinks = String.Empty
+                                                  Message = err
+                                              } 
                     | _ -> 
-                            return 
-                                { 
-                                    GetLinks = String.Empty
-                                    Message = sprintf "Request failed with status code %d" (int response.statusCode)
-                                } 
+                         return 
+                             { 
+                                 GetLinks = String.Empty
+                                 Message = sprintf "Request failed with status code %d" (int response.statusCode)
+                             } 
                 }   
             |> Async.RunSynchronously      
                 
