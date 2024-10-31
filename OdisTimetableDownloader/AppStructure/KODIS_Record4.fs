@@ -19,6 +19,8 @@ open Helpers.CommandLineWorkflow
 open SubmainFunctions4
 open SubmainFunctions4.KODIS_SubmainRecord4
 
+// 30-10-2024 Docasne reseni do doby, nez v KODISu odstrani naprosty chaos v json souborech a v retezcich jednotlivych odkazu  
+
 module WebScraping_KODISFMRecord4 = 
     
     //FREE MONAD 

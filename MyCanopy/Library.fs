@@ -162,7 +162,7 @@ module MyCanopy =
             {
                 let path = "CanopyResults/canopy_results.json"                
                 let url = "http://kodis.somee.com/api/" 
-                let apiKeyTest = "test74764"
+                let apiKeyTest = ""
                                                       
                 let thothJsonPayload =                    
                     match getJsonString path with

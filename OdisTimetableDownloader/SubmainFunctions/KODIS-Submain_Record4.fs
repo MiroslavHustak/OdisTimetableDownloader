@@ -46,7 +46,7 @@ open Serialization.Serialisation
 
 module KODIS_SubmainRecord4 =    
         
-    // 29-10-2024 Docasne reseni do doby, nez v KODISu odstrani naprosty chaos json souborech a v retezcech jednotlivych odkazu    
+    // 29-10-2024 Docasne reseni do doby, nez v KODISu odstrani naprosty chaos v json souborech a v retezcich jednotlivych odkazu    
 
     //*************************Helpers************************************************************
       
@@ -112,8 +112,8 @@ module KODIS_SubmainRecord4 =
         Decode.object
             (fun get ->
                       {
-                          GetLinks  = get.Required.Field "GetLinks" Decode.string
-                          Message  = get.Required.Field "Message" Decode.string
+                          GetLinks = get.Required.Field "GetLinks" Decode.string
+                          Message = get.Required.Field "Message" Decode.string
                       }
             )
 
@@ -152,14 +152,14 @@ module KODIS_SubmainRecord4 =
                                                 value                                
                                     | Error err ->
                                                 { 
-                                                    GetLinks  = String.Empty
-                                                    Message  = err
+                                                    GetLinks = String.Empty
+                                                    Message = err
                                                 } 
                     | _ -> 
                             return 
                                 { 
                                     GetLinks = String.Empty
-                                    Message  = sprintf "Request failed with status code %d" (int response.statusCode)
+                                    Message = sprintf "Request failed with status code %d" (int response.statusCode)
                                 } 
                 }   
             |> Async.RunSynchronously      
