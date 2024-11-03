@@ -30,7 +30,9 @@ module MyCanopy =
     
             //In CSS selectors, the . before a word or identifier specifies a class.    
             //<li class="Card_wrapper__ZQ5Fp">
-            let linksShown () = (canopy.classic.elements ".Card_wrapper__ZQ5Fp").Length >= 1 // //".Card_wrapper__ZQ5Fp" //.Card_actions__HhB_f
+            let linksShown () = (canopy.classic.elements ".Card_actions__HhB_f").Length >= 1 // //".Card_wrapper__ZQ5Fp" //.Card_actions__HhB_f
+
+            let linksShown2 () = (canopy.classic.elements ".Card_actions__HhB_f").Length >= 1 // //".Card_wrapper__ZQ5Fp" //.Card_actions__HhB_f //<div class="Card_menu__mL6mB" aria-labelledby="headlessui-menu-button-52" id="headlessui-menu-items-69" role="menu" tabindex="0"><div class="py-1" role="none"><a href="/changes/2227" class="text-gray-700 Card_menuItem__Q0EYk" id="headlessui-menu-item-70" role="menuitem" tabindex="-1">POZOR! ZMĚNA! Oprava kruhového objezdu v Opavě - Jaktaři</a><a href="https://kodis-files.s3.eu-central-1.amazonaws.com/249_2024_11_13_2024_11_19_v_db3f413f26.pdf" target="_blank" class="text-gray-700 Card_menuItem__Q0EYk" id="headlessui-menu-item-71" role="menuitem" tabindex="-1">Úplná uzavírka Sportovní ulice ve Velkých Heralticích</a></div></div>
             
             let urls = 
                 [
@@ -70,7 +72,8 @@ module MyCanopy =
                     Thread.Sleep 10000                     
                     canopy.classic.waitFor linksShown 
                     
-                    //canopy.classic.elements "a[title='Aktuální jízdní řád']" //title="Pravidelný jízdní řád"
+                    //canopy.classic.elements "a[title='Aktuální jízdní řád']" //title="Pravidelný jízdní řád" 
+
                     canopy.classic.elements "a"
                     |> Seq.map 
                         (fun item -> 
@@ -104,7 +107,7 @@ module MyCanopy =
                     |> Seq.distinct
                     |> Seq.toList                  
 
-                (pdfLinkList1 @ pdfLinkList2) |> List.choose id
+                (pdfLinkList1 @ pdfLinkList2) |> List.choose id           
             
             let list = 
                 urls 
@@ -162,7 +165,7 @@ module MyCanopy =
             {
                 let path = "CanopyResults/canopy_results.json"                
                 let url = "http://kodis.somee.com/api/" 
-                let apiKeyTest = ""
+                let apiKeyTest = "test747646s5d4fvasfd645654asgasga654a6g13a2fg465a4fg4a3"
                                                       
                 let thothJsonPayload =                    
                     match getJsonString path with
