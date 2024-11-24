@@ -809,15 +809,15 @@ module KODIS_SubmainRecord3 =
                         match response.statusCode with
                         | HttpStatusCode.OK 
                             -> 
-                                let! jsonMsg = Response.toTextAsync response
+                            let! jsonMsg = Response.toTextAsync response
     
-                                return                          
-                                    Decode.fromString decoderPutTest jsonMsg   
-                                    |> function
-                                        | Ok value  -> value   
-                                        | Error err -> { Message1 = String.Empty; Message2 = err }      
+                            return                          
+                                Decode.fromString decoderPutTest jsonMsg   
+                                |> function
+                                    | Ok value  -> value   
+                                    | Error err -> { Message1 = String.Empty; Message2 = err }      
                         | _ -> 
-                                return { Message1 = String.Empty; Message2 = sprintf "Request failed with status code %d" (int response.statusCode) }                                           
+                            return { Message1 = String.Empty; Message2 = sprintf "Request failed with status code %d" (int response.statusCode) }                                           
                     } 
                     |> Async.Catch 
                     |> Async.RunSynchronously  
