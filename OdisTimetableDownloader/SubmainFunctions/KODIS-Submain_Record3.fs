@@ -40,6 +40,7 @@ open Helpers.ProgressBarFSharp
 open DataModelling.DataModel
 
 open Serialization.Serialisation
+open Thoth.Json.Net
 
 module KODIS_SubmainRecord3 =    
         
@@ -49,6 +50,21 @@ module KODIS_SubmainRecord3 =
 
 
     //*************************Helpers************************************************************
+
+    type ResponsePut = 
+        {
+            Message1 : string
+            Message2 : string
+        }
+
+    let internal decoderPutTest : Decoder<ResponsePut> =
+        Decode.object
+            (fun get ->
+                      {
+                          Message1 = get.Required.Field "Message1" Decode.string
+                          Message2 = get.Required.Field "Message2" Decode.string
+                      }
+            )
       
     let private tempJson1, tempJson2 = 
 
@@ -754,9 +770,70 @@ module KODIS_SubmainRecord3 =
                 )   
        
         match param with 
-        | CurrentValidity           -> Records.SortRecordData.sortLinksOut dataToBeFiltered CurrentValidity |> createPathsForDownloadedFiles 
-        | FutureValidity            -> Records.SortRecordData.sortLinksOut dataToBeFiltered FutureValidity |> createPathsForDownloadedFiles 
-        | WithoutReplacementService -> Records.SortRecordData.sortLinksOut dataToBeFiltered WithoutReplacementService |> createPathsForDownloadedFiles 
+        | CurrentValidity          
+            -> 
+            Records.SortRecordData.sortLinksOut dataToBeFiltered CurrentValidity |> createPathsForDownloadedFiles 
+        
+        | FutureValidity          
+            ->
+            let list = Records.SortRecordData.sortLinksOut dataToBeFiltered FutureValidity |> createPathsForDownloadedFiles 
+
+            let (links, _) = list |> List.unzip
+                                    
+            //let jsonPayload = "[" + (links |> List.map (sprintf "\"%s\"") |> String.concat ",") + "]" //tohle ne
+
+            //transformace na json string            
+            let s1 = "{ \"list\": ["
+            let s2 = links |> List.map (sprintf "\"%s\"") |> String.concat ","
+            let s3 = "] }"
+            
+            let jsonPayload = sprintf "%s%s%s" s1 s2 s3                  
+
+            let result = 
+                async
+                    {
+                        let path = "CanopyResults/jsonLinks_results.json"                
+                        let url = "http://kodis.somee.com/api/jsonLinks" 
+                        let apiKeyTest = "test747646s5d4fvasfd645654asgasga654a6g13a2fg465a4fg4a3"
+                                                                                   
+                        let! response = 
+                            http
+                                {
+                                    PUT url
+                                    header "X-API-KEY" apiKeyTest 
+                                    body 
+                                    json jsonPayload
+                                }
+                            |> Request.sendAsync       
+                                                
+                        match response.statusCode with
+                        | HttpStatusCode.OK 
+                            -> 
+                                let! jsonMsg = Response.toTextAsync response
+    
+                                return                          
+                                    Decode.fromString decoderPutTest jsonMsg   
+                                    |> function
+                                        | Ok value  -> value   
+                                        | Error err -> { Message1 = String.Empty; Message2 = err }      
+                        | _ -> 
+                                return { Message1 = String.Empty; Message2 = sprintf "Request failed with status code %d" (int response.statusCode) }                                           
+                    } 
+                    |> Async.Catch 
+                    |> Async.RunSynchronously  
+                    |> Result.ofChoice    
+                    |> function
+                        | Ok value -> value 
+                        | Error ex -> { Message1 = String.Empty; Message2 = string ex.Message }    
+
+            printfn "%s" result.Message1 
+            printfn "%s" result.Message2     
+
+            list
+        
+        | WithoutReplacementService
+            ->
+            Records.SortRecordData.sortLinksOut dataToBeFiltered WithoutReplacementService |> createPathsForDownloadedFiles 
      
     //IO operations made separate in order to have some structure in the free-monad-based design (for educational purposes)   
     let internal deleteAllODISDirectories pathToDir = 

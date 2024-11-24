@@ -11,6 +11,7 @@ open System.Net
 
 open FsHttp
 open Thoth.Json.Net
+open FsToolkit.ErrorHandling
 
 open MyFsToolkit
 open System.Threading
@@ -195,4 +196,9 @@ module MyCanopy =
                 | _ -> 
                      return { Message1 = String.Empty; Message2 = sprintf "Request failed with status code %d" (int response.statusCode) }                                           
             } 
-        |> Async.RunSynchronously   
+        |> Async.Catch 
+        |> Async.RunSynchronously  
+        |> Result.ofChoice    
+        |> function
+            | Ok value -> value 
+            | Error ex -> { Message1 = String.Empty; Message2 = string ex.Message }   
