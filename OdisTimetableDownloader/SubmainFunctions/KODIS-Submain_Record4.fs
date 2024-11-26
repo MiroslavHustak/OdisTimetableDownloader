@@ -587,7 +587,7 @@ module KODIS_SubmainRecord4 =
                                             Directory.CreateDirectory dir |> ignore
                                  )           
                      | _    -> 
-                             Directory.CreateDirectory (sprintf "%s" dir) |> ignore           
+                             Directory.CreateDirectory dir |> ignore           
                 )
                 |> Ok
         with 
