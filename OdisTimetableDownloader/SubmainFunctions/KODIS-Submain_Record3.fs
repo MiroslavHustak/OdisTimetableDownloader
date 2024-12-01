@@ -10,6 +10,7 @@ open System.Text.RegularExpressions
 
 open FsHttp
 open FSharp.Control
+open Thoth.Json.Net
 open FsToolkit.ErrorHandling
 open FSharp.Quotations.Evaluator.QuotationEvaluationExtensions
 
@@ -17,6 +18,7 @@ open FSharp.Quotations.Evaluator.QuotationEvaluationExtensions
 
 open MyFsToolkit
 open MyFsToolkit.Builders
+
 open EmbeddedTP.EmbeddedTP
 
 //************************************************************
@@ -40,7 +42,6 @@ open Helpers.ProgressBarFSharp
 open DataModelling.DataModel
 
 open Serialization.Serialisation
-open Thoth.Json.Net
 
 module KODIS_SubmainRecord3 =    
         
