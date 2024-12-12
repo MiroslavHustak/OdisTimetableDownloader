@@ -390,7 +390,7 @@ let main argv =
             
                        match MyCanopy.MyCanopy.canopyResult () with
                        | Ok _      -> printfn "\nSerializace proběhla v pořádku." 
-                       | Error err -> printfn "Chyba při serializaci: %s" err 
+                       | Error err -> printfn "Chyba při serializaci 3: %s" err 
 
                        let result = MyCanopy.MyCanopy.putToRestApiTest ()
                        printfn "%s" result.Message1 
@@ -427,7 +427,7 @@ let main argv =
                                     let result = 
                                         match serializeToJsonThoth2 list3 "CanopyResults/results.json" with
                                         | Ok _      -> "Serializace výsledků ověřovacího testu proběhla v pořádku." 
-                                        | Error err -> sprintf "Chyba při serializaci: %s" err 
+                                        | Error err -> sprintf "Chyba při serializaci 4: %s" err 
                                     
                                     printfn "%s" result
                                         

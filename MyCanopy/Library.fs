@@ -31,9 +31,10 @@ module MyCanopy =
     
             //In CSS selectors, the . before a word or identifier specifies a class.    
             //<li class="Card_wrapper__ZQ5Fp">
-            let linksShown () = (canopy.classic.elements ".Card_actions__HhB_f").Length >= 1 // //".Card_wrapper__ZQ5Fp" //.Card_actions__HhB_f
 
-            let linksShown2 () = (canopy.classic.elements ".Card_actions__HhB_f").Length >= 1 // //".Card_wrapper__ZQ5Fp" //.Card_actions__HhB_f //<div class="Card_menu__mL6mB" aria-labelledby="headlessui-menu-button-52" id="headlessui-menu-items-69" role="menu" tabindex="0"><div class="py-1" role="none"><a href="/changes/2227" class="text-gray-700 Card_menuItem__Q0EYk" id="headlessui-menu-item-70" role="menuitem" tabindex="-1">POZOR! ZMĚNA! Oprava kruhového objezdu v Opavě - Jaktaři</a><a href="https://kodis-files.s3.eu-central-1.amazonaws.com/249_2024_11_13_2024_11_19_v_db3f413f26.pdf" target="_blank" class="text-gray-700 Card_menuItem__Q0EYk" id="headlessui-menu-item-71" role="menuitem" tabindex="-1">Úplná uzavírka Sportovní ulice ve Velkých Heralticích</a></div></div>
+            let linksShown () = (canopy.classic.elements ".Card_actions__HhB_f").Length >= 1
+
+            //".Card_wrapper__ZQ5Fp" //.Card_actions__HhB_f //<div class="Card_menu__mL6mB" aria-labelledby="headlessui-menu-button-52" id="headlessui-menu-items-69" role="menu" tabindex="0"><div class="py-1" role="none"><a href="/changes/2227" class="text-gray-700 Card_menuItem__Q0EYk" id="headlessui-menu-item-70" role="menuitem" tabindex="-1">POZOR! ZMĚNA! Oprava kruhového objezdu v Opavě - Jaktaři</a><a href="https://kodis-files.s3.eu-central-1.amazonaws.com/249_2024_11_13_2024_11_19_v_db3f413f26.pdf" target="_blank" class="text-gray-700 Card_menuItem__Q0EYk" id="headlessui-menu-item-71" role="menuitem" tabindex="-1">Úplná uzavírka Sportovní ulice ve Velkých Heralticích</a></div></div>
             
             let urls = 
                 [
@@ -65,60 +66,66 @@ module MyCanopy =
                 ]
 
             let scrapeUrl (url: string) =
+                try
+                    canopy.classic.url url
 
-                canopy.classic.url url
+                    let pdfLinkSeq () =
 
-                let pdfLinkSeq () =
-
-                    Thread.Sleep 10000                     
-                    canopy.classic.waitFor linksShown 
+                        Thread.Sleep 20000                     
+                        canopy.classic.waitFor linksShown 
                     
-                    //canopy.classic.elements "a[title='Aktuální jízdní řád']" //title="Pravidelný jízdní řád" 
+                        //canopy.classic.elements "a[title='Aktuální jízdní řád']" //title="Pravidelný jízdní řád" 
 
-                    canopy.classic.elements "a"
-                    |> Seq.map 
-                        (fun item -> 
-                                   let href = string <| item.GetAttribute("href")
-                                   match href.EndsWith("pdf") with
-                                   | true  -> 
-                                            printfn "%s" href
-                                            Some href
-                                   | false -> 
-                                            None
-                        )
-                    |> Seq.distinct
+                        canopy.classic.elements "a"
+                        |> Seq.map 
+                            (fun item -> 
+                                       let href = string <| item.GetAttribute("href")
+                                       match href.EndsWith("pdf") with
+                                       | true  -> 
+                                                printfn "%s" href
+                                                Some href
+                                       | false -> 
+                                                None
+                            )
+                        |> Seq.distinct
 
-                let clickCondition () =
-                    try
-                        let nextButton = canopy.classic.elementWithText "a" "Další"
-                        nextButton.Displayed && nextButton.Enabled
-                    with
-                    | _ -> false
+                    let clickCondition () =
+                        try
+                            let nextButton = canopy.classic.elementWithText "a" "Další"
+                            nextButton.Displayed && nextButton.Enabled
+                        with
+                        | _ -> false
     
-                let pdfLinkList1 = pdfLinkSeq () |> Seq.distinct |> List.ofSeq
+                    let pdfLinkList1 = pdfLinkSeq () |> Seq.distinct |> List.ofSeq
 
-                let pdfLinkList2 = 
-                    Seq.initInfinite (fun _ -> clickCondition())
-                    |> Seq.takeWhile ((=) true) 
-                    |> Seq.collect
-                        (fun _ -> 
-                                canopy.classic.click (canopy.classic.elementWithText "a" "Další")
-                                pdfLinkSeq ()
-                        )
-                    |> Seq.distinct
-                    |> Seq.toList                  
+                    let pdfLinkList2 = 
+                        Seq.initInfinite (fun _ -> clickCondition())
+                        |> Seq.takeWhile ((=) true) 
+                        |> Seq.collect
+                            (fun _ -> 
+                                    canopy.classic.click (canopy.classic.elementWithText "a" "Další")
+                                    pdfLinkSeq ()
+                            )
+                        |> Seq.distinct
+                        |> Seq.toList                  
 
-                (pdfLinkList1 @ pdfLinkList2) |> List.choose id           
-            
+                    (pdfLinkList1 @ pdfLinkList2) |> List.choose id      
+                with
+                | _ ->
+                     Console.BackgroundColor <- ConsoleColor.Blue 
+                     Console.ForegroundColor <- ConsoleColor.White 
+                     printfn "Na tomto odkazu se momentálně nenachází žádné JŘ: %s" url 
+                     [] 
+                                     
             let list = 
                 urls 
                 |> List.collect scrapeUrl
-                |> List.filter (fun item -> not <| item.Contains "2022")
-           
+                |> List.filter (fun item -> not <| item.Contains "2022")    
+
             serializeToJsonThoth2 list "CanopyResults/canopy_results.json" 
 
         with
-        | ex -> Error (string ex.Message)
+        | ex -> Error (sprintf "%s %s" <| string ex.Message <| " Error Canopy 001")
 
     type ResponsePut = 
         {
@@ -160,7 +167,7 @@ module MyCanopy =
                         return Ok jsonString 
                     }
             with
-            | ex -> Error (string ex.Message)
+            | ex -> Error (sprintf "%s %s" <| string ex.Message <| " Error Canopy 002")
     
         async
             {
@@ -192,7 +199,7 @@ module MyCanopy =
                          Decode.fromString decoderPutTest jsonMsg   
                          |> function
                              | Ok value  -> value   
-                             | Error err -> { Message1 = String.Empty; Message2 = err }      
+                             | Error err -> { Message1 = String.Empty; Message2 = (sprintf "%s %s" <| err <| " Error Canopy 003") }      
                 | _ -> 
                      return { Message1 = String.Empty; Message2 = sprintf "Request failed with status code %d" (int response.statusCode) }                                           
             } 
@@ -201,4 +208,4 @@ module MyCanopy =
         |> Result.ofChoice    
         |> function
             | Ok value -> value 
-            | Error ex -> { Message1 = String.Empty; Message2 = string ex.Message }   
+            | Error ex -> { Message1 = String.Empty; Message2 = (sprintf "%s %s" <| string ex.Message <| " Error Canopy 004")}   

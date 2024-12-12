@@ -1053,13 +1053,13 @@ module KODIS_SubmainRecord3 =
 
             match serializeToJsonThoth2 linksToBeSaved "CanopyResults/json_download_results.json" with
             | Ok _      -> printfn "Serializace odkazů pro ověření proběhla v pořádku." 
-            | Error err -> printfn "Chyba při serializaci: %s" err 
+            | Error err -> printfn "Chyba při serializaci 1: %s" err 
 
             filterTimetables () variant dir links |> Ok
             //digThroughJsonStructure >> filterTimetables () variant dir <| () |> Ok
 
         with
-        | ex -> Error <| string ex.Message   
+        | ex -> Error (string ex.Message)   
         
         |> function
             | Ok value  -> 
@@ -1087,7 +1087,7 @@ module KODIS_SubmainRecord3 =
                                   | true  -> 
                                            match serializeToJsonThoth2 (context.list |> List.unzip |> fst) "CanopyResults/filtered_results.json" with
                                            | Ok _      -> printfn "Serializace filtrovaných odkazů pro ověření proběhla v pořádku." 
-                                           | Error err -> printfn "Chyba při serializaci: %s" err 
+                                           | Error err -> printfn "Chyba při serializaci 2: %s" err 
                                   | false -> 
                                            ()
 
