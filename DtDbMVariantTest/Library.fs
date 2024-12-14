@@ -5,13 +5,13 @@ open FsToolkit
 
 module Settings = 
 
-    let internal pathDT = @"c:\Users\User\DataDT\"
+    let internal pathDT = @"g:\Users\User\DataDT\"
 
-    let private pathDT_CurrentValidity = @"c:\Users\User\DataDT\JR_ODIS_aktualni_vcetne_vyluk\"
-    let private pathDT_FutureValidity = @"c:\Users\User\DataDT\JR_ODIS_pouze_budouci_platnost\"
-    let private pathDT_DPO = @"c:\Users\User\DataDT\JR_ODIS_pouze_linky_dopravce_DPO\"
-    let private pathDT_MDPO = @"c:\Users\User\DataDT\JR_ODIS_pouze_linky_dopravce_MDPO\"
-    let private pathDT_WithoutReplacementService = @"c:\Users\User\DataDT\JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk\"
+    let private pathDT_CurrentValidity = @"g:\Users\User\DataDT\JR_ODIS_aktualni_vcetne_vyluk\"
+    let private pathDT_FutureValidity = @"g:\Users\User\DataDT\JR_ODIS_pouze_budouci_platnost\"
+    let private pathDT_DPO = @"g:\Users\User\DataDT\JR_ODIS_pouze_linky_dopravce_DPO\"
+    let private pathDT_MDPO = @"g:\Users\User\DataDT\JR_ODIS_pouze_linky_dopravce_MDPO\"
+    let private pathDT_WithoutReplacementService = @"g:\Users\User\DataDT\JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk\"
 
     let internal subPathsDT = 
         [
@@ -22,13 +22,13 @@ module Settings =
             pathDT_MDPO          
         ]
 
-    let internal pathDB = @"c:\Users\User\DataDB\"
+    let internal pathDB = @"g:\Users\User\DataDB\"
         
-    let private pathDB_CurrentValidity = @"c:\Users\User\DataDB\JR_ODIS_aktualni_vcetne_vyluk\"
-    let private pathDB_FutureValidity = @"c:\Users\User\DataDB\JR_ODIS_pouze_budouci_platnost\"
-    let private pathDB_DPO = @"c:\Users\User\DataDB\JR_ODIS_pouze_linky_dopravce_DPO\"
-    let private pathDB_MDPO = @"c:\Users\User\DataDB\JR_ODIS_pouze_linky_dopravce_MDPO\"
-    let private pathDB_WithoutReplacementService = @"c:\Users\User\DataDB\JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk\"  
+    let private pathDB_CurrentValidity = @"g:\Users\User\DataDB\JR_ODIS_aktualni_vcetne_vyluk\"
+    let private pathDB_FutureValidity = @"g:\Users\User\DataDB\JR_ODIS_pouze_budouci_platnost\"
+    let private pathDB_DPO = @"g:\Users\User\DataDB\JR_ODIS_pouze_linky_dopravce_DPO\"
+    let private pathDB_MDPO = @"g:\Users\User\DataDB\JR_ODIS_pouze_linky_dopravce_MDPO\"
+    let private pathDB_WithoutReplacementService = @"g:\Users\User\DataDB\JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk\"  
         
     let internal subPathsDB = 
         [
@@ -39,13 +39,13 @@ module Settings =
             pathDB_MDPO
         ] 
 
-    let internal pathM = @"c:\Users\User\Data\"
+    let internal pathM = @"g:\Users\User\Data\"
     
-    let private pathM_CurrentValidity = @"c:\Users\User\Data\JR_ODIS_aktualni_vcetne_vyluk\"
-    let private pathM_FutureValidity = @"c:\Users\User\Data\JR_ODIS_pouze_budouci_platnost\"
-    let private pathM_DPO = @"c:\Users\User\Data\JR_ODIS_pouze_linky_dopravce_DPO\"
-    let private pathM_MDPO = @"c:\Users\User\Data\JR_ODIS_pouze_linky_dopravce_MDPO\"
-    let private pathM_WithoutReplacementService = @"c:\Users\User\Data\JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk\"  
+    let private pathM_CurrentValidity = @"g:\Users\User\Data\JR_ODIS_aktualni_vcetne_vyluk\"
+    let private pathM_FutureValidity = @"g:\Users\User\Data\JR_ODIS_pouze_budouci_platnost\"
+    let private pathM_DPO = @"g:\Users\User\Data\JR_ODIS_pouze_linky_dopravce_DPO\"
+    let private pathM_MDPO = @"g:\Users\User\Data\JR_ODIS_pouze_linky_dopravce_MDPO\"
+    let private pathM_WithoutReplacementService = @"g:\Users\User\Data\JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk\"  
     
     let internal subPathsM = 
         [
