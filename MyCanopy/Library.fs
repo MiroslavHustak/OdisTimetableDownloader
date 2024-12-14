@@ -17,12 +17,6 @@ open MyFsToolkit
 open System.Threading
 open MyFsToolkit.Builders
 
-
-open canopy.runner
-open canopy.types
-open canopy.configuration
-open canopy.classic
-
 module MyCanopy =
 
     //testing
@@ -39,7 +33,7 @@ module MyCanopy =
             //<li class="Card_wrapper__ZQ5Fp">
 
             let linksShown () = (canopy.classic.elements ".Card_actions__HhB_f").Length >= 1
-            
+                       
             let urls = 
                 [
                     "https://www.kodis.cz/lines/city?tab=MHD+Ostrava"
@@ -75,48 +69,70 @@ module MyCanopy =
 
                     let pdfLinkSeq () =
 
-                        Thread.Sleep 20000                     
-                        canopy.classic.waitFor linksShown    
+                        Thread.Sleep 20000            
+                        
+                        canopy.classic.waitFor linksShown                         
+                        
+                        let buttons = canopy.classic.elements "button[title='Budoucí jízdní řády']"  //buttons, je jich +- 12 na kazdu page
                          
-                        canopy.classic.elements "button[title='Budoucí jízdní řády']"  //buttons
-                        |> Seq.collect 
-                            (fun button -> 
-                                        canopy.classic.click button 
+                        let result =  
+                            buttons
+                            |> List.mapi 
+                                (fun i button 
+                                    -> 
+                                    canopy.classic.click button 
 
-                                        Thread.Sleep 2000   
+                                    Thread.Sleep 2000   
                                             
-                                        let result = 
-                                            canopy.classic.elements "a"
-                                            |> Seq.map 
-                                                (fun item ->                                                     
-                                                           let href = string <| item.GetAttribute("href")
-                                                           match href.EndsWith("pdf") with
-                                                           | true  -> Some href     
-                                                           | false -> None
-                                                                    
-                                                )                                            
-                                        canopy.classic.navigate forward
-                                        result
-                            )                               
-                        |> Seq.distinct
-                        |> Seq.toList                        
-                                         
+                                    let result = 
+
+                                        canopy.classic.elements "a" //tohle pak vezme vse, jak odkazy z Card_actions__HhB_f, tak odkazy z cudliku 'Budoucí jízdní řády' 
+                                        |> List.map 
+                                            (fun item
+                                                ->                                                     
+                                                let href = string <| item.GetAttribute("href")
+                                                match href.EndsWith("pdf") with
+                                                | true  -> Some href     
+                                                | false -> None                                                                    
+                                            ) 
+                                    
+                                    match i = buttons.Length - 1 with 
+                                    | true  ->       
+                                            canopy.classic.waitForElement "[id*='headlessui-menu-item']" //u posledniho pockame na pop-up z 'Budoucí jízdní řády', kery prekryva "Další"
+                                            canopy.classic.click button //klikneme jeste jednou na posledni, abychom odkryli "Další"
+                                            Thread.Sleep 2000   
+                                    | false -> 
+                                            () 
+
+                                    canopy.classic.navigate canopy.classic.forward //je to zajimave, ale zrobi to 'back', tj. to, co potrebuju
+                                    result 
+                                )
+                            |> List.concat    
+                            |> List.distinct   
+                            
+                        result //musi tady byt specialne takto (nelze primo bez result, tj. vlastne 2x), aby se spustilo "Další"
+
                     let clickCondition () =
-                        try
+                        try                             
                             let nextButton = canopy.classic.elementWithText "a" "Další"
                             nextButton.Displayed && nextButton.Enabled
                         with
                         | _ -> false
     
-                    let pdfLinkList1 = pdfLinkSeq () |> List.distinct
+                    let pdfLinkList1 = pdfLinkSeq () |> List.distinct  //prvni pruchod
 
                     let pdfLinkList2 = 
-                        Seq.initInfinite (fun _ -> clickCondition())
+                        Seq.initInfinite (fun _ -> clickCondition())  //druhy a dalsi
                         |> Seq.takeWhile ((=) true) 
                         |> Seq.collect
                             (fun _ -> 
-                                    canopy.classic.click (canopy.classic.elementWithText "a" "Další")
-                                    pdfLinkSeq ()
+                                    try 
+                                        canopy.classic.click (canopy.classic.elementWithText "a" "Další")
+                                        pdfLinkSeq ()
+                                    with
+                                    | ex -> 
+                                         printfn "%s" (string ex.Message) 
+                                         []
                             )
                         |> Seq.distinct
                         |> Seq.toList                  
@@ -124,10 +140,10 @@ module MyCanopy =
                     (pdfLinkList1 @ pdfLinkList2) |> List.choose id  
 
                 with
-                | _ ->
+                | ex ->
                      Console.BackgroundColor <- ConsoleColor.Blue 
                      Console.ForegroundColor <- ConsoleColor.White 
-                     printfn "Na tomto odkazu se buď momentálně nenachází žádné JŘ, anebo to Canopy nezvládl: %s" url 
+                     printfn "Na tomto odkazu se buď momentálně nenachází žádné JŘ, anebo to Canopy nezvládl: %s" url // (string ex.Message) 
                      [] 
                                      
             let list = 
@@ -151,7 +167,7 @@ module MyCanopy =
             Message2 : string
         }
 
-    let internal decoderPutTest : Decoder<ResponsePut> =
+    let internal decoderPut : Decoder<ResponsePut> =
         Decode.object
             (fun get ->
                       {
@@ -214,7 +230,7 @@ module MyCanopy =
                      let! jsonMsg = Response.toTextAsync response
     
                      return                          
-                         Decode.fromString decoderPutTest jsonMsg   
+                         Decode.fromString decoderPut jsonMsg   
                          |> function
                              | Ok value  -> value   
                              | Error err -> { Message1 = String.Empty; Message2 = (sprintf "%s %s" <| err <| " Error Canopy 003") }      
