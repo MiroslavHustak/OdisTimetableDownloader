@@ -234,10 +234,10 @@ module Test2 =
                      totalM
                      |> Result.bind 
                          (fun m ->
-                                  match dt - m with
-                                  | result
-                                      when result = zero -> Ok "OK"
-                                  | _                    -> Error "Error"
+                                 match dt - m with
+                                 | result
+                                     when result = zero -> Ok "OK"
+                                 | _                    -> Error "Error"
             )
         )
         |> function Ok result -> result | Error _ -> "Error EnumerateFiles"     

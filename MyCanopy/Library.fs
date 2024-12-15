@@ -229,7 +229,7 @@ module MyCanopy =
                   []
         
         try
-            let list = currentAndFutureLinks () @ currentLinks ()
+            let list = (currentAndFutureLinks () @ currentLinks ()) |> List.distinct
             serializeToJsonThoth2 list "CanopyResults/canopy_results.json" 
         with
         | ex ->  
