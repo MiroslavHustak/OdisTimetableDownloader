@@ -690,7 +690,7 @@ module KODIS_SubmainRecord4 =
             let linksToBeSaved = 
                 links
                 |> List.ofSeq
-                |> List.filter (fun item -> not <| item.Contains "2022")
+                |> List.filter (fun item -> not <| (item.Contains "2022" || item.Contains "2023"))
 
             match serializeToJsonThoth2 linksToBeSaved "CanopyResults/json_download_results.json" with
             | Ok _      -> printfn "Serializace odkazů pro ověření proběhla v pořádku." 

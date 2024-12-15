@@ -793,7 +793,6 @@ module KODIS_SubmainRecord3 =
             let result = 
                 async
                     {
-                        let path = "CanopyResults/jsonLinks_results.json"                
                         let url = "http://kodis.somee.com/api/jsonLinks" 
                         let apiKeyTest = "test747646s5d4fvasfd645654asgasga654a6g13a2fg465a4fg4a3"
                                                                                    
@@ -1049,7 +1048,7 @@ module KODIS_SubmainRecord3 =
             let linksToBeSaved = 
                 links
                 |> List.ofSeq
-                |> List.filter (fun item -> not <| item.Contains "2022")
+                |> List.filter (fun item -> not <| (item.Contains "2022" || item.Contains "2023"))
 
             match serializeToJsonThoth2 linksToBeSaved "CanopyResults/json_download_results.json" with
             | Ok _      -> printfn "Serializace odkazů pro ověření proběhla v pořádku." 

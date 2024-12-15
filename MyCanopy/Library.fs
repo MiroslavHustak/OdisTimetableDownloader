@@ -17,149 +17,223 @@ open MyFsToolkit
 open System.Threading
 open MyFsToolkit.Builders
 
-module MyCanopy =
-
-    //testing
+module MyCanopy = 
     
     let internal canopyResult () = 
+
+        let urls = 
+            [
+                "https://www.kodis.cz/lines/city?tab=MHD+Ostrava"
+                "https://www.kodis.cz/lines/region?tab=75" 
+                "https://www.kodis.cz/lines/city?tab=MHD+Opava"
+                "https://www.kodis.cz/lines/region?tab=232-293"
+                "https://www.kodis.cz/lines/city?tab=MHD+Frýdek-Místek"
+                "https://www.kodis.cz/lines/region?tab=331-392"
+                "https://www.kodis.cz/lines/city?tab=MHD+Havířov"
+                "https://www.kodis.cz/lines/region?tab=440-465"
+                "https://www.kodis.cz/lines/city?tab=MHD+Karviná"
+                "https://www.kodis.cz/lines/city?tab=MHD+Orlová"
+                "https://www.kodis.cz/lines/region?tab=531-583"
+                "https://www.kodis.cz/lines/city?tab=MHD+Nový+Jičín"
+                "https://www.kodis.cz/lines/city?tab=MHD+Studénka"
+                "https://www.kodis.cz/lines/region?tab=613-699"
+                "https://www.kodis.cz/lines/city?tab=MHD+Třinec"
+                "https://www.kodis.cz/lines/city?tab=MHD+Český+Těšín"
+                "https://www.kodis.cz/lines/region?tab=731-788"
+                "https://www.kodis.cz/lines/city?tab=MHD+Krnov"
+                "https://www.kodis.cz/lines/city?tab=MHD+Bruntál"
+                "https://www.kodis.cz/lines/region?tab=811-885"
+                "https://www.kodis.cz/lines/region?tab=901-990"
+                "https://www.kodis.cz/lines/train?tab=S1-S34"
+                "https://www.kodis.cz/lines/train?tab=R8-R62"
+                "https://www.kodis.cz/lines/city?tab=NAD+MHD"
+                "https://www.kodis.cz/lines/region?tab=NAD"   
+            ]
+
+        let scrapeGeneral () = 
+
+            canopy.classic.elements "a" //tohle pak vezme vse, jak odkazy z Card_actions__HhB_f, tak odkazy z cudliku 'Budoucí jízdní řády' 
+            |> List.map 
+                (fun item
+                    ->                                                     
+                    let href = string <| item.GetAttribute("href")
+                    match href.EndsWith("pdf") with
+                    | true  -> Some href     
+                    | false -> None                                                                    
+                )    
+
+        let clickCondition () =
+
+            try                             
+                let nextButton = canopy.classic.elementWithText "a" "Další"
+                nextButton.Displayed && nextButton.Enabled
+            with
+            | _ -> false  
+        
+        let currentAndFutureLinks () = 
+
+            try
+                canopy.configuration.edgeDir <- @"c:/temp/driver" 
+                canopy.classic.start canopy.classic.edgeBETA
     
-        try
-            canopy.configuration.edgeDir <- @"c:/temp/driver" 
-            canopy.classic.start canopy.classic.edgeBETA
+                canopy.configuration.compareTimeout <- 100.0 
     
-            canopy.configuration.compareTimeout <- 100.0 
-    
-            //In CSS selectors, the . before a word or identifier specifies a class.    
-            //<li class="Card_wrapper__ZQ5Fp">
+                //In CSS selectors, the . before a word or identifier specifies a class.    
+                //<li class="Card_wrapper__ZQ5Fp">
 
-            let linksShown () = (canopy.classic.elements ".Card_actions__HhB_f").Length >= 1
-                       
-            let urls = 
-                [
-                    "https://www.kodis.cz/lines/city?tab=MHD+Ostrava"
-                    "https://www.kodis.cz/lines/region?tab=75" 
-                    "https://www.kodis.cz/lines/city?tab=MHD+Opava"
-                    "https://www.kodis.cz/lines/region?tab=232-293"
-                    "https://www.kodis.cz/lines/city?tab=MHD+Frýdek-Místek"
-                    "https://www.kodis.cz/lines/region?tab=331-392"
-                    "https://www.kodis.cz/lines/city?tab=MHD+Havířov"
-                    "https://www.kodis.cz/lines/region?tab=440-465"
-                    "https://www.kodis.cz/lines/city?tab=MHD+Karviná"
-                    "https://www.kodis.cz/lines/city?tab=MHD+Orlová"
-                    "https://www.kodis.cz/lines/region?tab=531-583"
-                    "https://www.kodis.cz/lines/city?tab=MHD+Nový+Jičín"
-                    "https://www.kodis.cz/lines/city?tab=MHD+Studénka"
-                    "https://www.kodis.cz/lines/region?tab=613-699"
-                    "https://www.kodis.cz/lines/city?tab=MHD+Třinec"
-                    "https://www.kodis.cz/lines/city?tab=MHD+Český+Těšín"
-                    "https://www.kodis.cz/lines/region?tab=731-788"
-                    "https://www.kodis.cz/lines/city?tab=MHD+Krnov"
-                    "https://www.kodis.cz/lines/city?tab=MHD+Bruntál"
-                    "https://www.kodis.cz/lines/region?tab=811-885"
-                    "https://www.kodis.cz/lines/region?tab=901-990"
-                    "https://www.kodis.cz/lines/train?tab=S1-S34"
-                    "https://www.kodis.cz/lines/train?tab=R8-R62"
-                    "https://www.kodis.cz/lines/city?tab=NAD+MHD"
-                    "https://www.kodis.cz/lines/region?tab=NAD"   
-                ]
+                let linksShown () = (canopy.classic.elements ".Card_actions__HhB_f").Length >= 1               
 
-            let scrapeUrl (url: string) =
-                try
-                    canopy.classic.url url
+                let scrapeUrl (url: string) =
+                    try
+                        canopy.classic.url url
 
-                    let pdfLinkSeq () =
+                        let pdfLinkList () =
 
-                        Thread.Sleep 20000            
+                            Thread.Sleep 15000            
                         
-                        canopy.classic.waitFor linksShown                         
+                            canopy.classic.waitFor linksShown                         
                         
-                        let buttons = canopy.classic.elements "button[title='Budoucí jízdní řády']"  //buttons, je jich +- 12 na kazdu page
+                            let buttons = canopy.classic.elements "button[title='Budoucí jízdní řády']"  //buttons, je jich +- 12 na kazdu page
                          
-                        let result =  
-                            buttons
-                            |> List.mapi 
-                                (fun i button 
-                                    -> 
-                                    canopy.classic.click button 
+                            let result =  
+                                buttons
+                                |> List.mapi 
+                                    (fun i button 
+                                        -> 
+                                        canopy.classic.click button 
 
-                                    Thread.Sleep 2000   
+                                        Thread.Sleep 2000   
                                             
-                                    let result = 
-
-                                        canopy.classic.elements "a" //tohle pak vezme vse, jak odkazy z Card_actions__HhB_f, tak odkazy z cudliku 'Budoucí jízdní řády' 
-                                        |> List.map 
-                                            (fun item
-                                                ->                                                     
-                                                let href = string <| item.GetAttribute("href")
-                                                match href.EndsWith("pdf") with
-                                                | true  -> Some href     
-                                                | false -> None                                                                    
-                                            ) 
+                                        let result = scrapeGeneral ()                                       
                                     
-                                    match i = buttons.Length - 1 with 
-                                    | true  ->       
-                                            canopy.classic.waitForElement "[id*='headlessui-menu-item']" //u posledniho pockame na pop-up z 'Budoucí jízdní řády', kery prekryva "Další"
-                                            canopy.classic.click button //klikneme jeste jednou na posledni, abychom odkryli "Další"
-                                            Thread.Sleep 2000   
-                                    | false -> 
-                                            () 
+                                        match i = buttons.Length - 1 with 
+                                        | true  ->       
+                                                canopy.classic.waitForElement "[id*='headlessui-menu-item']" //u posledniho pockame na pop-up z 'Budoucí jízdní řády', kery prekryva "Další"
+                                                canopy.classic.click button //klikneme jeste jednou na posledni, abychom odkryli "Další"
+                                                Thread.Sleep 2000   
+                                        | false -> 
+                                                () 
 
-                                    canopy.classic.navigate canopy.classic.forward //je to zajimave, ale zrobi to 'back', tj. to, co potrebuju
-                                    result 
-                                )
-                            |> List.concat    
-                            |> List.distinct   
+                                        canopy.classic.navigate canopy.classic.forward //je to zajimave, ale zrobi to 'back', tj. to, co potrebuju
+                                        result 
+                                    )
+                                |> List.concat    
+                                |> List.distinct   
                             
-                        result //musi tady byt specialne takto (nelze primo bez result, tj. vlastne 2x), aby se spustilo "Další"
+                            result //musi tady byt specialne takto (nelze primo bez result, tj. vlastne 2x), aby se spustilo "Další"
+                            
+                        let pdfLinkList1 = pdfLinkList () |> List.distinct  //prvni pruchod
 
-                    let clickCondition () =
-                        try                             
-                            let nextButton = canopy.classic.elementWithText "a" "Další"
-                            nextButton.Displayed && nextButton.Enabled
-                        with
-                        | _ -> false
-    
-                    let pdfLinkList1 = pdfLinkSeq () |> List.distinct  //prvni pruchod
+                        let pdfLinkList2 = 
+                            Seq.initInfinite (fun _ -> clickCondition())  //druhy a dalsi
+                            |> Seq.takeWhile ((=) true) 
+                            |> Seq.collect
+                                (fun _ -> 
+                                        try 
+                                            canopy.classic.click (canopy.classic.elementWithText "a" "Další")
+                                            pdfLinkList ()
+                                        with
+                                        | ex -> 
+                                              printfn "%s" (string ex.Message) 
+                                              []
+                                )
+                            |> Seq.distinct
+                            |> Seq.toList                  
 
-                    let pdfLinkList2 = 
-                        Seq.initInfinite (fun _ -> clickCondition())  //druhy a dalsi
-                        |> Seq.takeWhile ((=) true) 
-                        |> Seq.collect
-                            (fun _ -> 
-                                    try 
-                                        canopy.classic.click (canopy.classic.elementWithText "a" "Další")
-                                        pdfLinkSeq ()
-                                    with
-                                    | ex -> 
-                                         printfn "%s" (string ex.Message) 
-                                         []
-                            )
-                        |> Seq.distinct
-                        |> Seq.toList                  
+                        (pdfLinkList1 @ pdfLinkList2) |> List.choose id  
 
-                    (pdfLinkList1 @ pdfLinkList2) |> List.choose id  
+                    with
+                    | ex ->
+                         Console.BackgroundColor <- ConsoleColor.Blue 
+                         Console.ForegroundColor <- ConsoleColor.White 
+                     
+                         printfn "Na tomto odkazu se buď momentálně nenachází žádné JŘ, anebo to Canopy nezvládl: %s" url // (string ex.Message) 
+                         printfn "Zkusíme něco dalšího." 
+                                                  
+                         [] 
 
-                with
-                | ex ->
-                     Console.BackgroundColor <- ConsoleColor.Blue 
-                     Console.ForegroundColor <- ConsoleColor.White 
-                     printfn "Na tomto odkazu se buď momentálně nenachází žádné JŘ, anebo to Canopy nezvládl: %s" url // (string ex.Message) 
-                     [] 
-                                     
-            let list = 
                 urls 
                 |> List.collect scrapeUrl
                 |> List.filter
                     (fun (item : string) 
                         -> 
                         printfn "%s" item
-                        not <| item.Contains "2022"
-                    )    
+                        not <| (item.Contains "2022" || item.Contains "2023")
+                    )     
+            with
+            | ex -> 
+                  printf "%s %s" <| string ex.Message <| " Error Canopy 001 - c&f links"
+                  []
 
+        let currentLinks () = 
+            
+            try
+                canopy.configuration.edgeDir <- @"c:/temp/driver" 
+                canopy.classic.start canopy.classic.edgeBETA
+                
+                canopy.configuration.compareTimeout <- 100.0 
+                
+                //In CSS selectors, the . before a word or identifier specifies a class.    
+                //<li class="Card_wrapper__ZQ5Fp">
+            
+                let linksShown () = (canopy.classic.elements ".Card_actions__HhB_f").Length >= 1
+            
+                let scrapeUrl (url: string) =
+                    try
+                        canopy.classic.url url
+            
+                        let pdfLinkList () =
+                            Thread.Sleep 15000  
+                            canopy.classic.waitFor linksShown  
+                            scrapeGeneral ()  
+                                        
+                        let pdfLinkList1 = pdfLinkList () |> List.distinct  //prvni pruchod
+            
+                        let pdfLinkList2 = 
+                            Seq.initInfinite (fun _ -> clickCondition())  //druhy a dalsi
+                            |> Seq.takeWhile ((=) true) 
+                            |> Seq.collect
+                                (fun _ -> 
+                                        try 
+                                            canopy.classic.click (canopy.classic.elementWithText "a" "Další")
+                                            pdfLinkList ()
+                                        with
+                                        | ex -> 
+                                              printfn "%s" (string ex.Message) 
+                                              []
+                                )
+                            |> Seq.distinct
+                            |> Seq.toList                  
+            
+                        (pdfLinkList1 @ pdfLinkList2) |> List.choose id  
+            
+                    with
+                    | ex ->
+                            Console.BackgroundColor <- ConsoleColor.Blue 
+                            Console.ForegroundColor <- ConsoleColor.White 
+                            
+                            printfn "Na tomto odkazu to Canopy opravdu nezvládl: %s" url // (string ex.Message) 
+                            []        
+
+                urls 
+                |> List.collect scrapeUrl
+                |> List.filter
+                    (fun (item : string) 
+                        -> 
+                        printfn "%s" item
+                        not <| (item.Contains "2022" || item.Contains "2023")
+                    )   
+            with
+            | ex -> 
+                  printf "%s %s" <| string ex.Message <| " Error Canopy 001 - c only links"
+                  []
+        
+        try
+            let list = currentAndFutureLinks () @ currentLinks ()
             serializeToJsonThoth2 list "CanopyResults/canopy_results.json" 
-
         with
-        | ex -> Error (sprintf "%s %s" <| string ex.Message <| " Error Canopy 001")
+        | ex ->  
+              Error <| (sprintf "%s %s" <| string ex.Message <| " Error Canopy 001 combined")    
 
     type ResponsePut = 
         {
