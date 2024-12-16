@@ -39,13 +39,13 @@ module Settings =
             pathDB_MDPO
         ] 
 
-    let internal pathM = @"g:\Users\User\Data\"
+    let internal pathM = @"g:\Users\User\Data4\"
     
-    let private pathM_CurrentValidity = @"g:\Users\User\Data\JR_ODIS_aktualni_vcetne_vyluk\"
-    let private pathM_FutureValidity = @"g:\Users\User\Data\JR_ODIS_pouze_budouci_platnost\"
-    let private pathM_DPO = @"g:\Users\User\Data\JR_ODIS_pouze_linky_dopravce_DPO\"
-    let private pathM_MDPO = @"g:\Users\User\Data\JR_ODIS_pouze_linky_dopravce_MDPO\"
-    let private pathM_WithoutReplacementService = @"g:\Users\User\Data\JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk\"  
+    let private pathM_CurrentValidity = @"g:\Users\User\Data4\JR_ODIS_aktualni_vcetne_vyluk\"
+    let private pathM_FutureValidity = @"g:\Users\User\Data4\JR_ODIS_pouze_budouci_platnost\"
+    let private pathM_DPO = @"g:\Users\User\Data4\JR_ODIS_pouze_linky_dopravce_DPO\"
+    let private pathM_MDPO = @"g:\Users\User\Data4\JR_ODIS_pouze_linky_dopravce_MDPO\"
+    let private pathM_WithoutReplacementService = @"g:\Users\User\Data4\JR_ODIS_teoreticky_dlouhodobe_platne_bez_vyluk\"  
     
     let internal subPathsM = 
         [

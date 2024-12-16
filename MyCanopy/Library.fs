@@ -209,11 +209,11 @@ module MyCanopy =
             
                     with
                     | ex ->
-                            Console.BackgroundColor <- ConsoleColor.Blue 
-                            Console.ForegroundColor <- ConsoleColor.White 
+                          Console.BackgroundColor <- ConsoleColor.Blue 
+                          Console.ForegroundColor <- ConsoleColor.White 
                             
-                            printfn "Na tomto odkazu to Canopy opravdu nezvládl: %s" url // (string ex.Message) 
-                            []        
+                          printfn "Na tomto odkazu to Canopy opravdu nezvládl: %s" url // (string ex.Message) 
+                          []        
 
                 urls 
                 |> List.collect scrapeUrl
