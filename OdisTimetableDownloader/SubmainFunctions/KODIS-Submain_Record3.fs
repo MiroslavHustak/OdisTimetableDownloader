@@ -826,9 +826,9 @@ module KODIS_SubmainRecord3 =
                         | Ok value -> value 
                         | Error ex -> { Message1 = String.Empty; Message2 = string ex.Message }    
 
-            printfn "%s" result.Message1 
-            printfn "%s" result.Message2     
-
+            match result.Message1.Equals(String.Empty) with true -> () | _ -> printfn "%s" result.Message1  
+            match result.Message2.Equals(String.Empty) with true -> () | _ -> printfn "%s" result.Message2 
+            
             list
         
         | WithoutReplacementService
