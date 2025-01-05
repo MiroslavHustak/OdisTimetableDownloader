@@ -71,7 +71,7 @@ module Test =
     open Settings
 
     //SRTPs
-    let inline private result (totalDT : Result< ^a, string>) (totalDB : Result< ^a, string>) (zero : ^a) =  //viz learning material ohledne generics a SRTPs
+    let inline private result (totalDT : Result<^a, string>) (totalDB : Result<^a, string>) (zero : ^a) =  //viz learning material ohledne generics a SRTPs
 
         pyramidOfHell  //List.tryHead nestoji za tu namahu
             {
@@ -97,7 +97,7 @@ module Test =
         |> function Ok result -> result | Error _ -> "Error EnumerateFiles"     
 
     //Generics 
-    let inline private resultGenericsTest (totalDT : Result< 'a, string>) (totalDB : Result< 'a, string>) (zero : 'a) =  
+    let inline private resultGenericsTest (totalDT : Result<'a, string>) (totalDB : Result<'a, string>) (zero : 'a) =  
 
         pyramidOfHell
             {

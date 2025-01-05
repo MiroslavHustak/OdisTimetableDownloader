@@ -557,7 +557,7 @@ module KODIS_SubmainRecord3 =
         let extractStartDate (input : string) =
 
              let result = 
-                 match input.Equals(String.Empty) with
+                 match input.Equals String.Empty with
                  | true  -> String.Empty
                  | _     -> input.[ 0..min 9 (input.Length - 1) ] 
              result.Replace("_", "-")
