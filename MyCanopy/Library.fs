@@ -168,7 +168,7 @@ module MyCanopy =
         let currentLinks () = 
             
             try
-                canopy.configuration.edgeDir <- @"c:/temp/driver" 
+                canopy.configuration.edgeDir <- @"c:/temp/driver" //cas od casu prestane po upgradu driver fungovat, novy stahni z Miscrosoftu a prejmenuj na MicrosoftWebDriver.exe
                 canopy.classic.start canopy.classic.edgeBETA
                 
                 canopy.configuration.compareTimeout <- 100.0 

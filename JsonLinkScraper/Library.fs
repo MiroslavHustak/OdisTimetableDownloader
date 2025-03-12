@@ -60,7 +60,7 @@ module Links =
                                                   ExecutablePath = executablePath
                                               )                       
                    
-                    use! browser =
+                    let! browser =
                         Puppeteer.LaunchAsync launchOptions       
                         |> Option.ofNull
                         |> function
@@ -71,8 +71,10 @@ module Links =
                                           closeTest () 
                                           Puppeteer.LaunchAsync launchOptions   
                         |> Async.AwaitTask   
-                   
-                    use! page =
+                    
+                    use browser = browser
+
+                    let! page =
                         browser.NewPageAsync()       
                         |> Option.ofNull
                         |> function
@@ -82,7 +84,9 @@ module Links =
                                           printfn "Error in scrapeLinks: %s" "page -> null"
                                           closeTest ()  
                                           browser.NewPageAsync()   
-                        |> Async.AwaitTask                      
+                        |> Async.AwaitTask   
+                        
+                    use page = page  
 
                     let allFilteredLinks = 
                         urlList 
@@ -132,7 +136,7 @@ module Links =
                     // Combine all filtered links from all pages
                     let combinedLinks = List.concat allFilteredLinks
 
-                    do! browser.CloseAsync() |> Async.AwaitTask //use! only disposes, browser se musi separatne zavrit
+                    do! browser.CloseAsync() |> Async.AwaitTask //use only disposes, browser se musi separatne zavrit
 
                     return combinedLinks
                 with
@@ -169,7 +173,7 @@ module Links =
                                                   ExecutablePath = executablePath
                                               )  
                    
-                    use! browser =
+                    let! browser =
                         Puppeteer.LaunchAsync launchOptions       
                         |> Option.ofNull
                         |> function
@@ -180,8 +184,10 @@ module Links =
                                           closeTest ()
                                           Puppeteer.LaunchAsync launchOptions   
                         |> Async.AwaitTask   
-                   
-                    use! page =
+
+                    use browser = browser
+
+                    let! page =
                         browser.NewPageAsync()       
                         |> Option.ofNull
                         |> function
@@ -192,6 +198,8 @@ module Links =
                                           closeTest ()
                                           browser.NewPageAsync()   
                         |> Async.AwaitTask 
+
+                    use page = page
 
                     // Set up request interception to monitor all network requests                    
                     do! page.SetRequestInterceptionAsync true                                                    

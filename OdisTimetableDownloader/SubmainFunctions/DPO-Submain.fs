@@ -127,7 +127,8 @@ module DPO_Submain =
                         
                         match client with
                         | Ok client ->      
-                                     use! response = client.GetAsync uri |> Async.AwaitTask
+                                     let! response = client.GetAsync uri |> Async.AwaitTask
+                                     use response = response
                         
                                      match response.IsSuccessStatusCode with //true if StatusCode was in the range 200-299; otherwise, false.
                                      | true  -> 

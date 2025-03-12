@@ -90,7 +90,8 @@ module KODIS_SubmainRecord =
                     ->                       
                      async
                          {    
-                             use! response = (>>) get Request.sendAsync <| uri 
+                             let! response = (>>) get Request.sendAsync <| uri 
+                             use response = response
 
                              match response.statusCode with
                              | HttpStatusCode.OK
@@ -887,7 +888,8 @@ module KODIS_SubmainRecord =
                                                           GET(uri) 
                                                       }    
                                               
-                                              use! response = (>>) get Request.sendAsync <| uri  
+                                              let! response = (>>) get Request.sendAsync <| uri 
+                                              use response = response
                                                 
                                               match response.statusCode with
                                               | HttpStatusCode.OK 
