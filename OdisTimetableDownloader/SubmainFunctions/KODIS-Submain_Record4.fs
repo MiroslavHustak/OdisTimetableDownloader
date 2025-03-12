@@ -642,8 +642,7 @@ module KODIS_SubmainRecord4 =
                                                           GET(uri) 
                                                       }    
                                               
-                                              let! response = get >> Request.sendAsync <| uri  
-                                              use response = response
+                                              use! response = get >> Request.sendAsync <| uri  
                                                 
                                               match response.statusCode with
                                               | HttpStatusCode.OK 

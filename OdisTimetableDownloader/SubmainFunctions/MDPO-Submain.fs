@@ -126,8 +126,7 @@ module MDPO_Submain =
                         | true  -> 
                                  return Ok () 
                         | false -> 
-                                 let! response = get >> Request.sendAsync <| uri //anebo get rucne definovane viz Bungie.NET let get uri = http { GET (uri) }  
-                                 use response = response
+                                 use! response = get >> Request.sendAsync <| uri //anebo get rucne definovane viz Bungie.NET let get uri = http { GET (uri) }  
                                         
                                  match response.statusCode with
                                  | HttpStatusCode.OK                  ->                                                                   

@@ -36,8 +36,7 @@ module Select =
                     let query = sprintf "SELECT * FROM %s" itvfCall  
                     use cmdCallITVFunction = new SqlCommand(query, connection)
     
-                    let! reader = cmdCallITVFunction.ExecuteReaderAsync() |> Async.AwaitTask
-                    use reader = reader
+                    use! reader = cmdCallITVFunction.ExecuteReaderAsync() |> Async.AwaitTask
     
                     try
                         let records = 
