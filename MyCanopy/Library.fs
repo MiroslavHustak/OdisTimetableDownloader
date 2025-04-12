@@ -49,7 +49,7 @@ module MyCanopy =
                 "https://www.kodis.cz/lines/city?tab=NAD+MHD"
                 "https://www.kodis.cz/lines/region?tab=NAD"   
             ]
-
+        
         let urlsChanges = 
             2115 :: [ 2400 .. 2800 ]
             |> List.map (fun item -> sprintf "%s%s" "https://www.kodis.cz/changes/" (string item))
@@ -395,51 +395,8 @@ module MyCanopy =
 
 
 (*
-https://www.kodis.cz/changes/2517
-https://www.kodis.cz/changes/2674
-https://www.kodis.cz/changes/2628
-https://www.kodis.cz/changes/2629
-https://www.kodis.cz/changes/2615
-https://www.kodis.cz/changes/2426
-https://www.kodis.cz/changes/2115
-https://www.kodis.cz/changes/2632
-https://www.kodis.cz/changes/2670
-https://www.kodis.cz/changes/2696
-https://www.kodis.cz/changes/2616
-https://www.kodis.cz/changes/2592
 https://www.kodis.cz/changes/1834
-https://www.kodis.cz/changes/2606
-https://www.kodis.cz/changes/2709
-https://www.kodis.cz/changes/2616
-https://www.kodis.cz/changes/2697
-https://www.kodis.cz/changes/2569
-https://www.kodis.cz/changes/2692
-https://www.kodis.cz/changes/2603
-https://www.kodis.cz/changes/2430
-https://www.kodis.cz/changes/1834
-https://www.kodis.cz/changes/2620
-https://www.kodis.cz/changes/2638
-https://www.kodis.cz/changes/2485
 https://www.kodis.cz/changes/2731
-https://www.kodis.cz/changes/2657
-https://www.kodis.cz/changes/2485
-https://www.kodis.cz/changes/2718
-https://www.kodis.cz/changes/2709
-https://www.kodis.cz/changes/2683
-https://www.kodis.cz/changes/2659
-https://www.kodis.cz/changes/2588
-https://www.kodis.cz/changes/2664
-https://www.kodis.cz/changes/2658
-https://www.kodis.cz/changes/2699
-https://www.kodis.cz/changes/2482
-https://www.kodis.cz/changes/2700
-https://www.kodis.cz/changes/2425
-https://www.kodis.cz/changes/2676
-https://www.kodis.cz/changes/2696
-https://www.kodis.cz/changes/2616
-
-class: container max-w-screen-lg
 
 https://www.kodis.cz/changes/2628
-
 *)
