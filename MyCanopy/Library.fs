@@ -74,7 +74,7 @@ module MyCanopy =
             with
             | _ -> false  
 
-        let changeLinks () = 
+        let changesLinks () = 
 
             try
                 canopy.configuration.edgeDir <- @"c:/temp/driver" 
@@ -301,7 +301,7 @@ module MyCanopy =
                   []
         
         try
-            let list2 = changeLinks () |> List.distinct
+            let list2 = changesLinks () |> List.distinct
             let list1 = (currentAndFutureLinks () @ currentLinks ()) |> List.distinct
             let list = list2 @ list1
 
