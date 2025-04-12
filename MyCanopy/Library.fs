@@ -50,6 +50,10 @@ module MyCanopy =
                 "https://www.kodis.cz/lines/region?tab=NAD"   
             ]
 
+        let urlsChanges = 
+            2115 :: [ 2400 .. 2800 ]
+            |> List.map (fun item -> sprintf "%s%s" "https://www.kodis.cz/changes/" (string item))
+
         let scrapeGeneral () = 
 
             canopy.classic.elements "a" //tohle pak vezme vse, jak odkazy z Card_actions__HhB_f, tak odkazy z cudliku 'Budoucí jízdní řády' 
@@ -69,6 +73,74 @@ module MyCanopy =
                 nextButton.Displayed && nextButton.Enabled
             with
             | _ -> false  
+
+        let changeLinks () = 
+
+            try
+                canopy.configuration.edgeDir <- @"c:/temp/driver" 
+                canopy.classic.start canopy.classic.edgeBETA
+        
+                canopy.configuration.compareTimeout <- 100.0 
+                    
+               // let linksShown () = (canopy.classic.elements "#__next > main > div > ul > li.col-span-2.flex.flex-col.rounded-lg.border.border-gray-200.bg-gray-50.px-4.py-2 > div").Length >= 1
+                let linksShown () = canopy.classic.elements "ul > li > div" |> Seq.length >= 1
+          
+                let scrapeUrl (url: string) =
+                    try
+                        canopy.classic.url url
+                        Thread.Sleep 50  
+                        
+                        let waitForWithTimeout (timeoutSeconds : float) (condition : unit -> bool) =
+
+                            let timeout = System.TimeSpan.FromSeconds timeoutSeconds
+                            let sw = System.Diagnostics.Stopwatch.StartNew()
+                        
+                            Seq.initInfinite id
+                            |> Seq.takeWhile (fun _ -> sw.Elapsed < timeout)
+                            |> Seq.tryPick 
+                                (fun _ 
+                                    ->
+                                    match condition() with
+                                    | true  ->
+                                            Some true
+                                    | false ->
+                                            System.Threading.Thread.Sleep 250
+                                            None
+                                )
+                            |> Option.defaultValue false                           
+                       
+                        try
+                            canopy.classic.url url
+                       
+                            match waitForWithTimeout 5.0 linksShown with
+                            | true 
+                                ->
+                                scrapeGeneral ()
+                                |> List.choose id  
+                                |> List.distinct
+                                |> List.filter (fun item -> item.Contains "https://kodis-files.s3.eu-central-1.amazonaws.com/")                                
+                            | false 
+                                ->
+                                [] 
+                        
+                        with
+                        | ex -> []                                 
+
+                    with
+                    | ex -> []        
+
+                urlsChanges 
+                |> List.collect scrapeUrl
+                |> List.filter
+                    (fun (item : string) 
+                        -> 
+                        printfn "%s" item
+                        not <| (item.Contains "2022" || item.Contains "2023")
+                    )     
+            with
+            | ex -> 
+                    //printf "%s %s" <| string ex.Message <| " Error Canopy 009 - change links"
+                    []
         
         let currentAndFutureLinks () = 
 
@@ -83,7 +155,7 @@ module MyCanopy =
 
                 let linksShown () = (canopy.classic.elements ".Card_actions__HhB_f").Length >= 1               
 
-                let scrapeUrl (url: string) =
+                let scrapeUrl (url : string) =
                     try
                         canopy.classic.url url
 
@@ -229,11 +301,13 @@ module MyCanopy =
                   []
         
         try
-            let list = (currentAndFutureLinks () @ currentLinks ()) |> List.distinct
+            let list2 = changeLinks () |> List.distinct
+            let list1 = (currentAndFutureLinks () @ currentLinks ()) |> List.distinct
+            let list = list2 @ list1
+
             serializeToJsonThoth2 list "CanopyResults/canopy_results.json" 
         with
-        | ex ->  
-              Error <| (sprintf "%s %s" <| string ex.Message <| " Error Canopy 001 combined")    
+        | ex -> Error <| (sprintf "%s %s" <| string ex.Message <| " Error Canopy 001 combined")   
 
     type ResponsePut = 
         {
@@ -241,7 +315,7 @@ module MyCanopy =
             Message2 : string
         }
 
-    let internal decoderPut : Decoder<ResponsePut> =
+    let private decoderPut : Decoder<ResponsePut> =
         Decode.object
             (fun get ->
                       {
@@ -317,3 +391,55 @@ module MyCanopy =
         |> function
             | Ok value -> value 
             | Error ex -> { Message1 = String.Empty; Message2 = (sprintf "%s %s" <| string ex.Message <| " Error Canopy 004")}   
+
+
+
+(*
+https://www.kodis.cz/changes/2517
+https://www.kodis.cz/changes/2674
+https://www.kodis.cz/changes/2628
+https://www.kodis.cz/changes/2629
+https://www.kodis.cz/changes/2615
+https://www.kodis.cz/changes/2426
+https://www.kodis.cz/changes/2115
+https://www.kodis.cz/changes/2632
+https://www.kodis.cz/changes/2670
+https://www.kodis.cz/changes/2696
+https://www.kodis.cz/changes/2616
+https://www.kodis.cz/changes/2592
+https://www.kodis.cz/changes/1834
+https://www.kodis.cz/changes/2606
+https://www.kodis.cz/changes/2709
+https://www.kodis.cz/changes/2616
+https://www.kodis.cz/changes/2697
+https://www.kodis.cz/changes/2569
+https://www.kodis.cz/changes/2692
+https://www.kodis.cz/changes/2603
+https://www.kodis.cz/changes/2430
+https://www.kodis.cz/changes/1834
+https://www.kodis.cz/changes/2620
+https://www.kodis.cz/changes/2638
+https://www.kodis.cz/changes/2485
+https://www.kodis.cz/changes/2731
+https://www.kodis.cz/changes/2657
+https://www.kodis.cz/changes/2485
+https://www.kodis.cz/changes/2718
+https://www.kodis.cz/changes/2709
+https://www.kodis.cz/changes/2683
+https://www.kodis.cz/changes/2659
+https://www.kodis.cz/changes/2588
+https://www.kodis.cz/changes/2664
+https://www.kodis.cz/changes/2658
+https://www.kodis.cz/changes/2699
+https://www.kodis.cz/changes/2482
+https://www.kodis.cz/changes/2700
+https://www.kodis.cz/changes/2425
+https://www.kodis.cz/changes/2676
+https://www.kodis.cz/changes/2696
+https://www.kodis.cz/changes/2616
+
+class: container max-w-screen-lg
+
+https://www.kodis.cz/changes/2628
+
+*)

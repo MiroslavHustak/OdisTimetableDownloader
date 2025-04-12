@@ -80,6 +80,8 @@ module DPO_Submain =
                                             item2.Contains ".pdf" 
                                             && 
                                             not (item2.Contains "AE-en")
+                                            && 
+                                            not (item2.Contains "eng")
                           )
                       |> Seq.map 
                           (fun (_ , item2) ->  
