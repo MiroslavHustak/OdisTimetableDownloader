@@ -83,29 +83,31 @@ module MyCanopy =
                 canopy.configuration.compareTimeout <- 100.0 
                     
                // let linksShown () = (canopy.classic.elements "#__next > main > div > ul > li.col-span-2.flex.flex-col.rounded-lg.border.border-gray-200.bg-gray-50.px-4.py-2 > div").Length >= 1
-                let linksShown () = canopy.classic.elements "ul > li > div" |> Seq.length >= 1
+                let linksShown () = Some (canopy.classic.elements "ul > li > div" |> Seq.length >= 1)
           
                 let scrapeUrl (url: string) =
                     try
                         canopy.classic.url url
                         Thread.Sleep 50  
                         
-                        let waitForWithTimeout (timeoutSeconds : float) (condition : unit -> bool) =
+                        let waitForWithTimeout (timeoutSeconds : float) (condition : unit -> bool option) =
 
                             let timeout = System.TimeSpan.FromSeconds timeoutSeconds
                             let sw = System.Diagnostics.Stopwatch.StartNew()
                         
                             Seq.initInfinite id
                             |> Seq.takeWhile (fun _ -> sw.Elapsed < timeout)
-                            |> Seq.tryPick 
+                            |> Seq.tryPick //gets the first Some  srovnej s Result.sequence (gets the first Error)
                                 (fun _ 
-                                    ->
-                                    match condition() with
-                                    | true  ->
-                                            Some true
-                                    | false ->
+                                    -> condition () |> Option.orElse (System.Threading.Thread.Sleep 250; None)
+                                    (*
+                                    match condition () with
+                                    | Some value  ->
+                                            Some value
+                                    | None ->
                                             System.Threading.Thread.Sleep 250
                                             None
+                                    *)
                                 )
                             |> Option.defaultValue false                           
                        
@@ -138,9 +140,10 @@ module MyCanopy =
                         not <| (item.Contains "2022" || item.Contains "2023")
                     )     
             with
-            | ex -> 
-                    //printf "%s %s" <| string ex.Message <| " Error Canopy 009 - change links"
-                    []
+            | ex 
+                -> 
+                //printf "%s %s" <| string ex.Message <| " Error Canopy 009 - change links"
+                []
         
         let currentAndFutureLinks () = 
 

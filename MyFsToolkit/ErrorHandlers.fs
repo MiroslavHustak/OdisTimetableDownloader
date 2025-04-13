@@ -23,7 +23,7 @@ module Result =
         | None       -> Error String.Empty  
         
     let internal sequence aListOfResults = //gets the first error - see the book Domain Modelling Made Functional
-
+        //gets the first Error, otherwise collects all Ok values: 
         let prepend firstR restR =
             match firstR, restR with
             | Ok first, Ok rest   -> Ok (first :: rest) | Error err1, Ok _ -> Error err1
