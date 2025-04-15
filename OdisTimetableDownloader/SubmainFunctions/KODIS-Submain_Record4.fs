@@ -162,7 +162,7 @@ module KODIS_SubmainRecord4 =
                                  Message = sprintf "Request failed with status code %d" (int response.statusCode)
                              } 
                 }   
-            |> Async.RunSynchronously      
+            |> Async.RunSynchronously      //nahradit pri realnem vyuziti async
                 
         let response = getFromRestApiTest ()        
 
@@ -667,7 +667,7 @@ module KODIS_SubmainRecord4 =
                                                    return ()      //nechame chybu tise projit                                                                                                                                         
                                  } 
                              |> Async.Catch
-                             |> Async.RunSynchronously  
+                             |> Async.RunSynchronously   //nahradit pri realnem vyuziti async
                              |> Result.ofChoice                      
                              |> function
                                  | Ok _      ->    

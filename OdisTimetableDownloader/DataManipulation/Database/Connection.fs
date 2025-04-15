@@ -10,7 +10,7 @@ open Settings.Messages
 
 module Connection =   
 
-    let internal getConnectionAsync () =
+    let internal getConnectionAsync () =  //async zde jen jako template pro pripadne pouziti cancellation token napr. v operationOnDataFromJson
 
         let connString = @"Data Source=Misa\SQLEXPRESS;Initial Catalog=TimetableDownloader;Integrated Security=True;Encrypt=False"
 
@@ -23,7 +23,7 @@ module Connection =
                 with 
                 | ex -> return Error <| string ex.Message
             }
-            |> Async.RunSynchronously
+            |> Async.RunSynchronously //pri pouziti cancellation token zmenit 
             |> function
                 | Ok value  -> 
                              value  
@@ -32,7 +32,7 @@ module Connection =
                              closeItBaby msg16 
                              new SqlConnection(connString)   
 
-    let internal closeConnectionAsync (connection: SqlConnection) =  
+    let internal closeConnectionAsync (connection: SqlConnection) =  //async zde jen jako template pro pripadne pouziti cancellation token napr. v operationOnDataFromJson
 
         async
             {

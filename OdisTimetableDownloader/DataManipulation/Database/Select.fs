@@ -89,7 +89,7 @@ module Select =
                 | ex -> return Error <| string ex.Message
             }
             |> Async.Catch
-            |> Async.RunSynchronously  //musi byt, takze async tady nema vyznam, ale jakozto template se to hodi
+            |> Async.RunSynchronously  //nahradit pri realnem vyuziti async
             |> Result.ofChoice    
             |> Result.map
                 (fun value -> 

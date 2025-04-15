@@ -77,7 +77,7 @@ module KODIS_SubmainRecord3 =
         ]         
         |> Async.Parallel 
         |> Async.Catch
-        |> Async.RunSynchronously
+        |> Async.RunSynchronously  
         |> Result.ofChoice                      
         |> function
             | Ok [|a; b|] -> 
@@ -146,7 +146,7 @@ module KODIS_SubmainRecord3 =
                                   return Error "HttpStatusCode.OK is not OK"     
                          }  
                      |> Async.Catch
-                     |> Async.RunSynchronously
+                     |> Async.RunSynchronously //nahradit pri realnem vyuziti async
                      |> Result.ofChoice
                 )
            
@@ -820,7 +820,7 @@ module KODIS_SubmainRecord3 =
                             return { Message1 = String.Empty; Message2 = sprintf "Request failed with status code %d" (int response.statusCode) }                                           
                     } 
                     |> Async.Catch 
-                    |> Async.RunSynchronously  
+                    |> Async.RunSynchronously   //nahradit pri realnem vyuziti async
                     |> Result.ofChoice    
                     |> function
                         | Ok value -> value 
@@ -1025,7 +1025,7 @@ module KODIS_SubmainRecord3 =
                                                    return ()      //nechame chybu tise projit                                                                                                                                         
                                  } 
                              |> Async.Catch
-                             |> Async.RunSynchronously  
+                             |> Async.RunSynchronously   //nahradit pri realnem vyuziti async
                              |> Result.ofChoice                      
                              |> function
                                  | Ok _      ->    

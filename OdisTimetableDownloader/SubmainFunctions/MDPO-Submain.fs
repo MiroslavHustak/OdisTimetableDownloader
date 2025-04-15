@@ -193,7 +193,7 @@ module MDPO_Submain =
                              return! downloadFileTaskAsync link pathToFile                                                                                                                               
                          } 
                      |> Async.Catch
-                     |> Async.RunSynchronously
+                     |> Async.RunSynchronously  //nahradit pri realnem vyuziti async
                      |> Result.ofChoice  
                      |> Result.mapErr mapErr2 (lazy msgParam2 link)                                                   
                 )     

@@ -103,7 +103,7 @@ module KODIS_SubmainDataTable =
                                   return Error "HttpStatusCode.OK is not OK"     
                          }  
                      |> Async.Catch
-                     |> Async.RunSynchronously
+                     |> Async.RunSynchronously  //nahradit pri realnem vyuziti async
                      |> Result.ofChoice
                 )
            
@@ -920,7 +920,7 @@ module KODIS_SubmainDataTable =
                                                    return ()      //nechame chybu tise projit                                                                                                                                         
                                  } 
                              |> Async.Catch
-                             |> Async.RunSynchronously  
+                             |> Async.RunSynchronously   //nahradit pri realnem vyuziti async
                              |> Result.ofChoice                      
                              |> function
                                  | Ok _      ->    

@@ -389,12 +389,11 @@ module MyCanopy =
                      return { Message1 = String.Empty; Message2 = sprintf "Request failed with status code %d" (int response.statusCode) }                                           
             } 
         |> Async.Catch 
-        |> Async.RunSynchronously  
+        |> Async.RunSynchronously  //MAUI uz vyuziva async, takze tady to nechej jako template
         |> Result.ofChoice    
         |> function
             | Ok value -> value 
             | Error ex -> { Message1 = String.Empty; Message2 = (sprintf "%s %s" <| string ex.Message <| " Error Canopy 004")}   
-
 
 
 (*

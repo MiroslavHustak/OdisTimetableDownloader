@@ -262,7 +262,7 @@ module Links =
                                           | ex ->
                                                 printfn "Error navigating to %s: %s" url ex.Message
                                       } 
-                                      |> Async.RunSynchronously
+                                      |> Async.RunSynchronously   
                         )   
                     // Close the browser
                     do! browser.CloseAsync() |> Async.AwaitTask
@@ -286,7 +286,7 @@ module Links =
         let capturedLinks links executablePath = 
 
             captureNetworkRequest links executablePath
-            |> Async.RunSynchronously
+            |> Async.RunSynchronously  
             |> List.distinct
             |> List.sort
                        
