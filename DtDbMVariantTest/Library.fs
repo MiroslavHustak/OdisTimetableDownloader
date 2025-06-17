@@ -370,10 +370,10 @@ module Test3 =
         
     open Settings
     
-    let private getDirNames pathToDir =                            
-        Directory.EnumerateDirectories pathToDir         
+    let private getDirNames pathToDir = Directory.EnumerateDirectories pathToDir         
         
     let private getUniqueFileNames (folderPathTP: string) (folderPathCanopy: string) =
+
         let fileNamesTP =
             Directory.EnumerateFiles folderPathTP
             |> Seq.map Path.GetFileName
@@ -386,7 +386,8 @@ module Test3 =
         
         Set.difference fileNamesTP fileNamesCanopy |> Set.toList, Set.difference fileNamesCanopy fileNamesTP |> Set.toList
     
-    let private result2 (folderPathTP: string) (folderPathCanopy: string) =       
+    let private result2 (folderPathTP: string) (folderPathCanopy: string) =  
+    
         (getDirNames folderPathTP, getDirNames folderPathCanopy)
         ||> Seq.iter2
             (fun pathTP pathCanopy 
