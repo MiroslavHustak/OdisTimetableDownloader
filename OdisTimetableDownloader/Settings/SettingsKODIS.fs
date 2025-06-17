@@ -50,7 +50,7 @@ module SettingsKODIS =
             "linky 001-199"; "linky 200-299"; "linky 300-399"; 
             "linky 400-499"; "linky 500-599"; "linky 600-699"; 
             "linky 700-799"; "linky 800-899"; "linky 900-999"; 
-            "vlakové linky S"; "vlakové linky R"; "linky X, NAD, AE, A, B"
+            "vlakové linky S"; "vlakové linky R"; "linky X, NAD, AE, P, A, B"
         ]
 
     //Captured links to JSON files
@@ -112,6 +112,7 @@ module SettingsKODIS =
             sprintf "%s%s" pathKodisWeb @"linky?_limit=12&_start=0&group_in%5B0%5D=S1-S34&group_in%5B1%5D=R8-R62&_sort=numeric_label"
             sprintf "%s%s" pathKodisWeb @"linky?_limit=12&_start=0&group_in%5B0%5D=S1-S34&_sort=numeric_label"
             sprintf "%s%s" pathKodisWeb @"linky?_limit=12&_start=0&group_in%5B0%5D=NAD&_sort=numeric_label" 
+            sprintf "%s%s" pathKodisWeb @"linky?_limit=12&_start=0&group_in%5B0%5D=NAD&_sort=numeric_label"
         ]  
         
     //Json Provider 1 
@@ -152,6 +153,7 @@ module SettingsKODIS =
             sprintf "%s%s" partialPathJson @"kodisTrainTotal2.json"
             sprintf "%s%s" partialPathJson @"kodisTrainPomaliky.json"
             sprintf "%s%s" partialPathJson @"kodisNAD.json"
+            sprintf "%s%s" partialPathJson @"kodisNAD.json"
         ] 
       
     //Json Provider 2. Zatim pronechat pro DB verzi.
@@ -186,7 +188,8 @@ module SettingsKODIS =
             sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=S1-S34&groups%5B1%5D=R8-R62&start=0&limit=12"
             sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=S1-S34&start=0&limit=12"
             sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=R8-R62&start=0&limit=12"            
-            sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=NAD&start=0&limit=12"            
+            sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=NAD&start=0&limit=12" 
+            sprintf "%s%s" pathKodisWeb2 "groups%5B0%5D=NAD&start=0&limit=12"
         ]
   
     //Json Provider 2. Zatim pronechat pro DB verzi.
@@ -222,10 +225,11 @@ module SettingsKODIS =
             sprintf "%s%s" partialPathJson @"kodisTrainPomaliky2_0.json"
             sprintf "%s%s" partialPathJson @"kodisTrainRychliky2_0.json"
             sprintf "%s%s" partialPathJson @"kodisNAD2_0.json"
+            sprintf "%s%s" partialPathJson @"kodisNAD2_0.json"
         ] 
         
     let private interval = 12 //menit dle json struktury
-    let private lastCode = 108 //menit dle json struktury
+    let private lastCode = 132 //menit dle json struktury
 
     let private codes = [ 0 .. interval .. lastCode ] |> List.map string 
         
@@ -259,7 +263,8 @@ module SettingsKODIS =
             sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=901-990&start=" code "&limit=12"
             sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=S1-S34&start=" code "&limit=12"
             sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=R8-R62&start=" code "&limit=12"            
-            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=NAD&start=" code "&limit=12"            
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=NAD&start=" code "&limit=12" 
+            sprintf "%s%s%s%s" pathKodisWeb2 "groups%5B0%5D=Lodní%20doprava&start=" code "&limit=12" 
         ]
 
     let internal jsonLinkList3 = codes |> List.collect jsonLinkListPartial
@@ -294,6 +299,7 @@ module SettingsKODIS =
             sprintf "%s%s%s%s" partialPathJson @"kodisTrainPomaliky2_" code ".json"
             sprintf "%s%s%s%s" partialPathJson @"kodisTrainRychliky2_" code ".json"
             sprintf "%s%s%s%s" partialPathJson @"kodisNAD2_" code ".json"
+            sprintf "%s%s%s%s" partialPathJson @"kodisBoat_" code ".json"
         ] 
 
     let internal pathToJsonList3 = codes |> List.collect pathToJsonListPartial

@@ -107,7 +107,7 @@ module LogicalAliases =
         | x :: xs -> (x && not (nXor xs)) || ((not x) && (nXor xs))
     *)
 
-    [<TailCall>]
+    //[<TailCall>]
     let internal nXor operands =
         let rec nXor_tail_recursive acc operands =
             match operands with

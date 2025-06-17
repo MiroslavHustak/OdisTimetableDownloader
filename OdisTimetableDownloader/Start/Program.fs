@@ -55,7 +55,7 @@ type MyBenchmark() =
     //dotnet run -c Release
     //let summary = BenchmarkRunner.Run<MyBenchmark>()
 
-[<TailCall>] 
+//[<TailCall>] 
 let rec private pathToFolder () =
     
     try        
@@ -380,6 +380,17 @@ let main argv =
                        printfn "Stiskni cokoliv pro návrat na hlavní stránku."
                        Console.ReadKey() |> ignore
 
+                       variant() 
+
+            | "70801" -> 
+                       printfn "\nTrefil jsi zrovna kód pro přístup k testování počtu a velikosti stažených souborů."
+                       printfn "Gratuluji, ale pokud nevíš, co test obnáší, raději ukonči tento program ... \n"  
+                      
+                       DtDbMVariantTest.Test3.main () 
+
+                       printfn "Stiskni cokoliv pro návrat na hlavní stránku."
+                       Console.ReadKey() |> ignore
+            
                        variant() 
             | "74601" -> 
                        printfn "\nTrefil jsi zrovna kód pro web testing tool zvaný Canopy."

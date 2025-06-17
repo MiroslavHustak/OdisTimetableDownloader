@@ -643,6 +643,7 @@ module KODIS_SubmainRecord3 =
                         fun () -> oldPrefix.Contains("R") && oldPrefix.Length = 4
                         fun () -> oldPrefix.Contains("NAD")
                         fun () -> oldPrefix.Contains("X")
+                        fun () -> oldPrefix.Contains("P")
                     ]
 
                 match List.filter (fun condition -> condition()) conditions with
@@ -783,7 +784,7 @@ module KODIS_SubmainRecord3 =
                                     
             //let jsonPayload = "[" + (links |> List.map (sprintf "\"%s\"") |> String.concat ",") + "]" //tohle ne
 
-            //transformace na json string            
+            //prima transformace na json string (bez pouziti records / serializace / Thoth encoders )   
             let s1 = "{ \"list\": ["
             let s2 = links |> List.map (sprintf "\"%s\"") |> String.concat ","
             let s3 = "] }"

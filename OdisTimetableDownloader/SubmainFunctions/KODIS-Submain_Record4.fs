@@ -345,6 +345,7 @@ module KODIS_SubmainRecord4 =
                         fun () -> oldPrefix.Contains("R") && oldPrefix.Length = 4
                         fun () -> oldPrefix.Contains("NAD")
                         fun () -> oldPrefix.Contains("X")
+                        fun () -> oldPrefix.Contains("P")
                     ]
 
                 match List.filter (fun condition -> condition()) conditions with

@@ -47,7 +47,8 @@ module MyCanopy =
                 "https://www.kodis.cz/lines/train?tab=S1-S34"
                 "https://www.kodis.cz/lines/train?tab=R8-R62"
                 "https://www.kodis.cz/lines/city?tab=NAD+MHD"
-                "https://www.kodis.cz/lines/region?tab=NAD"   
+                "https://www.kodis.cz/lines/region?tab=NAD" 
+                "https://www.kodis.cz/lines/boat?tab=Lodní+doprava"
             ]
         
         let urlsChanges = 
