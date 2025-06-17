@@ -385,19 +385,7 @@ module Test3 =
             |> Set.ofSeq
         
         Set.difference fileNamesTP fileNamesCanopy |> Set.toList, Set.difference fileNamesCanopy fileNamesTP |> Set.toList
-    
-    let private result2 (folderPathTP: string) (folderPathCanopy: string) =  
-    
-        (getDirNames folderPathTP, getDirNames folderPathCanopy)
-        ||> Seq.iter2
-            (fun pathTP pathCanopy 
-                ->
-                let uniqueFileNamesTP, uniqueFileNamesCanopy = getUniqueFileNames pathTP pathCanopy 
-                printfn "Je v TP, ale chybi v Canopy %A" uniqueFileNamesTP                  
-                printfn "Je v Canopy, ale chybi v TP %A" uniqueFileNamesCanopy
-                printfn "************************************************" 
-            )  
-            
+
     let private result (folderPathTP: string) (folderPathCanopy: string) =
        
         match folderPathTP = pathTP_FutureValidity && folderPathCanopy = pathCanopy_FutureValidity with
