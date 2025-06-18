@@ -375,7 +375,7 @@ module Test3 =
 
         let fileNames path =
 
-            Directory.EnumerateFiles folderPathTP
+            Directory.EnumerateFiles path
             |> Seq.map Path.GetFileName
             |> Set.ofSeq
 
@@ -406,8 +406,7 @@ module Test3 =
             result pathTP_CurrentValidity pathCanopy_CurrentValidity
        
             printfn "FutureValidity"
-            let uniqueFileNamesTP, uniqueFileNamesCanopy = getUniqueFileNames pathTP_FutureValidity pathCanopy_FutureValidity 
-            printResults uniqueFileNamesTP uniqueFileNamesCanopy
+            result pathTP_FutureValidity pathCanopy_FutureValidity 
          
             printfn "WithoutReplacementService"
             result pathTP_WithoutReplacementService pathCanopy_WithoutReplacementService
