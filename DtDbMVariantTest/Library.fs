@@ -360,33 +360,33 @@ module Test3 =
     
     open System
     open System.IO
-        
-    //***************************************
-    
-    open MyFsToolkit
-    open MyFsToolkit.Builders  
-    
+            
     //***************************************
         
     open Settings
     
-    let private getDirNames pathToDir = Directory.EnumerateDirectories pathToDir         
-        
-    let private getUniqueFileNames (folderPathTP: string) (folderPathCanopy: string) =
+    let private printResults uniqueFileNamesTP uniqueFileNamesCanopy = 
 
-        let fileNamesTP =
+        printfn "Je v TP, ale chybi v Canopy %A" uniqueFileNamesTP                  
+        printfn "Je v Canopy, ale chybi v TP %A" uniqueFileNamesCanopy
+        printfn "************************************************" 
+        
+    let private getUniqueFileNames folderPathTP folderPathCanopy =
+
+        let fileNames path =
+
             Directory.EnumerateFiles folderPathTP
             |> Seq.map Path.GetFileName
             |> Set.ofSeq
-        
-        let fileNamesCanopy =
-            Directory.EnumerateFiles folderPathCanopy
-            |> Seq.map Path.GetFileName
-            |> Set.ofSeq
+
+        let fileNamesTP = fileNames folderPathTP                    
+        let fileNamesCanopy = fileNames folderPathCanopy        
         
         Set.difference fileNamesTP fileNamesCanopy |> Set.toList, Set.difference fileNamesCanopy fileNamesTP |> Set.toList
+                
+    let private result folderPathTP folderPathCanopy =
 
-    let private result (folderPathTP: string) (folderPathCanopy: string) =
+        let getDirNames pathToDir = Directory.EnumerateDirectories pathToDir 
        
         match folderPathTP = pathTP_FutureValidity && folderPathCanopy = pathCanopy_FutureValidity with
         | true  -> (seq {folderPathTP}, seq {folderPathCanopy})
@@ -396,9 +396,7 @@ module Test3 =
             (fun pathTP pathCanopy
                 ->
                 let uniqueFileNamesTP, uniqueFileNamesCanopy = getUniqueFileNames pathTP pathCanopy 
-                printfn "Je v TP, ale chybi v Canopy %A" uniqueFileNamesTP                  
-                printfn "Je v Canopy, ale chybi v TP %A" uniqueFileNamesCanopy
-                printfn "************************************************" 
+                printResults uniqueFileNamesTP uniqueFileNamesCanopy
             )
          
     let internal main () = //Netestovano na pritomnost souboru, nestoji to za tu namahu        
@@ -409,14 +407,14 @@ module Test3 =
        
             printfn "FutureValidity"
             let uniqueFileNamesTP, uniqueFileNamesCanopy = getUniqueFileNames pathTP_FutureValidity pathCanopy_FutureValidity 
-            printfn "Je v TP, ale chybi v Canopy %A" uniqueFileNamesTP                  
-            printfn "Je v Canopy, ale chybi v TP %A" uniqueFileNamesCanopy
-            printfn "************************************************" 
+            printResults uniqueFileNamesTP uniqueFileNamesCanopy
          
             printfn "WithoutReplacementService"
             result pathTP_WithoutReplacementService pathCanopy_WithoutReplacementService
         with
-        | ex -> printfn "%s\n" (string ex.Message)
+        | ex 
+            -> 
+            printfn "%s\n" (string ex.Message)
 
 (*
 // F#
