@@ -820,12 +820,12 @@ module KODIS_SubmainRecord3 =
                         | _ -> 
                             return { Message1 = String.Empty; Message2 = sprintf "Request failed with status code %d" (int response.statusCode) }                                           
                     } 
-                    |> Async.Catch 
-                    |> Async.RunSynchronously   //nahradit pri realnem vyuziti async
-                    |> Result.ofChoice    
-                    |> function
-                        | Ok value -> value 
-                        | Error ex -> { Message1 = String.Empty; Message2 = string ex.Message }    
+                |> Async.Catch 
+                |> Async.RunSynchronously   //nahradit pri realnem vyuziti async
+                |> Result.ofChoice    
+                |> function
+                    | Ok value -> value 
+                    | Error ex -> { Message1 = String.Empty; Message2 = string ex.Message }    
 
             match result.Message1.Equals(String.Empty) with true -> () | _ -> printfn "%s" result.Message1  
             match result.Message2.Equals(String.Empty) with true -> () | _ -> printfn "%s" result.Message2 

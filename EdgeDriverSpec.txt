@@ -1,0 +1,9 @@
+Cas od casu prestane po upgradu driver fungovat, novy stahni z Miscrosoftu a prejmenuj na MicrosoftWebDriver.exe
+
+https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver?form=MA13LH#downloads
+
+x64
+
+c:/temp/driver
+
+MicrosoftWebDriver.exe
